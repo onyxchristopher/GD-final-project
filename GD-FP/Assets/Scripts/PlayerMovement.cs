@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour {
     private float fuel; // the current fuel level (depleted at 1/s)
     [SerializeField] private int maxFuel; // the maximum fuel
+    private Slider fuelBarSlider;
 
     private GameController gameController;
 
@@ -21,6 +23,10 @@ public class PlayerMovement : MonoBehaviour {
 
     void Start() {
         fuel = maxFuel;
+        fuelBarSlider = GameObject.FindWithTag("FuelBar").GetComponent<Slider>();
+        fuelBarSlider.maxValue = maxFuel;
+        fuelBarSlider.value = fuel;
+
         gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
         rb = GetComponent<Rigidbody2D>();
 
@@ -48,6 +54,7 @@ public class PlayerMovement : MonoBehaviour {
 
         if (moveDir != Vector2.zero) {
             fuel -= frameBalanceConst; // spend 1 fuel/sec during movement
+            fuelBarSlider.value = fuel;
             if (fuel <= 0) {
                 EventManager.PlayerDeath();
             }

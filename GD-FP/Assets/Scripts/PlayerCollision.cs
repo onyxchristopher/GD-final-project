@@ -9,7 +9,7 @@ public class PlayerCollision : MonoBehaviour
     [SerializeField] private int maxHealth = 5;
     private bool invuln = false;
     private Slider healthBarSlider;
-    // Start is called before the first frame update
+    
     void Start() {
         health = maxHealth;
         healthBarSlider = GameObject.FindWithTag("HealthBar").GetComponent<Slider>();
@@ -37,10 +37,5 @@ public class PlayerCollision : MonoBehaviour
     private IEnumerator iFrames() {
         yield return new WaitForSeconds(2);
         invuln = false;
-    }
-
-    // Update is called once per frame
-    void Update() {
-        
     }
 }

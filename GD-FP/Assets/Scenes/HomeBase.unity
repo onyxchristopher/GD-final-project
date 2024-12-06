@@ -465,8 +465,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 35, y: 12}
-  m_SizeDelta: {x: 128, y: 48}
+  m_AnchoredPosition: {x: 72, y: 16}
+  m_SizeDelta: {x: 256, y: 96}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &491136088
 MonoBehaviour:
@@ -489,11 +489,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 43
+    m_FontSize: 80
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 50
+    m_MaxSize: 86
     m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -743,8 +743,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 40, y: 28}
-  m_SizeDelta: {x: 128, y: 12}
+  m_AnchoredPosition: {x: 80, y: 40}
+  m_SizeDelta: {x: 256, y: 16}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &569865263
 MonoBehaviour:
@@ -905,8 +905,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 40, y: 12}
-  m_SizeDelta: {x: 128, y: 12}
+  m_AnchoredPosition: {x: 80, y: 16}
+  m_SizeDelta: {x: 256, y: 16}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &803562614
 MonoBehaviour:
@@ -992,8 +992,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 35, y: 28}
-  m_SizeDelta: {x: 128, y: 48}
+  m_AnchoredPosition: {x: 72, y: 40}
+  m_SizeDelta: {x: 256, y: 96}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &929934893
 MonoBehaviour:
@@ -1016,11 +1016,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 43
+    m_FontSize: 80
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 50
+    m_MaxSize: 86
     m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -1182,7 +1182,7 @@ TilemapRenderer:
   m_SortingLayer: -1
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 49.5, y: 49.5, z: 0}
+  m_ChunkCullingBounds: {x: 82.833336, y: 82.833336, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
@@ -1312,7 +1312,7 @@ Grid:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1583870153}
   m_Enabled: 1
-  m_CellSize: {x: 100, y: 100, z: 0}
+  m_CellSize: {x: 150, y: 150, z: 0}
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
