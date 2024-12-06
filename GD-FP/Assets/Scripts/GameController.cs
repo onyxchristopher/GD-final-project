@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        Screen.SetResolution(1920, 1080, true);
+public class GameController : MonoBehaviour {
+    public enum gameState {
+        running,
+        paused
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void Start() {
+        Screen.SetResolution(1080, 1080, true);
+    }
+
+    public void Pause() {
+
     }
 }
