@@ -6,6 +6,7 @@ TagManager:
   tags:
   - HealthBar
   - FuelBar
+  - Planet
   layers:
   - Default
   - TransparentFX

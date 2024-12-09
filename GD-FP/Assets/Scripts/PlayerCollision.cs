@@ -17,7 +17,7 @@ public class PlayerCollision : MonoBehaviour
         healthBarSlider.value = health;
     }
 
-    public void OnAction1(){
+    public void OnAction1() {
         Damage(3);
     }
 
