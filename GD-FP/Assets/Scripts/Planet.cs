@@ -13,14 +13,13 @@ public class Planet : MonoBehaviour
         player = GameObject.FindWithTag("Player");
     }
 
-    void FixedUpdate() {
-        
-    }
-
+    // OnTriggerStay2D applies gravity to the player while they are within the planet's trigger
+    // It specifies the Law of Gravity: F = G * m1 * m2 / r^2, where G = gravitationalConstant,
+    // m1 = player mass (which is 1), m2 = gravityScale, r = distance to planet center
     void OnTriggerStay2D(Collider2D other) {
-        // get a vector between player and planet
-        dist = transform.position - player.transform.position;
+        dist = transform.position - player.transform.position; // distance to planet center
         Rigidbody2D playerRB = player.GetComponent<Rigidbody2D>();
+        // the law of gravity, in code
         playerRB.AddForce(dist * (gravitationalConstant * gravityScale / dist.sqrMagnitude));
     }
 }

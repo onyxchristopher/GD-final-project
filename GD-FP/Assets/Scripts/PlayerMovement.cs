@@ -5,22 +5,25 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour {
-    
-    private float fuel; // the current fuel level (depleted at 1/s)
-    [SerializeField] private int maxFuel; // the maximum fuel
-    private Slider fuelBarSlider;
 
+    // Player components
+    [HideInInspector] public Rigidbody2D rb;
+    private PlayerInput playerInput; // the player input component
+    private InputAction playerMove; // the player move action
+
+    // Fuel
+    private float fuel; // current fuel level (depleted at 1/s)
+    [SerializeField] private int maxFuel; // maximum fuel
+    private Slider fuelBarSlider; // slider showing fuel level
+
+    // Script references
     private GameController gameController;
 
-    [HideInInspector] public Rigidbody2D rb;
-
+    // Movement parameters
+    [SerializeField] private float moveSpeed;
     [SerializeField] private float maxSpeed;
 
-    private PlayerInput playerInput;
-    private InputAction playerMove;
-
-    [SerializeField] private float moveSpeed;
-
+    // Attack prefabs
     [SerializeField] private GameObject blade;
     [SerializeField] private GameObject trap;
 
@@ -57,8 +60,6 @@ public class PlayerMovement : MonoBehaviour {
 
         rb.AddForce(moveSpeed * normalMoveDir, ForceMode2D.Impulse);
 
-        Debug.Log(rb.velocity.magnitude);
-
         float speedDifference = rb.velocity.magnitude - maxSpeed;
         if (speedDifference > 0) {
             rb.AddForce(-rb.velocity.normalized * speedDifference, ForceMode2D.Impulse);
@@ -73,7 +74,3 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 }
-
-// F = a
-// F = v/s
-// F = 0.02v/0.02s
