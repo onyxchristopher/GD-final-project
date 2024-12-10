@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class Blade : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private GameObject player;
+
     void Start() {
-        Destroy(gameObject, 1)
+        player = transform.parent.gameObject;
+        Destroy(gameObject, 0.5f);
     }
 
-    
+    void FixedUpdate() {
+        transform.RotateAround(player.transform.position, Vector3.forward, 14.4f);
+    }
 }

@@ -15,14 +15,12 @@ public class PlayerCollision : MonoBehaviour
         healthBarSlider = GameObject.FindWithTag("HealthBar").GetComponent<Slider>();
         healthBarSlider.maxValue = maxHealth;
         healthBarSlider.value = health;
-    }
 
-    public void OnAction1() {
-        Damage(3);
+        EventManager.onPlayerDeath += ResetPlayerHealth;
     }
 
     public void Damage(int damage) {
-        if (invuln == false){
+        if (!invuln){
             health -= damage;
             healthBarSlider.value = health;
             if (health <= 0) {
@@ -37,5 +35,9 @@ public class PlayerCollision : MonoBehaviour
     private IEnumerator iFrames() {
         yield return new WaitForSeconds(2);
         invuln = false;
+    }
+
+    public void ResetPlayerHealth() {
+        health = maxHealth;
     }
 }

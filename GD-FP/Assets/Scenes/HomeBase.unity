@@ -136,7 +136,8 @@ GameObject:
   - component: {fileID: 207719369}
   - component: {fileID: 207719370}
   - component: {fileID: 207719371}
-  m_Layer: 0
+  - component: {fileID: 207719372}
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -179,9 +180,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -4397537
+  m_SortingLayer: 1
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 9a81cded2c7654823875ebb6bb5f9955, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -297,12 +298,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfabc69420b741a3b7a31ce68ffba76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxFuel: 15
   rb: {fileID: 0}
-  maxSpeed: 20
+  maxFuel: 15
   moveSpeed: 0.3
-  blade: {fileID: 0}
-  trap: {fileID: 0}
+  maxSpeed: 20
 --- !u!114 &207719371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,6 +315,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 5
+--- !u!114 &207719372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207719364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 980ce1d6a4a0642aaa99ac8ad85f83dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blade: {fileID: 281569288893573339, guid: 3b8a7d2c80afd4ee9a57753a05177470, type: 3}
+  trap: {fileID: 0}
 --- !u!1 &232289865
 GameObject:
   m_ObjectHideFlags: 0
@@ -1601,6 +1614,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Planet
+      objectReference: {fileID: 0}
+    - target: {fileID: 652723905759159058, guid: a6b2e72cdeb3148579a9df3453a5e8e4,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a6b2e72cdeb3148579a9df3453a5e8e4, type: 3}
