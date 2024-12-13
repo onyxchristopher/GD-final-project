@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using MEC;
 
 public class PlayerCollision : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class PlayerCollision : MonoBehaviour
         healthBarSlider.maxValue = maxHealth;
         healthBarSlider.value = health;
 
+        EventManager.onPlayerDamage += Damage;
         EventManager.onPlayerDeath += ResetPlayerHealth;
     }
 
@@ -28,16 +30,17 @@ public class PlayerCollision : MonoBehaviour
                 return;
             }
             invuln = true;
-            StartCoroutine(iFrames());
+            Timing.RunCoroutine(_IFrames());
         }
     }
 
-    private IEnumerator iFrames() {
-        yield return new WaitForSeconds(2);
+    private IEnumerator<float> _IFrames() {
+        yield return Timing.WaitForSeconds(2);
         invuln = false;
     }
 
     public void ResetPlayerHealth() {
         health = maxHealth;
+        healthBarSlider.value = health;
     }
 }

@@ -7,8 +7,12 @@ TagManager:
   - HealthBar
   - FuelBar
   - Planet
+  - SentryTurretEnemy
+  - Projectile
+  - Attack
   - Blade
   - Trap
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -22,7 +26,7 @@ TagManager:
   - Planet
   - Attack
   - Enemy
-  - 
+  - Projectile
   - 
   - 
   - 
