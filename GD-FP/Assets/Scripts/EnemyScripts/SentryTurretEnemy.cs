@@ -11,29 +11,18 @@ In ATTACK, it shoots a projectile at the player every three seconds.
 It moves back to IDLE when its trigger is exited by the player.
 */
 
-public class SentryTurretEnemy : MonoBehaviour
+public class SentryTurretEnemy : Enemy
 {
-    private EnemyState fsm;
-    private Vector2 location;
-    private int health = 10;
-    private Rigidbody2D playerRB;
     [SerializeField] GameObject projectile;
 
     // Awake encodes the enemy FSM
     void Awake() {
-        fsm = gameObject.GetComponentInParent<EnemyState>();
-
         Action sentryAttack = AttackLoop;
-        fsm.enterStateLogic.Add(EnemyState.State.ATTACK, sentryAttack);
-    }
-
-    void Start() {
-        location = new Vector2(transform.position.x, transform.position.y);
-        playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
+        enterStateLogic.Add(State.ATTACK, sentryAttack);
     }
 
     private void AttackLoop() {
-        if (fsm.state == EnemyState.State.IDLE) {
+        if (state == State.IDLE) {
             return;
         }
         Timing.RunCoroutine(_SentryFire(), "sentryFire");
@@ -48,20 +37,17 @@ public class SentryTurretEnemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Player") {
-            fsm.state = EnemyState.State.ATTACK;
+            state = State.ATTACK;
+            StateTransition();
         }
     }
 
     void OnTriggerExit2D(Collider2D other) {
         if (other.tag == "Player") {
-            fsm.state = EnemyState.State.IDLE;
+            state = State.IDLE;
+            StateTransition();
         }
     }
 
-    public void Damage(int damage) {
-        health -= damage;
-        if (health <= 0) {
-            Destroy(gameObject);
-        }
-    }
+    
 }

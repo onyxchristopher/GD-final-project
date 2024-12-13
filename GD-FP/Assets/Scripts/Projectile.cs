@@ -21,7 +21,7 @@ public class Projectile : MonoBehaviour
             EventManager.PlayerDamage(3);
             Destroy(gameObject);
         }
-        if (!other.tag.Contains("Enemy")) {
+        if (!other.isTrigger) {
             Destroy(gameObject);
         }
     }

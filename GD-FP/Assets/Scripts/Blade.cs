@@ -18,7 +18,9 @@ public class Blade : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag.Contains("Enemy")) {
-            other.gameObject.GetComponent<SentryTurretEnemy>().Damage(damage);
+            if (!other.isTrigger) {
+                other.gameObject.GetComponent<SentryTurretEnemy>().Damage(damage);
+            }
         }
     }
 }

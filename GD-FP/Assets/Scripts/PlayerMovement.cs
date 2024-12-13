@@ -41,7 +41,6 @@ public class PlayerMovement : MonoBehaviour {
 
     // reset the player at their spawnpoint with max fuel
     public void ResetPlayer() {
-        Debug.Log("resetted");
         SetFuel(maxFuel);
         transform.position = origin;
     }
@@ -52,6 +51,7 @@ public class PlayerMovement : MonoBehaviour {
         if (fuel >= maxFuel) {
             fuel = maxFuel;
         }
+        fuelBarSlider.value = fuel;
     }
 
     void FixedUpdate() {
