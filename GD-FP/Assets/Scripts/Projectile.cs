@@ -6,6 +6,7 @@ public class Projectile : MonoBehaviour
 {
     private Rigidbody2D rb;
     private float speed = 15;
+    private int damage = 4;
     
     void Awake() {
         rb = GetComponent<Rigidbody2D>();
@@ -18,10 +19,10 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Player") {
-            EventManager.PlayerDamage(3);
+            EventManager.PlayerDamage(damage);
             Destroy(gameObject);
         }
-        if (!other.isTrigger) {
+        if (!other.isTrigger || other.tag == "Blade") {
             Destroy(gameObject);
         }
     }

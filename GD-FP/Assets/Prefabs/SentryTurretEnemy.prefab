@@ -12,10 +12,11 @@ GameObject:
   - component: {fileID: 8339442900829789064}
   - component: {fileID: 8339442900829789175}
   - component: {fileID: 8339442900829789067}
-  - component: {fileID: 8339442900829789174}
+  - component: {fileID: 4033924179094493683}
+  - component: {fileID: 4187135916521462681}
   m_Layer: 11
   m_Name: SentryTurretEnemy
-  m_TagString: SentryTurretEnemy
+  m_TagString: Damageable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,7 +94,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 8339442900829789173}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: e2ba9f1b92f0d423d940139935fc67f9, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -116,7 +117,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 10
---- !u!114 &8339442900829789174
+--- !u!114 &4033924179094493683
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -128,8 +129,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaf63ef36a039460e9c888c3d11d3c58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
   fuelDrop: {fileID: 5922313539474208338, guid: 3007814f33983497da3e0b174119cd8c,
     type: 3}
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
+--- !u!114 &4187135916521462681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8339442900829789173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 747cb28c910544d55bb55904fa8ef295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 10
+  enemy: {fileID: 0}

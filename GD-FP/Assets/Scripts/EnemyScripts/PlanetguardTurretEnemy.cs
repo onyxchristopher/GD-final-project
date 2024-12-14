@@ -5,40 +5,37 @@ using UnityEngine;
 using MEC;
 
 /*
-The sentry turret has two states: IDLE and ATTACK.
-It starts in IDLE, and when its trigger is entered by the player, moves to ATTACK.
-In ATTACK, it shoots a projectile at the player every three seconds.
-It moves back to IDLE when its trigger is exited by the player.
+The planetguard turret is a child of the boss enemy of the same name. Its
+purpose is to track the player and fire at the player. 
 */
 
-public class SentryTurretEnemy : Enemy {
+public class PlanetguardTurretEnemy : Enemy {
     [SerializeField] private GameObject projectile;
     private Rigidbody2D playerRB;
-    private Vector2 spawnpoint;
+    public Vector2 location;
 
     // Awake encodes the enemy FSM
     void Awake() {
-        Action sentryAttack = AttackLoop;
-        enterStateLogic.Add(State.ATTACK, sentryAttack);
+        Action turretAttack = AttackLoop;
+        enterStateLogic.Add(State.ATTACK, turretAttack);
     }
 
     void Start() {
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
-        spawnpoint = new Vector2(transform.position.x, transform.position.y);
-        gameObject.GetComponent<Damageable>().enemy = this;
+        location = new Vector2(transform.position.x, transform.position.y);
     }
 
     private void AttackLoop() {
-        if (state == State.IDLE) {
+        if (state != State.ATTACK) {
             return;
         }
-        Timing.RunCoroutine(_SentryFire());
+        Timing.RunCoroutine(_TurretFire());
     }
 
-    private IEnumerator<float> _SentryFire() {
-        Vector2 dirToPlayer = playerRB.position - spawnpoint;
+    private IEnumerator<float> _TurretFire() {
+        Vector2 dirToPlayer = playerRB.position - location;
         Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
-        yield return Timing.WaitForSeconds(2);
+        yield return Timing.WaitForSeconds(0.5f);
         AttackLoop();
     }
 
@@ -51,7 +48,7 @@ public class SentryTurretEnemy : Enemy {
 
     void OnTriggerExit2D(Collider2D other) {
         if (other.tag == "Player") {
-            state = State.IDLE;
+            state = State.TRACK;
             StateTransition();
         }
     }

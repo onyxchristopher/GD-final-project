@@ -16,4 +16,12 @@ public class EventManager : MonoBehaviour {
     public static void PlayerDeath() {
         onPlayerDeath?.Invoke();
     }
+
+    public delegate void NotifyArtifactPickup(int id);
+    public static event NotifyArtifactPickup onArtifactPickup;
+    public static void ArtifactPickup(int id) {
+        if (onArtifactPickup != null) {
+            onArtifactPickup(id);
+        }
+    }
 }

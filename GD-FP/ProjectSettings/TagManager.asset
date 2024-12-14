@@ -13,6 +13,11 @@ TagManager:
   - Blade
   - Trap
   - Enemy
+  - Damageable
+  - Artifact
+  - BossBar
+  - BossText
+  - Planetguard
   layers:
   - Default
   - TransparentFX

@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Blade : MonoBehaviour
-{
+public class Blade : MonoBehaviour {
     private GameObject player;
     private int damage = 5;
 
@@ -17,9 +16,9 @@ public class Blade : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag.Contains("Enemy")) {
+        if (other.tag == "Damageable") {
             if (!other.isTrigger) {
-                other.gameObject.GetComponent<SentryTurretEnemy>().Damage(damage);
+                other.gameObject.GetComponent<Damageable>().Damage(damage);
             }
         }
     }
