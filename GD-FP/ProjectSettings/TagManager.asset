@@ -7,8 +7,17 @@ TagManager:
   - HealthBar
   - FuelBar
   - Planet
+  - SentryTurretEnemy
+  - Projectile
+  - Attack
   - Blade
   - Trap
+  - Enemy
+  - Damageable
+  - Artifact
+  - BossBar
+  - BossText
+  - Planetguard
   layers:
   - Default
   - TransparentFX
@@ -22,8 +31,8 @@ TagManager:
   - Planet
   - Attack
   - Enemy
-  - 
-  - 
+  - Projectile
+  - Collectible
   - 
   - 
   - 

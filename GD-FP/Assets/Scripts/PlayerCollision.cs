@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using MEC;
 
-public class PlayerCollision : MonoBehaviour
-{
+public class PlayerCollision : MonoBehaviour {
     private int health;
-    [SerializeField] private int maxHealth = 5;
+    [SerializeField] private int maxHealth;
+    private int badCollisionDamage = 2;
     private bool invuln = false;
+    private float invulnDuration = 2;
     private Slider healthBarSlider;
+    
     
     void Start() {
         health = maxHealth;
@@ -16,7 +19,14 @@ public class PlayerCollision : MonoBehaviour
         healthBarSlider.maxValue = maxHealth;
         healthBarSlider.value = health;
 
+        EventManager.onPlayerDamage += Damage;
         EventManager.onPlayerDeath += ResetPlayerHealth;
+    }
+
+    void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy")) {
+            Damage(badCollisionDamage);
+        }
     }
 
     public void Damage(int damage) {
@@ -28,16 +38,17 @@ public class PlayerCollision : MonoBehaviour
                 return;
             }
             invuln = true;
-            StartCoroutine(iFrames());
+            Timing.RunCoroutine(_IFrames());
         }
     }
 
-    private IEnumerator iFrames() {
-        yield return new WaitForSeconds(2);
+    private IEnumerator<float> _IFrames() {
+        yield return Timing.WaitForSeconds(invulnDuration);
         invuln = false;
     }
 
     public void ResetPlayerHealth() {
         health = maxHealth;
+        healthBarSlider.value = health;
     }
 }
