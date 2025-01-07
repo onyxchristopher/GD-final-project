@@ -51,7 +51,6 @@ public class GameController : MonoBehaviour {
     }
 
     public void UpgradeAndReset(int id) {
-        Debug.Log(id);
         Timing.RunCoroutine(_ResetTimer());
     }
 

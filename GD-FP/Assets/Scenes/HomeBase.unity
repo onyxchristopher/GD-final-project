@@ -579,9 +579,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
-  maxFuel: 30
-  moveSpeed: 0.3
-  maxSpeed: 20
+  maxFuel: 60
+  maxAccel: 1.2
+  softMaxSpeed: 8
+  softAccel: 0.2
+  maxSpeed: 25
 --- !u!114 &207719371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1696,7 +1698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fuelDrop: {fileID: 0}
-  rotationSpeed: 0.4
+  rotationSpeed: 0.3
 --- !u!58 &1036854089
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1712,7 +1714,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 50
+  m_Radius: 65
 --- !u!114 &1036854090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1898,7 +1900,7 @@ PrefabInstance:
     - target: {fileID: 652723905759159061, guid: a6b2e72cdeb3148579a9df3453a5e8e4,
         type: 3}
       propertyPath: gravityScale
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a6b2e72cdeb3148579a9df3453a5e8e4, type: 3}
