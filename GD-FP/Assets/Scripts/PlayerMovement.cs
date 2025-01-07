@@ -20,13 +20,11 @@ public class PlayerMovement : MonoBehaviour {
     private GameController gameController;
 
     // Movement system
-    [SerializeField] private float maxAccel; // acceleration at speed = 0 (b)
+    [SerializeField] private float maxAccel; // acceleration at speed 0 to f (b)
     [SerializeField] private float softMaxSpeed; // the speed at which fast-accel stops (f)
-    [SerializeField] private float softAccel; // acceleration at speed = f (d)
-    [SerializeField] private float maxSpeed; // how fast the player can be (m)
-
-    private float fastAccelDecay; // how fast-acceleration decreases (a)
-    private float slowAccelDecay; // how slow-acceleration decreases (c)
+    [SerializeField] private float softAccel; // acceleration at speed f to m (d)
+    [SerializeField] private float maxSpeed; // speed cap (m)
+    [SerializeField] private float brakeConstant; // the multiplier for braking
 
     private bool autoDecelerate = false;
     
@@ -48,9 +46,6 @@ public class PlayerMovement : MonoBehaviour {
 
         EventManager.onPlayerDeath += ResetPlayer;
         origin = transform.position;
-
-        fastAccelDecay = (softAccel - maxAccel) / softMaxSpeed;
-        slowAccelDecay = -softAccel / (maxSpeed - softMaxSpeed);
     }
 
     // reset the player at their spawnpoint with max fuel
@@ -97,7 +92,7 @@ public class PlayerMovement : MonoBehaviour {
                     acceleration[axis] = accelCurve(Mathf.Abs(rb.velocity[axis])) * moveComponent;
                     rb.AddForce(acceleration, ForceMode2D.Impulse);
                 } else { // opposite dir
-                    acceleration[axis] = maxAccel * moveComponent;
+                    acceleration[axis] = brakeConstant * maxAccel * moveComponent;
                     rb.AddForce(acceleration, ForceMode2D.Impulse);
                 }
             }
@@ -116,11 +111,12 @@ public class PlayerMovement : MonoBehaviour {
     // helper function that defines the piecewise function that controls acceleration
     // returns the amount to accelerate
     private float accelCurve(float speed) {
-        // this is simply a piecewise linear function
+        // this is a piecewise constant function
+        Debug.Log(speed);
         if (speed <= softMaxSpeed) {
-            return fastAccelDecay * speed + maxAccel;
+            return maxAccel;
         } else if (speed <= maxSpeed) {
-            return slowAccelDecay * speed + softAccel - softMaxSpeed * slowAccelDecay;
+            return softAccel;
         } else {
             return 0;
         }

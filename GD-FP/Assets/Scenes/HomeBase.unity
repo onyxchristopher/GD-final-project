@@ -580,10 +580,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   maxFuel: 60
-  maxAccel: 1.2
-  softMaxSpeed: 8
-  softAccel: 0.2
+  maxAccel: 0.4
+  softMaxSpeed: 10
+  softAccel: 0.1
   maxSpeed: 25
+  brakeConstant: 3
 --- !u!114 &207719371
 MonoBehaviour:
   m_ObjectHideFlags: 0
