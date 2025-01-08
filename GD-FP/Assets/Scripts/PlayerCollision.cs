@@ -7,7 +7,7 @@ using MEC;
 public class PlayerCollision : MonoBehaviour {
     private int health;
     [SerializeField] private int maxHealth;
-    private int badCollisionDamage = 2;
+    [SerializeField] private int badCollisionDamage = 1;
     private bool invuln = false;
     private float invulnDuration = 2;
     private Slider healthBarSlider;
