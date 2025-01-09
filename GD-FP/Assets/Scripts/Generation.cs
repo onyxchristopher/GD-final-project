@@ -25,8 +25,8 @@ public class Generation : MonoBehaviour
 
     Vector2Int coreLocation, the location of the cluster core
 
-    NOTE: this algorithm is inefficient for tightly-packed, large-sized grids;
-    it is best used for sparse cluster sizes
+    NOTE: this algorithm will throw an exception for tightly-packed, large areas;
+    it is best used to find sparse clusters
     */
     public RectInt[] generate(
         float gridSize,
@@ -34,8 +34,7 @@ public class Generation : MonoBehaviour
         Vector2Int totalSize,
         int numClusters,
         Vector2Int clusterSize,
-        Vector2Int coreLocation,
-        int seed) {
+        int seed = 42) {
         
         // set seed
         Random.InitState(seed);
@@ -52,13 +51,13 @@ public class Generation : MonoBehaviour
             // re-randomize if there is overlap
             int iterations = 0;
             int maxIterations = 1000;
-            while (checkOverlap(clusters, numClusters, rect) || iterations > maxIterations) {
+            while (checkOverlap(clusters, i, rect) && iterations < maxIterations) {
                 rect = randomizeCluster(zeroRect, clusterSize);
-                iterations++
+                iterations++;
             }
             if (iterations > maxIterations) {
                 throw new InvalidOperationException(
-                    "Clustering arrangement not found.")
+                    "Clustering arrangement not found.");
             }
             clusters[i] = rect;
         }
@@ -72,7 +71,7 @@ public class Generation : MonoBehaviour
         return new RectInt(xCoord, yCoord, clusterSize.x, clusterSize.y);
     }
 
-    private bool checkOverlap(RectInt[] clusters, int numClusters, rect) {
+    private bool checkOverlap(RectInt[] clusters, int numClusters, RectInt rect) {
         bool overlap = false;
         for (int i = 0; i < numClusters; i++) {
             if (clusters[i].Overlaps(rect)) {

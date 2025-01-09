@@ -27,7 +27,7 @@ public class GameController : MonoBehaviour {
     void Start() {
         EventManager.onArtifactPickup += UpgradeAndReset;
         gen = gameObject.GetComponent<Generation>();
-        Debug.Log(gen.generate(1, Vector2.zero, Vector2Int.one, 4, Vector2Int.one, Vector2Int.zero, 42));
+        Debug.Log(gen.generate(1, Vector2.zero, Vector2Int.one, 4, Vector2Int.one));
     }
 
     public void Pause() {
