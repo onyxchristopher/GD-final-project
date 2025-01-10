@@ -864,11 +864,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: 10
-  offset: {x: 0, y: 0}
+  offset: {x: 10, y: 10}
   totalSize: {x: 30, y: 30}
-  numLargeClusters: 6
+  numLargeClusters: 8
   largeClusterSize: {x: 8, y: 8}
   coreLocation: {x: 0.5, y: 0.5}
+  coreSize: {x: 0.1, y: 0.1}
 --- !u!114 &467730943
 MonoBehaviour:
   m_ObjectHideFlags: 0
