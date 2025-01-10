@@ -5,62 +5,92 @@ using UnityEngine;
 
 public class Generation : MonoBehaviour
 {
-    [SerializeField] private float gridSize;
+    [SerializeField] private float largeGridSize;
+    [SerializeField] private float smallGridSize;
     [SerializeField] private Vector2 offset;
     [SerializeField] private Vector2 totalSize;
     [SerializeField] private int numLargeClusters;
     [SerializeField] private Vector2 largeClusterSize;
+    [SerializeField] private int numSmallClusters;
+    [SerializeField] private Vector2 smallClusterSize;
+    
     [SerializeField] private Vector2 coreLocation;
     [SerializeField] private Vector2 coreSize;
 
     public void generate() {
         // initialize the root core
-        Rect universe = new Rect(offset, totalSize * gridSize);
+        Rect universe = new Rect(offset, totalSize * largeGridSize);
         Vector2 corePosition = calculateCorePosition(universe, coreLocation);
         
-        Cluster rootCore = new Cluster(0, universe, corePosition, null);
+        Cluster root = new Cluster(0, universe, corePosition, null);
 
         // make cluster bounds
         Rect[] largeClusterRects = boundingRects(
-            gridSize, offset, totalSize, numLargeClusters, largeClusterSize, coreLocation, coreSize);
+            largeGridSize,
+            offset,
+            totalSize,
+            numLargeClusters,
+            largeClusterSize,
+            coreLocation,
+            coreSize);
         if (largeClusterRects.Length != numLargeClusters) {
             Debug.Log("Invalid parameters");
         }
 
-        // create Cluster objects
-        List<Cluster> level1Clusters = new List<Cluster>();
+        // create level 1 Cluster objects
+        Cluster[] level1Clusters = new Cluster[numLargeClusters];
         for (int i = 0; i < numLargeClusters; i++) {
-            level1Clusters.Add(
-                new Cluster(1,
+            level1Clusters[i] = new Cluster(
+                1,
                 largeClusterRects[i],
                 calculateCorePosition(largeClusterRects[i], coreLocation),
-                rootCore));
+                root);
         }
 
-        // sort Clusters in an order s.t. consecutive clusters are close together
-        Cluster[] sortedLevel1Clusters = new Cluster[numLargeClusters];
+        // order level 1 Cluster objects
+        Cluster[] orderedLevel1Clusters = orderClusters(level1Clusters, numLargeClusters, root);
 
-        List<Cluster> ordered = new List<Cluster>();
+        visualizeClusters(orderedLevel1Clusters, largeGridSize * totalSize, offset);
+
+        // level 2
+
+        Cluster[][] level2Clusters = new Cluster[numLargeClusters][];
 
         for (int i = 0; i < numLargeClusters; i++) {
-            if (i == 0) {
-                ordered = level1Clusters.OrderBy(
-                    x => (x.getCorePosition() - rootCore.getCorePosition()).magnitude
-                ).ToList();
-                sortedLevel1Clusters[0] = ordered[0];
-                /*Vector2[] dists = (from x in level1Clusters select
-                (x.getCorePosition() - rootCore.getCorePosition()).magnitude).ToArray();*/
-            } else {
-                ordered = ordered.OrderBy(
-                    x => (x.getCorePosition() - sortedLevel1Clusters[i - 1].getCorePosition()).magnitude
-                ).ToList();
-                ordered.RemoveAt(0);
-                sortedLevel1Clusters[i] = ordered[0];
-            }
-            sortedLevel1Clusters[i].setId(i);
-        }
+            // initilize subcluster array and parent
+            Cluster[] subclusters = new Cluster[numSmallClusters];
+            Cluster parent = orderedLevel1Clusters[i];
 
-        visualizeClusters(sortedLevel1Clusters, gridSize * totalSize, offset);
+            // calculate offset for rect clustering method
+            Vector2 smallOffset = parent.getCorePosition();
+            smallOffset = smallOffset - parent.getBounds().size / 2;
+
+            // get rectangles
+            Rect[] smallClusterRects = boundingRects(
+                smallGridSize,
+                smallOffset,
+                parent.getBounds().size,
+                numSmallClusters,
+                smallClusterSize,
+                coreLocation,
+                coreSize
+            );
+            if (smallClusterRects.Length != numSmallClusters) {
+                Debug.Log("Invalid parameters");
+            }
+
+            // initialize subclusters
+            for (int j = 0; j < numSmallClusters; j++) {
+                subclusters[j] = new Cluster(
+                    2,
+                    smallClusterRects[j],
+                    calculateCorePosition(smallClusterRects[j], coreLocation),
+                    parent);
+            }
+
+            // add the subcluster array to the main array
+            level2Clusters[i] = subclusters;
+        }
     }
 
     /*
@@ -181,6 +211,31 @@ public class Generation : MonoBehaviour
     // helper to calculate core position from bounds and location
     private Vector2 calculateCorePosition(Rect bounds, Vector2 coreLocation) {
         return bounds.position + Vector2.right * bounds.width * coreLocation.x + Vector2.up * bounds.height * coreLocation.y;
+    }
+
+    private Cluster[] orderClusters(Cluster[] unorderedClusters, int numClusters, Cluster root) {
+        // sort Clusters in an order s.t. consecutive clusters are close together
+        Cluster[] orderedClusters = new Cluster[numClusters];
+
+        List<Cluster> ordered = new List<Cluster>();
+
+        for (int i = 0; i < numClusters; i++) {
+            if (i == 0) {
+                ordered = unorderedClusters.OrderBy(
+                    x => (x.getCorePosition() - root.getCorePosition()).magnitude
+                ).ToList();
+                orderedClusters[0] = ordered[0];
+            } else {
+                ordered = ordered.OrderBy(
+                    x => (x.getCorePosition() - orderedClusters[i - 1].getCorePosition()).magnitude
+                ).ToList();
+                ordered.RemoveAt(0);
+                orderedClusters[i] = ordered[0];
+            }
+            orderedClusters[i].setId(i);
+        }
+
+        return orderedClusters;
     }
 
     // Debug method for visualizing clusters

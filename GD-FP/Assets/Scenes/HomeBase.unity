@@ -863,11 +863,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b4951a24aa034c2c9c0abc4a806c6cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: 10
-  offset: {x: 10, y: 10}
+  largeGridSize: 10
+  smallGridSize: 2
+  offset: {x: 0, y: 0}
   totalSize: {x: 30, y: 30}
   numLargeClusters: 8
   largeClusterSize: {x: 8, y: 8}
+  numSmallClusters: 0
+  smallClusterSize: {x: 2, y: 2}
   coreLocation: {x: 0.5, y: 0.5}
   coreSize: {x: 0.1, y: 0.1}
 --- !u!114 &467730943
