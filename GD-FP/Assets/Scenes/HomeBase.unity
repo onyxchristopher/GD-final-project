@@ -864,15 +864,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   largeGridSize: 10
-  smallGridSize: 2
-  offset: {x: 0, y: 0}
-  totalSize: {x: 30, y: 30}
+  smallGridSize: 5
+  largeOffset: {x: 0, y: 0}
+  totalSize: {x: 35, y: 35}
   numLargeClusters: 8
-  largeClusterSize: {x: 8, y: 8}
-  numSmallClusters: 0
-  smallClusterSize: {x: 2, y: 2}
+  largeClusterSize: {x: 9, y: 9}
+  numSmallClusters: 5
+  smallClusterSize: {x: 5, y: 5}
   coreLocation: {x: 0.5, y: 0.5}
-  coreSize: {x: 0.1, y: 0.1}
+  largeCoreSize: {x: 0.1, y: 0.1}
+  smallCoreSize: {x: 0.2, y: 0.2}
 --- !u!114 &467730943
 MonoBehaviour:
   m_ObjectHideFlags: 0

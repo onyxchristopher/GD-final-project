@@ -7,7 +7,7 @@ public class Generation : MonoBehaviour
 {
     [SerializeField] private float largeGridSize;
     [SerializeField] private float smallGridSize;
-    [SerializeField] private Vector2 offset;
+    [SerializeField] private Vector2 largeOffset;
     [SerializeField] private Vector2 totalSize;
     [SerializeField] private int numLargeClusters;
     [SerializeField] private Vector2 largeClusterSize;
@@ -15,11 +15,16 @@ public class Generation : MonoBehaviour
     [SerializeField] private Vector2 smallClusterSize;
     
     [SerializeField] private Vector2 coreLocation;
-    [SerializeField] private Vector2 coreSize;
+    [SerializeField] private Vector2 largeCoreSize;
+    [SerializeField] private Vector2 smallCoreSize;
 
-    public void generate() {
+    public (Cluster[], Cluster[][]) generate(int seed) {
+
+        // set seed
+        Random.InitState(seed);
+
         // initialize the root core
-        Rect universe = new Rect(offset, totalSize * largeGridSize);
+        Rect universe = new Rect(largeOffset, totalSize * largeGridSize);
         Vector2 corePosition = calculateCorePosition(universe, coreLocation);
         
         Cluster root = new Cluster(0, universe, corePosition, null);
@@ -27,15 +32,12 @@ public class Generation : MonoBehaviour
         // make cluster bounds
         Rect[] largeClusterRects = boundingRects(
             largeGridSize,
-            offset,
+            largeOffset,
             totalSize,
             numLargeClusters,
             largeClusterSize,
             coreLocation,
-            coreSize);
-        if (largeClusterRects.Length != numLargeClusters) {
-            Debug.Log("Invalid parameters");
-        }
+            largeCoreSize);
 
         // create level 1 Cluster objects
         Cluster[] level1Clusters = new Cluster[numLargeClusters];
@@ -50,11 +52,11 @@ public class Generation : MonoBehaviour
         // order level 1 Cluster objects
         Cluster[] orderedLevel1Clusters = orderClusters(level1Clusters, numLargeClusters, root);
 
-        visualizeClusters(orderedLevel1Clusters, largeGridSize * totalSize, offset);
+        visualizeClusters(orderedLevel1Clusters, largeGridSize * totalSize, largeOffset);
 
         // level 2
 
-        Cluster[][] level2Clusters = new Cluster[numLargeClusters][];
+        Cluster[][] orderedLevel2Clusters = new Cluster[numLargeClusters][];
 
         for (int i = 0; i < numLargeClusters; i++) {
             // initilize subcluster array and parent
@@ -62,22 +64,18 @@ public class Generation : MonoBehaviour
             Cluster parent = orderedLevel1Clusters[i];
 
             // calculate offset for rect clustering method
-            Vector2 smallOffset = parent.getCorePosition();
-            smallOffset = smallOffset - parent.getBounds().size / 2;
+            Vector2 smallOffset = parent.getBounds().position;
 
             // get rectangles
             Rect[] smallClusterRects = boundingRects(
                 smallGridSize,
                 smallOffset,
-                parent.getBounds().size,
+                parent.getBounds().size / smallGridSize,
                 numSmallClusters,
                 smallClusterSize,
                 coreLocation,
-                coreSize
+                smallCoreSize
             );
-            if (smallClusterRects.Length != numSmallClusters) {
-                Debug.Log("Invalid parameters");
-            }
 
             // initialize subclusters
             for (int j = 0; j < numSmallClusters; j++) {
@@ -88,9 +86,15 @@ public class Generation : MonoBehaviour
                     parent);
             }
 
+            
+
             // add the subcluster array to the main array
-            level2Clusters[i] = subclusters;
+            orderedLevel2Clusters[i] = orderClusters(subclusters, numSmallClusters, parent);
+
+            visualizeClusters(orderedLevel2Clusters[i], largeClusterSize, smallOffset);
         }
+
+        return (orderedLevel1Clusters, orderedLevel2Clusters);
     }
 
     /*
@@ -98,7 +102,7 @@ public class Generation : MonoBehaviour
     
     Vector2 offset, the offset of the grid
     
-    Vector2 totalSize, the total size of the generated area in grid-chunks
+    Vector2 boundedSize, the total size of the generated area in grid-chunks
 
     int numClusters, the number of clusters
 
@@ -107,8 +111,6 @@ public class Generation : MonoBehaviour
     Vector2 coreLocation, the normalized location of the core relative to the bottom-left
 
     Vector2 coreSize, the normalized size of the core
-
-    int seed, the random seed
 
     RETURNS randomized non-overlapping clusters
 
@@ -119,29 +121,25 @@ public class Generation : MonoBehaviour
     public Rect[] boundingRects(
         float gridSize,
         Vector2 offset,
-        Vector2 totalSize,
+        Vector2 boundedSize,
         int numClusters,
         Vector2 clusterSize,
         Vector2 coreLocation,
-        Vector2 coreSize,
-        int seed = 42) {
-        
-        // set seed
-        Random.InitState(seed);
+        Vector2 coreSize) {
 
         // initialize bounding rect
-        Rect zeroRect = new Rect(Vector2.zero, totalSize);
+        Rect zeroRect = new Rect(Vector2.zero, boundedSize);
 
         // initialize cluster array
         Rect[] clusters = new Rect[numClusters];
 
         // find core position
         Vector2 core = new Vector2(
-            totalSize.x * coreLocation.x,
-            totalSize.y * coreLocation.y);
+            boundedSize.x * coreLocation.x,
+            boundedSize.y * coreLocation.y);
 
-        float coreWidth = totalSize.x * coreSize.x;
-        float coreHeight = totalSize.y * coreSize.y;
+        float coreWidth = boundedSize.x * coreSize.x;
+        float coreHeight = boundedSize.y * coreSize.y;
 
         Rect coreBounds = new Rect(
             core.x - coreWidth / 2,
@@ -239,15 +237,15 @@ public class Generation : MonoBehaviour
     }
 
     // Debug method for visualizing clusters
-    private void visualizeClusters(Cluster[] clusters, Vector2 totalSize, Vector2 offset) {
-        Vector3 totalBottomLeft = (Vector3) offset;
-        Vector3 totalBottomRight = totalBottomLeft + totalSize.x * Vector3.right;
-        Vector3 totalTopLeft = totalBottomLeft + totalSize.y * Vector3.up;
-        Vector3 totalTopRight = totalTopLeft + totalSize.x * Vector3.right;
+    private void visualizeClusters(Cluster[] clusters, Vector2 siz, Vector2 off) {
+        /*Vector3 totalBottomLeft = (Vector3) off;
+        Vector3 totalBottomRight = totalBottomLeft + siz.x * Vector3.right;
+        Vector3 totalTopLeft = totalBottomLeft + siz.y * Vector3.up;
+        Vector3 totalTopRight = totalTopLeft + siz.x * Vector3.right;
         Debug.DrawLine(totalBottomLeft, totalBottomRight, Color.red, 20f, false);
         Debug.DrawLine(totalBottomRight, totalTopRight, Color.red, 20f, false);
         Debug.DrawLine(totalTopRight, totalTopLeft, Color.red, 20f, false);
-        Debug.DrawLine(totalTopLeft, totalBottomLeft, Color.red, 20f, false);
+        Debug.DrawLine(totalTopLeft, totalBottomLeft, Color.red, 20f, false);*/
 
         for (int i = 0; i < clusters.Length; i++) {
             Color color = Random.ColorHSV(0.3f, 0.6f, 1f, 1f, 1f, 1f, 1f, 1f);
@@ -255,13 +253,13 @@ public class Generation : MonoBehaviour
             Vector3 bottomRight = bottomLeft + Vector3.right * clusters[i].getBounds().width;
             Vector3 topLeft = bottomLeft + Vector3.up * clusters[i].getBounds().height;
             Vector3 topRight = bottomRight + Vector3.up * clusters[i].getBounds().height;
-            Debug.DrawLine(bottomLeft, bottomRight, color, 10+clusters[i].getId(), false);
-            Debug.DrawLine(bottomRight, topRight, color, 10+clusters[i].getId(), false);
-            Debug.DrawLine(topRight, topLeft, color, 10+clusters[i].getId(), false);
-            Debug.DrawLine(topLeft, bottomLeft, color, 10+clusters[i].getId(), false);
-            /*Debug.DrawLine((Vector3) clusters[i].getCorePosition(),
+            Debug.DrawLine(bottomLeft, bottomRight, color, 15+clusters[i].getId(), false);
+            Debug.DrawLine(bottomRight, topRight, color, 15+clusters[i].getId(), false);
+            Debug.DrawLine(topRight, topLeft, color, 15+clusters[i].getId(), false);
+            Debug.DrawLine(topLeft, bottomLeft, color, 15+clusters[i].getId(), false);
+            Debug.DrawLine((Vector3) clusters[i].getCorePosition(),
             (Vector3) clusters[i].getParentCore().getCorePosition(),
-            Color.white, 10+clusters[i].getId(), false);*/
+            Color.white, 10+clusters[i].getId(), false);/*
             if (i == 0) {
                 Debug.DrawLine((Vector3) clusters[0].getCorePosition(),
                 (Vector3) clusters[0].getParentCore().getCorePosition(),
@@ -270,7 +268,7 @@ public class Generation : MonoBehaviour
                 Debug.DrawLine((Vector3) clusters[i-1].getCorePosition(),
                 (Vector3) clusters[i].getCorePosition(),
                 Color.yellow, 15+clusters[i].getId(), false);
-            }
+            }*/
         }
     }
 }

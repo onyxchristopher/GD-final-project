@@ -27,7 +27,10 @@ public class GameController : MonoBehaviour {
     void Start() {
         EventManager.onArtifactPickup += UpgradeAndReset;
         gen = gameObject.GetComponent<Generation>();
-        gen.generate();
+
+        int seed = 42;
+
+        (Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
     }
 
     public void Pause() {

@@ -27,6 +27,10 @@ public class Cluster
         id = -1;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
     public Rect getBounds() {
         return bounds;
     }
