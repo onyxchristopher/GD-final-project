@@ -112,7 +112,6 @@ public class PlayerMovement : MonoBehaviour {
     // returns the amount to accelerate
     private float accelCurve(float speed) {
         // this is a piecewise constant function
-        Debug.Log(speed);
         if (speed <= softMaxSpeed) {
             return maxAccel;
         } else if (speed <= maxSpeed) {

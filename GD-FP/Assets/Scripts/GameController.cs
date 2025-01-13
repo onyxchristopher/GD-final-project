@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour {
     private GameObject bossText;
     private Slider bossHealthBar;
     private Text bossNameText;
+    private Generation gen;
 
     void Awake() {
         Screen.SetResolution(1080, 1080, true);
@@ -25,6 +26,11 @@ public class GameController : MonoBehaviour {
     
     void Start() {
         EventManager.onArtifactPickup += UpgradeAndReset;
+        gen = gameObject.GetComponent<Generation>();
+
+        int seed = 42;
+
+        (Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
     }
 
     public void Pause() {
