@@ -10,6 +10,6 @@ public class Artifact : MonoBehaviour
         if (other.tag == "Player") {
             EventManager.ArtifactPickup(id);
             Destroy(gameObject);
-        }   
+        }
     }
 }

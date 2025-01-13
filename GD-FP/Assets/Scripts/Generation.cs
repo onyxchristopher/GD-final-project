@@ -257,9 +257,11 @@ public class Generation : MonoBehaviour
             Debug.DrawLine(bottomRight, topRight, color, 15+clusters[i].getId(), false);
             Debug.DrawLine(topRight, topLeft, color, 15+clusters[i].getId(), false);
             Debug.DrawLine(topLeft, bottomLeft, color, 15+clusters[i].getId(), false);
+            /*
             Debug.DrawLine((Vector3) clusters[i].getCorePosition(),
             (Vector3) clusters[i].getParentCore().getCorePosition(),
-            Color.white, 10+clusters[i].getId(), false);/*
+            Color.white, 10+clusters[i].getId(), false);
+            */
             if (i == 0) {
                 Debug.DrawLine((Vector3) clusters[0].getCorePosition(),
                 (Vector3) clusters[0].getParentCore().getCorePosition(),
@@ -268,7 +270,7 @@ public class Generation : MonoBehaviour
                 Debug.DrawLine((Vector3) clusters[i-1].getCorePosition(),
                 (Vector3) clusters[i].getCorePosition(),
                 Color.yellow, 15+clusters[i].getId(), false);
-            }*/
+            }
         }
     }
 }

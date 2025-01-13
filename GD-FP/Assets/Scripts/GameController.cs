@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour {
     }
     
     void Start() {
-        EventManager.onArtifactPickup += UpgradeAndReset;
+        EventManager.onArtifactPickup += Upgrade;
         gen = gameObject.GetComponent<Generation>();
 
         int seed = 42;
@@ -56,7 +56,7 @@ public class GameController : MonoBehaviour {
         bossText.SetActive(false);
     }
 
-    public void UpgradeAndReset(int id) {
+    public void Upgrade(int id) {
         Timing.RunCoroutine(_ResetTimer());
     }
 
