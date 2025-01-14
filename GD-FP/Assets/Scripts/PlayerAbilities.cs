@@ -12,14 +12,14 @@ public class PlayerAbilities : MonoBehaviour
 
     // Starter settings
 
-    private float startingBladeLength = 5f;
-    private int startingBladeDamage = 5;
+    [SerializeField] private float startingBladeLength;
+    [SerializeField] private int startingBladeDamage;
 
-    private float startingTrapCooldown = 2f;
-    private int startingTrapDamage = 5;
+    [SerializeField] private float startingTrapCooldown;
+    [SerializeField] private int startingTrapDamage;
 
-    private float startingShieldCooldown = 5f;
-    private float startingShieldDuration = 1f;
+    [SerializeField] private float startingShieldCooldown;
+    [SerializeField] private float startingShieldDuration;
 
     // Current settings
     private float bladeLength;

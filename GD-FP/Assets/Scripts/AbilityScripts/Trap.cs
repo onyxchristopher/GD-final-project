@@ -9,4 +9,13 @@ public class Trap : MonoBehaviour
     public void SetDamage(int d) {
         damage = d;
     }
+
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.tag == "Damageable") {
+            if (!other.isTrigger) {
+                other.gameObject.GetComponent<Damageable>().Damage(damage);
+                Destroy(gameObject);
+            }
+        }
+    }
 }

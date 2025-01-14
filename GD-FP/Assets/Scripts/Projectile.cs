@@ -7,6 +7,8 @@ public class Projectile : MonoBehaviour
     private Rigidbody2D rb;
     private float speed = 15;
     private int damage = 4;
+
+    private Rigidbody2D playerRB;
     
     void Awake() {
         rb = GetComponent<Rigidbody2D>();
@@ -21,8 +23,11 @@ public class Projectile : MonoBehaviour
         if (other.tag == "Player") {
             EventManager.PlayerDamage(damage);
             Destroy(gameObject);
-        }
-        if (!other.isTrigger || other.tag == "Blade") {
+        } else if (other.tag == "Shield") {
+            playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
+            Vector2 diffVector = (playerRB.position - rb.position).normalized;
+            rb.velocity *= rb.velocity.magnitude * diffVector;
+        } else if (!other.isTrigger || other.tag == "Blade") {
             Destroy(gameObject);
         }
     }

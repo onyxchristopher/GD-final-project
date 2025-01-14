@@ -18,6 +18,7 @@ TagManager:
   - BossBar
   - BossText
   - Planetguard
+  - Shield
   layers:
   - Default
   - TransparentFX

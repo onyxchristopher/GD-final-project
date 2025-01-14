@@ -27,6 +27,8 @@ public class GameController : MonoBehaviour {
     
     void Start() {
         EventManager.onArtifactPickup += Upgrade;
+
+        playerAbilities = GameObject.FindWithTag("Player").GetComponent<PlayerAbilities>();
         gen = gameObject.GetComponent<Generation>();
 
         InitializeUniverse();

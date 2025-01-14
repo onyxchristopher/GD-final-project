@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour {
     private InputAction playerMove; // the player move action
 
     // Fuel system
-    private int startingMaxFuel = 40;
+    [SerializeField] private int startingMaxFuel;
     private float fuel; // current fuel level (depleted at 1/s)
     private int maxFuel; // maximum fuel
     private Slider fuelBarSlider; // slider showing fuel level
@@ -30,10 +30,7 @@ public class PlayerMovement : MonoBehaviour {
     private Vector3 origin; // the player's spawnpoint
 
     void Start() {
-        fuel = maxFuel;
         fuelBarSlider = GameObject.FindWithTag("FuelBar").GetComponent<Slider>();
-        fuelBarSlider.maxValue = maxFuel;
-        fuelBarSlider.value = fuel;
 
         rb = GetComponent<Rigidbody2D>();
 
@@ -50,6 +47,8 @@ public class PlayerMovement : MonoBehaviour {
         origin = startingOrigin;
         maxFuel = startingMaxFuel;
         SetFuel(maxFuel);
+        fuelBarSlider.maxValue = maxFuel;
+        fuelBarSlider.value = fuel;
     }
 
     // regain fuel

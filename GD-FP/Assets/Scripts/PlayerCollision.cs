@@ -6,7 +6,7 @@ using MEC;
 
 public class PlayerCollision : MonoBehaviour {
 
-    private int startingMaxHealth = 5;
+    [SerializeField] private int startingMaxHealth;
     private int health;
     private int maxHealth;
 
@@ -18,8 +18,6 @@ public class PlayerCollision : MonoBehaviour {
     
     void Start() {
         healthBarSlider = GameObject.FindWithTag("HealthBar").GetComponent<Slider>();
-        healthBarSlider.maxValue = maxHealth;
-        healthBarSlider.value = health;
 
         EventManager.onPlayerDamage += Damage;
         EventManager.onPlayerDeath += ResetPlayerHealth;
@@ -29,6 +27,8 @@ public class PlayerCollision : MonoBehaviour {
     public void InitializeHealth() {
         maxHealth = startingMaxHealth;
         SetHealth(maxHealth);
+        healthBarSlider.maxValue = maxHealth;
+        healthBarSlider.value = health;
     }
 
     void OnCollisionEnter2D(Collision2D collision) {

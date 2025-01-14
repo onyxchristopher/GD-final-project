@@ -5,12 +5,9 @@ using UnityEngine;
 public class Shield : MonoBehaviour
 {
     private float duration;
-
-    void Start() {
-        Destroy(gameObject, duration);
-    }
     
     public void SetDuration(float dur) {
         duration = dur;
+        Destroy(gameObject, duration);
     }
 }

@@ -579,9 +579,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
-  maxFuel: 60
+  startingMaxFuel: 40
   maxAccel: 0.5
-  softMaxSpeed: 10
+  softMaxSpeed: 12
   softAccel: 0.1
   maxSpeed: 25
   brakeConstant: 3
@@ -597,7 +597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6931250c3a5d44dc591058a2bcdde1d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
+  startingMaxHealth: 10
   badCollisionDamage: 1
 --- !u!114 &207719372
 MonoBehaviour:
@@ -612,7 +612,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blade: {fileID: 281569288893573339, guid: 3b8a7d2c80afd4ee9a57753a05177470, type: 3}
-  trap: {fileID: 0}
+  trap: {fileID: 1033677025869236685, guid: c8bef5848a27848c0a957d60b7e61bff, type: 3}
+  shield: {fileID: 5541807942136184757, guid: ee2417f9a320a452fbb7dd87e25d9980, type: 3}
+  startingBladeLength: 5
+  startingBladeDamage: 5
+  startingTrapCooldown: 2
+  startingTrapDamage: 5
+  startingShieldCooldown: 3
+  startingShieldDuration: 0.5
 --- !u!1 &232289865
 GameObject:
   m_ObjectHideFlags: 0
@@ -3290,7 +3297,7 @@ PrefabInstance:
     - target: {fileID: 5171839951300311729, guid: 5a50d14f0ce72435e9783f74cca39686,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 247
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5171839951300311729, guid: 5a50d14f0ce72435e9783f74cca39686,
         type: 3}
