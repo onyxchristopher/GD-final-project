@@ -26,7 +26,7 @@ public class Projectile : MonoBehaviour
         } else if (other.tag == "Shield") {
             playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
             Vector2 diffVector = (playerRB.position - rb.position).normalized;
-            rb.velocity *= rb.velocity.magnitude * diffVector;
+            rb.velocity = rb.velocity.magnitude * diffVector;
         } else if (!other.isTrigger || other.tag == "Blade") {
             Destroy(gameObject);
         }
