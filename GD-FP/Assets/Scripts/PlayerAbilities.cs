@@ -38,8 +38,13 @@ public class PlayerAbilities : MonoBehaviour
     private bool shieldUnlocked = false;
     private bool shieldOnCd = false;
 
+    // Script refs
+    private PlayerMovement pMove;
+
     void Start() {
         EventManager.onNewUniverse += InitializeAbilities;
+
+        pMove = gameObject.GetComponent<PlayerMovement>();
     }
 
     public void InitializeAbilities() {
@@ -64,6 +69,7 @@ public class PlayerAbilities : MonoBehaviour
     private void OnAction2() {
         if (trapUnlocked && !trapOnCd) {
             // move + trap
+            pMove.Dash();
             GameObject trapInstance = Instantiate(trap, transform.position, Quaternion.identity);
             trapInstance.GetComponent<Trap>().SetDamage(trapDamage);
             trapOnCd = true;
@@ -103,5 +109,4 @@ public class PlayerAbilities : MonoBehaviour
         trapUnlocked = false;
         shieldUnlocked = false;
     }
-
 }

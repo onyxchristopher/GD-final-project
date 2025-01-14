@@ -70,6 +70,10 @@ public class PlayerMovement : MonoBehaviour {
         origin = spawn;
     }
 
+    public void Dash() {
+        
+    }
+
     void FixedUpdate() {
         Vector2 moveDir = playerMove.ReadValue<Vector2>(); // get player input
         Vector2 normMoveDir = moveDir.normalized; // normalized player input vector

@@ -7,7 +7,7 @@ public class Damageable : MonoBehaviour {
 
     private GameController gameController;
     public int maxHealth;
-    public int health;
+    [HideInInspector] public int health;
     [SerializeField] private bool isBoss;
     private bool invuln = false;
     private float invulnDuration = 0.3f;
@@ -15,6 +15,7 @@ public class Damageable : MonoBehaviour {
 
     void Start() {
         gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
+        health = maxHealth;
     }
     
     public void Damage(int damage) {
