@@ -18,7 +18,7 @@ public class Generation : MonoBehaviour
     [SerializeField] private Vector2 largeCoreSize;
     [SerializeField] private Vector2 smallCoreSize;
 
-    public (Cluster[], Cluster[][]) generate(int seed) {
+    public (Cluster, Cluster[], Cluster[][]) generate(int seed) {
 
         // set seed
         Random.InitState(seed);
@@ -94,7 +94,7 @@ public class Generation : MonoBehaviour
             visualizeClusters(orderedLevel2Clusters[i], largeClusterSize, smallOffset);
         }
 
-        return (orderedLevel1Clusters, orderedLevel2Clusters);
+        return (root, orderedLevel1Clusters, orderedLevel2Clusters);
     }
 
     /*

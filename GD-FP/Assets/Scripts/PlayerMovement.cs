@@ -12,12 +12,10 @@ public class PlayerMovement : MonoBehaviour {
     private InputAction playerMove; // the player move action
 
     // Fuel system
+    private int startingMaxFuel = 40;
     private float fuel; // current fuel level (depleted at 1/s)
-    [SerializeField] private int maxFuel; // maximum fuel
+    private int maxFuel; // maximum fuel
     private Slider fuelBarSlider; // slider showing fuel level
-
-    // Script references
-    private GameController gameController;
 
     // Movement system
     [SerializeField] private float maxAccel; // acceleration at speed 0 to f (b)
@@ -28,9 +26,8 @@ public class PlayerMovement : MonoBehaviour {
 
     private bool autoDecelerate = false;
     
+    private Vector3 startingOrigin = new Vector3(0, 0.5, 0);
     private Vector3 origin; // the player's spawnpoint
-
-
 
     void Start() {
         fuel = maxFuel;
@@ -38,7 +35,6 @@ public class PlayerMovement : MonoBehaviour {
         fuelBarSlider.maxValue = maxFuel;
         fuelBarSlider.value = fuel;
 
-        gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
         rb = GetComponent<Rigidbody2D>();
 
         playerInput = GetComponent<PlayerInput>();
@@ -46,12 +42,14 @@ public class PlayerMovement : MonoBehaviour {
 
         EventManager.onPlayerDeath += ResetPlayer;
         origin = transform.position;
+
+        EventManager.onNewUniverse += InitializeMovement;
     }
 
-    // reset the player at their spawnpoint with max fuel
-    public void ResetPlayer() {
+    public void InitializeMovement() {
+        origin = startingOrigin;
+        maxFuel = startingMaxFuel;
         SetFuel(maxFuel);
-        transform.position = origin;
     }
 
     // regain fuel
@@ -61,6 +59,16 @@ public class PlayerMovement : MonoBehaviour {
             fuel = maxFuel;
         }
         fuelBarSlider.value = fuel;
+    }
+
+    // reset the player at their spawnpoint with max fuel
+    public void ResetPlayer() {
+        SetFuel(maxFuel);
+        transform.position = origin;
+    }
+
+    public void SetSpawn(Vector3 spawn) {
+        origin = spawn;
     }
 
     void FixedUpdate() {
@@ -74,7 +82,7 @@ public class PlayerMovement : MonoBehaviour {
             rb.AddForce(-normVel * speedDifference, ForceMode2D.Impulse);
         }
 
-        // if movedir is zero vector
+        // if movedir is zero vector and autodeceleration is on
         if (autoDecelerate && normMoveDir.magnitude < 0.5) {
             // if moving
             if (normVel.magnitude > 0.001) {

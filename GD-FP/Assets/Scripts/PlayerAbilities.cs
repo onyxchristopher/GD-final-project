@@ -10,21 +10,48 @@ public class PlayerAbilities : MonoBehaviour
     [SerializeField] private GameObject trap;
     [SerializeField] private GameObject shield;
 
-    // Attack settings
-    private float bladeLength = 5;
-    private int bladeDamage = 5;
-    private int trapDamage = 5;
-    private float shieldDuration = 1f;
+    // Starter settings
 
+    private float startingBladeLength = 5f;
+    private int startingBladeDamage = 5;
 
-    private float trapCooldown = 2f;
+    private float startingTrapCooldown = 2f;
+    private int startingTrapDamage = 5;
+
+    private float startingShieldCooldown = 5f;
+    private float startingShieldDuration = 1f;
+
+    // Current settings
+    private float bladeLength;
+    private int bladeDamage;
+
+    private float trapCooldown;
+    private int trapDamage;
+
+    private float shieldCooldown;
+    private float shieldDuration;
+
+    // Availability booleans
+    private bool trapUnlocked = false;
     private bool trapOnCd = false;
 
-    private float shieldCooldown = 5f;
+    private bool shieldUnlocked = false;
     private bool shieldOnCd = false;
 
     void Start() {
-        
+        EventManager.onNewUniverse += InitializeAbilities;
+    }
+
+    public void InitializeAbilities() {
+        bladeLength = startingBladeLength;
+        bladeDamage = startingBladeDamage;
+        trapCooldown = startingTrapCooldown;
+        trapDamage = startingTrapDamage;
+        shieldCooldown = startingShieldCooldown;
+        shieldDuration = startingShieldDuration;
+
+        trapUnlocked = false;
+        shieldUnlocked = false;
     }
 
     private void OnAction1() {
@@ -35,7 +62,7 @@ public class PlayerAbilities : MonoBehaviour
     }
 
     private void OnAction2() {
-        if (!trapOnCd) {
+        if (trapUnlocked && !trapOnCd) {
             // move + trap
             GameObject trapInstance = Instantiate(trap, transform.position, Quaternion.identity);
             trapInstance.GetComponent<Trap>().SetDamage(trapDamage);
@@ -45,13 +72,21 @@ public class PlayerAbilities : MonoBehaviour
     }
 
     private void OnAction3() {
-        if (!shieldOnCd) {
+        if (shieldUnlocked && !shieldOnCd) {
             // shield
             GameObject shieldInstance = Instantiate(shield, transform.position, Quaternion.identity, transform);
             shieldInstance.GetComponent<Shield>().SetDuration(shieldDuration);
             shieldOnCd = true;
             Timing.RunCoroutine(_ShieldCooldown());
         }
+    }
+
+    public void UnlockTrap() {
+        trapUnlocked = true;
+    }
+
+    public void UnlockShield() {
+        shieldUnlocked = true;
     }
 
     private IEnumerator<float> _TrapCooldown() {
@@ -62,6 +97,11 @@ public class PlayerAbilities : MonoBehaviour
     private IEnumerator<float> _ShieldCooldown() {
         yield return Timing.WaitForSeconds(shieldCooldown);
         shieldOnCd = false;
+    }
+
+    public void ResetAllAbilities() {
+        trapUnlocked = false;
+        shieldUnlocked = false;
     }
 
 }

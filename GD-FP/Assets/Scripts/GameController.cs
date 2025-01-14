@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour {
     private Slider bossHealthBar;
     private Text bossNameText;
     private Generation gen;
+    private PlayerAbilities playerAbilities;
 
     void Awake() {
         Screen.SetResolution(1080, 1080, true);
@@ -28,9 +29,13 @@ public class GameController : MonoBehaviour {
         EventManager.onArtifactPickup += Upgrade;
         gen = gameObject.GetComponent<Generation>();
 
-        int seed = 42;
+        InitializeUniverse();
+    }
 
-        (Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
+    void InitializeUniverse() {
+        EventManager.NewUniverse();
+        int seed = 42; // Random.Range(0, 1000000);
+        (Cluster level0, Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
     }
 
     public void Pause() {
@@ -57,7 +62,10 @@ public class GameController : MonoBehaviour {
     }
 
     public void Upgrade(int id) {
-        Timing.RunCoroutine(_ResetTimer());
+        if (id == 0) {
+            playerAbilities.UnlockTrap();
+            playerAbilities.UnlockShield();
+        }
     }
 
     private IEnumerator<float> _ResetTimer() {

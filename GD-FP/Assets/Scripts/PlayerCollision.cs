@@ -5,8 +5,11 @@ using UnityEngine.UI;
 using MEC;
 
 public class PlayerCollision : MonoBehaviour {
+
+    private int startingMaxHealth = 5;
     private int health;
-    [SerializeField] private int maxHealth;
+    private int maxHealth;
+
     [SerializeField] private int badCollisionDamage = 1;
     private bool invuln = false;
     private float invulnDuration = 2;
@@ -14,13 +17,18 @@ public class PlayerCollision : MonoBehaviour {
     
     
     void Start() {
-        health = maxHealth;
         healthBarSlider = GameObject.FindWithTag("HealthBar").GetComponent<Slider>();
         healthBarSlider.maxValue = maxHealth;
         healthBarSlider.value = health;
 
         EventManager.onPlayerDamage += Damage;
         EventManager.onPlayerDeath += ResetPlayerHealth;
+        EventManager.onNewUniverse += InitializeHealth;
+    }
+
+    public void InitializeHealth() {
+        maxHealth = startingMaxHealth;
+        SetHealth(maxHealth);
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
@@ -32,8 +40,11 @@ public class PlayerCollision : MonoBehaviour {
     public void Damage(int damage) {
         if (!invuln){
             health -= damage;
+            if (health < 0) {
+                health = 0;
+            }
             healthBarSlider.value = health;
-            if (health <= 0) {
+            if (health == 0) {
                 EventManager.PlayerDeath();
                 return;
             }
@@ -47,8 +58,11 @@ public class PlayerCollision : MonoBehaviour {
         invuln = false;
     }
 
-    public void ResetPlayerHealth() {
-        health = maxHealth;
+    public void SetHealth(int healthToGain) {
+        health += healthToGain;
+        if (health >= maxHealth) {
+            health = maxHealth;
+        }
         healthBarSlider.value = health;
     }
 }
