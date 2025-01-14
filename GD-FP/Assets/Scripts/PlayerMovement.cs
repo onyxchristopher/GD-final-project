@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private bool autoDecelerate = false;
     
-    private Vector3 startingOrigin = new Vector3(0, 0.5, 0);
+    private Vector3 startingOrigin = new Vector3(0, 0.5f, 0);
     private Vector3 origin; // the player's spawnpoint
 
     void Start() {
