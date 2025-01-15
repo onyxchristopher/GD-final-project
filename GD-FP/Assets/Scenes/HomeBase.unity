@@ -580,11 +580,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   startingMaxFuel: 40
-  maxAccel: 0.5
+  fastAccel: 0.5
   softMaxSpeed: 12
-  softAccel: 0.1
+  slowAccel: 0.1
   maxSpeed: 25
   brakeConstant: 3
+  dashAccel: 1
+  dashDuration: 0.5
 --- !u!114 &207719371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -618,7 +620,7 @@ MonoBehaviour:
   startingBladeDamage: 5
   startingTrapCooldown: 4
   startingTrapDamage: 5
-  startingShieldCooldown: 5
+  startingShieldCooldown: 7
   startingShieldDuration: 0.5
 --- !u!1 &232289865
 GameObject:
@@ -920,6 +922,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3525dcae76f1445b0943bb8955d90c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  upgradedBladeLength: 8
+  upgradedTrapCooldown: 2
+  upgradedShieldCooldown: 5
+  upgradedBladeDamage: 10
+  upgradedTrapDamage: 10
+  upgradedShieldDuration: 1
+  minorFuelUpgrade: 5
+  minorHealthUpgrade: 2
+  majorFuelUpgrade: 15
+  majorHealthUpgrade: 5
 --- !u!1 &491136086
 GameObject:
   m_ObjectHideFlags: 0
@@ -1305,7 +1317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d663219ddcf940e8a0ec4b170b7b1b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 16
+  id: 20
 --- !u!1 &761537592
 GameObject:
   m_ObjectHideFlags: 0

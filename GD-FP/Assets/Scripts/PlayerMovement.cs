@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using MEC;
 
 public class PlayerMovement : MonoBehaviour {
 
@@ -18,13 +19,17 @@ public class PlayerMovement : MonoBehaviour {
     private Slider fuelBarSlider; // slider showing fuel level
 
     // Movement system
-    [SerializeField] private float maxAccel; // acceleration at speed 0 to f (b)
+    [SerializeField] private float fastAccel; // acceleration at speed 0 to f (b)
     [SerializeField] private float softMaxSpeed; // the speed at which fast-accel stops (f)
-    [SerializeField] private float softAccel; // acceleration at speed f to m (d)
+    [SerializeField] private float slowAccel; // acceleration at speed f to m (d)
     [SerializeField] private float maxSpeed; // speed cap (m)
     [SerializeField] private float brakeConstant; // the multiplier for braking
 
     private bool autoDecelerate = false;
+
+    private bool dashQueued = false;
+    [SerializeField] private float dashAccel;
+    [SerializeField] private float dashDuration;
     
     private Vector3 startingOrigin = new Vector3(0, 0.5f, 0);
     private Vector3 origin; // the player's spawnpoint
@@ -75,8 +80,14 @@ public class PlayerMovement : MonoBehaviour {
         origin = spawn;
     }
 
-    public void Dash() {
-        
+    public void QueueDash() {
+        dashQueued = true; // lets FixedUpdate know not to intervene
+        Timing.RunCoroutine(_Dash());
+    }
+
+    private IEnumerator<float> _Dash() {
+        yield return Timing.WaitForSeconds(dashDuration);
+        dashQueued = false;
     }
 
     void FixedUpdate() {
@@ -86,7 +97,7 @@ public class PlayerMovement : MonoBehaviour {
 
         // check if player is over the speed limit, and limit them if so
         float speedDifference = rb.velocity.magnitude - maxSpeed;
-        if (speedDifference > 0) {
+        if (speedDifference > 0 && !dashQueued) {
             rb.AddForce(-normVel * speedDifference, ForceMode2D.Impulse);
         }
 
@@ -94,10 +105,10 @@ public class PlayerMovement : MonoBehaviour {
         if (autoDecelerate && normMoveDir.magnitude < 0.5) {
             // if moving
             if (normVel.magnitude > 0.001) {
-                rb.AddForce(-normVel * maxAccel, ForceMode2D.Impulse);
+                rb.AddForce(-normVel * fastAccel, ForceMode2D.Impulse);
             }
-        } else {
-            // loop through x and y axes
+        } else if (!dashQueued) {
+            // consider x and y axes seperately
             for (int axis = 0; axis <= 1; axis++) {
                 Vector2 acceleration = Vector2.zero;
 
@@ -108,10 +119,13 @@ public class PlayerMovement : MonoBehaviour {
                     acceleration[axis] = accelCurve(Mathf.Abs(rb.velocity[axis])) * moveComponent;
                     rb.AddForce(acceleration, ForceMode2D.Impulse);
                 } else { // opposite dir
-                    acceleration[axis] = brakeConstant * maxAccel * moveComponent;
+                    acceleration[axis] = brakeConstant * fastAccel * moveComponent;
                     rb.AddForce(acceleration, ForceMode2D.Impulse);
                 }
             }
+        } else {
+            rb.AddForce(dashAccel * normVel, ForceMode2D.Impulse);
+            Debug.Log(rb.velocity.magnitude);
         }
         
         // spend fuel
@@ -129,9 +143,9 @@ public class PlayerMovement : MonoBehaviour {
     private float accelCurve(float speed) {
         // this is a piecewise constant function
         if (speed <= softMaxSpeed) {
-            return maxAccel;
+            return fastAccel;
         } else if (speed <= maxSpeed) {
-            return softAccel;
+            return slowAccel;
         } else {
             return 0;
         }

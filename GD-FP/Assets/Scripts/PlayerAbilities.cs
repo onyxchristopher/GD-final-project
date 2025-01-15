@@ -69,7 +69,7 @@ public class PlayerAbilities : MonoBehaviour
     private void OnAction2() {
         if (trapUnlocked && !trapOnCd) {
             // move + trap
-            pMove.Dash();
+            pMove.QueueDash();
             GameObject trapInstance = Instantiate(trap, transform.position, Quaternion.identity);
             trapInstance.GetComponent<Trap>().SetDamage(trapDamage);
             trapOnCd = true;

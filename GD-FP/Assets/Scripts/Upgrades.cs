@@ -14,7 +14,13 @@ public class Upgrades : MonoBehaviour
     [SerializeField] private float upgradedShieldCooldown;
     [SerializeField] private int upgradedBladeDamage;
     [SerializeField] private int upgradedTrapDamage;
-    [SerializeField] private int upgradedShieldDuration;
+    [SerializeField] private float upgradedShieldDuration;
+
+    [SerializeField] private int minorFuelUpgrade;
+    [SerializeField] private int minorHealthUpgrade;
+    [SerializeField] private int majorFuelUpgrade;
+    [SerializeField] private int majorHealthUpgrade;
+
 
     void Start()
     {
@@ -64,16 +70,16 @@ public class Upgrades : MonoBehaviour
         } else { // minor upgrades
             switch (secondDigit) {
                 case 1:
-                    playerMovement.IncreaseMaxFuel(5);
+                    playerMovement.IncreaseMaxFuel(minorFuelUpgrade);
                     break;
                 case 2:
-                    playerCollision.IncreaseMaxHealth(2);
+                    playerCollision.IncreaseMaxHealth(minorHealthUpgrade);
                     break;
                 case 3:
-                    playerMovement.IncreaseMaxFuel(10);
+                    playerMovement.IncreaseMaxFuel(majorFuelUpgrade);
                     break;
                 case 4:
-                    playerCollision.IncreaseMaxHealth(5);
+                    playerCollision.IncreaseMaxHealth(majorHealthUpgrade);
                     break;
             }
         }
