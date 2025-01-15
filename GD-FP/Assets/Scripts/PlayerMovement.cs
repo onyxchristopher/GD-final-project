@@ -60,6 +60,11 @@ public class PlayerMovement : MonoBehaviour {
         fuelBarSlider.value = fuel;
     }
 
+    public void IncreaseMaxFuel(int max) {
+        maxFuel += max;
+        fuelBarSlider.maxValue = maxFuel;
+    }
+
     // reset the player at their spawnpoint with max fuel
     public void ResetPlayer() {
         SetFuel(maxFuel);

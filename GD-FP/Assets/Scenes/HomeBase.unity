@@ -616,9 +616,9 @@ MonoBehaviour:
   shield: {fileID: 5541807942136184757, guid: ee2417f9a320a452fbb7dd87e25d9980, type: 3}
   startingBladeLength: 5
   startingBladeDamage: 5
-  startingTrapCooldown: 2
+  startingTrapCooldown: 4
   startingTrapDamage: 5
-  startingShieldCooldown: 3
+  startingShieldCooldown: 5
   startingShieldDuration: 0.5
 --- !u!1 &232289865
 GameObject:
@@ -851,6 +851,7 @@ GameObject:
   - component: {fileID: 467730944}
   - component: {fileID: 467730943}
   - component: {fileID: 467730942}
+  - component: {fileID: 467730945}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -907,6 +908,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &467730945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467730941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3525dcae76f1445b0943bb8955d90c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &491136086
 GameObject:
   m_ObjectHideFlags: 0
@@ -1292,7 +1305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d663219ddcf940e8a0ec4b170b7b1b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
+  id: 16
 --- !u!1 &761537592
 GameObject:
   m_ObjectHideFlags: 0

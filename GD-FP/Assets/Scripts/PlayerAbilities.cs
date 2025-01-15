@@ -87,14 +87,6 @@ public class PlayerAbilities : MonoBehaviour
         }
     }
 
-    public void UnlockTrap() {
-        trapUnlocked = true;
-    }
-
-    public void UnlockShield() {
-        shieldUnlocked = true;
-    }
-
     private IEnumerator<float> _TrapCooldown() {
         yield return Timing.WaitForSeconds(trapCooldown);
         trapOnCd = false;
@@ -105,8 +97,35 @@ public class PlayerAbilities : MonoBehaviour
         shieldOnCd = false;
     }
 
-    public void ResetAllAbilities() {
-        trapUnlocked = false;
-        shieldUnlocked = false;
+    public void UnlockTrap() {
+        trapUnlocked = true;
+    }
+
+    public void UnlockShield() {
+        shieldUnlocked = true;
+    }
+
+    public void SetBladeLength(float length) {
+        bladeLength = length;
+    }
+
+    public void SetBladeDamage(int damage) {
+        bladeDamage = damage;
+    }
+
+    public void SetTrapCooldown(float cd) {
+        trapCooldown = cd;
+    }
+
+    public void SetTrapDamage(int damage) {
+        trapDamage = damage;
+    }
+
+    public void SetShieldCooldown(float cd) {
+        shieldCooldown = cd;
+    }
+
+    public void SetShieldDuration(float duration) {
+        shieldDuration = duration;
     }
 }

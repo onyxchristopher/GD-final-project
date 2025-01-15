@@ -6,14 +6,16 @@ using MEC;
 
 public class GameController : MonoBehaviour {
     
+    // Boss management
     private GameObject activeBoss;
     private int activeBossHealth;
     private GameObject bossBar;
     private GameObject bossText;
     private Slider bossHealthBar;
     private Text bossNameText;
+
+    // Script refs
     private Generation gen;
-    private PlayerAbilities playerAbilities;
 
     void Awake() {
         Screen.SetResolution(1080, 1080, true);
@@ -26,9 +28,6 @@ public class GameController : MonoBehaviour {
     }
     
     void Start() {
-        EventManager.onArtifactPickup += Upgrade;
-
-        playerAbilities = GameObject.FindWithTag("Player").GetComponent<PlayerAbilities>();
         gen = gameObject.GetComponent<Generation>();
 
         InitializeUniverse();
@@ -61,13 +60,6 @@ public class GameController : MonoBehaviour {
     public void HideBossUI() {
         bossBar.SetActive(false);
         bossText.SetActive(false);
-    }
-
-    public void Upgrade(int id) {
-        if (id == 0) {
-            playerAbilities.UnlockTrap();
-            playerAbilities.UnlockShield();
-        }
     }
 
     private IEnumerator<float> _ResetTimer() {

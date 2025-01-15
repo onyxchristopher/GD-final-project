@@ -31,6 +31,10 @@ public class PlayerCollision : MonoBehaviour {
         healthBarSlider.value = health;
     }
 
+    public void IncreaseMaxHealth(int hp) {
+        maxHealth += hp;
+    }
+
     void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy")) {
             Damage(badCollisionDamage);
