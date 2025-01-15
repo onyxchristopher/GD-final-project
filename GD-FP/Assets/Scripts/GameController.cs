@@ -6,12 +6,15 @@ using MEC;
 
 public class GameController : MonoBehaviour {
     
+    // Boss management
     private GameObject activeBoss;
     private int activeBossHealth;
     private GameObject bossBar;
     private GameObject bossText;
     private Slider bossHealthBar;
     private Text bossNameText;
+
+    // Script refs
     private Generation gen;
 
     void Awake() {
@@ -25,12 +28,15 @@ public class GameController : MonoBehaviour {
     }
     
     void Start() {
-        EventManager.onArtifactPickup += UpgradeAndReset;
         gen = gameObject.GetComponent<Generation>();
 
-        int seed = 42;
+        InitializeUniverse();
+    }
 
-        (Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
+    void InitializeUniverse() {
+        EventManager.NewUniverse();
+        int seed = 42; // Random.Range(0, 1000000);
+        (Cluster level0, Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
     }
 
     public void Pause() {
@@ -54,10 +60,6 @@ public class GameController : MonoBehaviour {
     public void HideBossUI() {
         bossBar.SetActive(false);
         bossText.SetActive(false);
-    }
-
-    public void UpgradeAndReset(int id) {
-        Timing.RunCoroutine(_ResetTimer());
     }
 
     private IEnumerator<float> _ResetTimer() {

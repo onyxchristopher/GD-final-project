@@ -24,4 +24,10 @@ public class EventManager : MonoBehaviour {
             onArtifactPickup(id);
         }
     }
+
+    public delegate void NotifyNewUniverse();
+    public static event NotifyNewUniverse onNewUniverse;
+    public static void NewUniverse() {
+        onNewUniverse?.Invoke();
+    }
 }

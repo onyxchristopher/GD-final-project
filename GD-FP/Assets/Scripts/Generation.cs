@@ -18,7 +18,7 @@ public class Generation : MonoBehaviour
     [SerializeField] private Vector2 largeCoreSize;
     [SerializeField] private Vector2 smallCoreSize;
 
-    public (Cluster[], Cluster[][]) generate(int seed) {
+    public (Cluster, Cluster[], Cluster[][]) generate(int seed) {
 
         // set seed
         Random.InitState(seed);
@@ -94,7 +94,7 @@ public class Generation : MonoBehaviour
             visualizeClusters(orderedLevel2Clusters[i], largeClusterSize, smallOffset);
         }
 
-        return (orderedLevel1Clusters, orderedLevel2Clusters);
+        return (root, orderedLevel1Clusters, orderedLevel2Clusters);
     }
 
     /*
@@ -257,9 +257,11 @@ public class Generation : MonoBehaviour
             Debug.DrawLine(bottomRight, topRight, color, 15+clusters[i].getId(), false);
             Debug.DrawLine(topRight, topLeft, color, 15+clusters[i].getId(), false);
             Debug.DrawLine(topLeft, bottomLeft, color, 15+clusters[i].getId(), false);
+            /*
             Debug.DrawLine((Vector3) clusters[i].getCorePosition(),
             (Vector3) clusters[i].getParentCore().getCorePosition(),
-            Color.white, 10+clusters[i].getId(), false);/*
+            Color.white, 10+clusters[i].getId(), false);
+            */
             if (i == 0) {
                 Debug.DrawLine((Vector3) clusters[0].getCorePosition(),
                 (Vector3) clusters[0].getParentCore().getCorePosition(),
@@ -268,7 +270,7 @@ public class Generation : MonoBehaviour
                 Debug.DrawLine((Vector3) clusters[i-1].getCorePosition(),
                 (Vector3) clusters[i].getCorePosition(),
                 Color.yellow, 15+clusters[i].getId(), false);
-            }*/
+            }
         }
     }
 }

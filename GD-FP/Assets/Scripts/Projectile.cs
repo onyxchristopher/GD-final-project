@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    // the projectile's rigidbody
     private Rigidbody2D rb;
+    // the projectile's speed
     private float speed = 15;
+    // the projectile's damage to the player
     private int damage = 4;
+    // how much faster the projectile is when reflected
+    [SerializeField] private float reflectScaling = 2;
+
+    private Rigidbody2D playerRB;
     
     void Awake() {
         rb = GetComponent<Rigidbody2D>();
@@ -21,8 +28,15 @@ public class Projectile : MonoBehaviour
         if (other.tag == "Player") {
             EventManager.PlayerDamage(damage);
             Destroy(gameObject);
-        }
-        if (!other.isTrigger || other.tag == "Blade") {
+        } else if (other.tag == "Shield") {
+            playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
+            Vector2 diffVector = (rb.position - playerRB.position).normalized;
+            rb.velocity = reflectScaling * speed * diffVector;
+            gameObject.layer = LayerMask.NameToLayer("Attack");
+        } else if (!other.isTrigger && other.tag == "Damageable") {
+            other.gameObject.GetComponent<Damageable>().Damage(Mathf.RoundToInt(reflectScaling * damage));
+            Destroy(gameObject);
+        } else if (!other.isTrigger || other.tag == "Blade") {
             Destroy(gameObject);
         }
     }
