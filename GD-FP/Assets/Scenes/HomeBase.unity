@@ -585,8 +585,9 @@ MonoBehaviour:
   slowAccel: 0.1
   maxSpeed: 25
   brakeConstant: 3
-  dashAccel: 1
-  dashDuration: 0.5
+  dashSpeed: 15
+  dashAccel: 1.5
+  dashDuration: 0.6
 --- !u!114 &207719371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -618,7 +619,7 @@ MonoBehaviour:
   shield: {fileID: 5541807942136184757, guid: ee2417f9a320a452fbb7dd87e25d9980, type: 3}
   startingBladeLength: 5
   startingBladeDamage: 5
-  startingTrapCooldown: 4
+  startingTrapCooldown: 1
   startingTrapDamage: 5
   startingShieldCooldown: 7
   startingShieldDuration: 0.5

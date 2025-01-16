@@ -25,9 +25,10 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float maxSpeed; // speed cap (m)
     [SerializeField] private float brakeConstant; // the multiplier for braking
 
-    private bool autoDecelerate = false;
-
     private bool dashQueued = false;
+    private bool dashEnding = false;
+
+    [SerializeField] private float dashSpeed;
     [SerializeField] private float dashAccel;
     [SerializeField] private float dashDuration;
     
@@ -81,13 +82,36 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     public void QueueDash() {
-        dashQueued = true; // lets FixedUpdate know not to intervene
+        dashQueued = true; // lets FixedUpdate know to dash
         Timing.RunCoroutine(_Dash());
     }
 
     private IEnumerator<float> _Dash() {
-        yield return Timing.WaitForSeconds(dashDuration);
+        Vector2 normMoveDir = playerMove.ReadValue<Vector2>().normalized;
+        Vector2 normVel = rb.velocity.normalized;
+        float speed = rb.velocity.magnitude;
+
+        // if not pressing anything and moving, dash in dir
+        if (normMoveDir.magnitude < 0.5) {
+            if (speed > dashSpeed) {
+                rb.velocity = speed * normVel;
+            } else if (speed > 0.001) {
+                rb.velocity = dashSpeed * normVel;
+            }
+        } else { // pressing something
+            if (speed > dashSpeed) {
+                rb.velocity = speed * normMoveDir;
+            } else {
+                rb.velocity = dashSpeed * normMoveDir;
+            }
+            
+        }
+
+        yield return Timing.WaitForSeconds(dashDuration / 2);
+        dashEnding = true;
         dashQueued = false;
+        yield return Timing.WaitForSeconds(dashDuration / 2);
+        dashEnding = false;
     }
 
     void FixedUpdate() {
@@ -96,18 +120,12 @@ public class PlayerMovement : MonoBehaviour {
         Vector2 normVel = rb.velocity.normalized; // normalized player velocity
 
         // check if player is over the speed limit, and limit them if so
-        float speedDifference = rb.velocity.magnitude - maxSpeed;
+        /*float speedDifference = rb.velocity.magnitude - maxSpeed;
         if (speedDifference > 0 && !dashQueued) {
-            rb.AddForce(-normVel * speedDifference, ForceMode2D.Impulse);
-        }
+            rb.AddForce(-normVel * slowAccel * 2, ForceMode2D.Impulse);
+        }*/
 
-        // if movedir is zero vector and autodeceleration is on
-        if (autoDecelerate && normMoveDir.magnitude < 0.5) {
-            // if moving
-            if (normVel.magnitude > 0.001) {
-                rb.AddForce(-normVel * fastAccel, ForceMode2D.Impulse);
-            }
-        } else if (!dashQueued) {
+        if (!dashQueued && !dashEnding) {
             // consider x and y axes seperately
             for (int axis = 0; axis <= 1; axis++) {
                 Vector2 acceleration = Vector2.zero;
@@ -123,9 +141,10 @@ public class PlayerMovement : MonoBehaviour {
                     rb.AddForce(acceleration, ForceMode2D.Impulse);
                 }
             }
-        } else {
+        } else if (dashQueued) {
             rb.AddForce(dashAccel * normVel, ForceMode2D.Impulse);
-            Debug.Log(rb.velocity.magnitude);
+        } else {
+            rb.AddForce(-dashAccel * normVel, ForceMode2D.Impulse);
         }
         
         // spend fuel
