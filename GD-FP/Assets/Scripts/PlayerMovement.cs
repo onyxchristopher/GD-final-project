@@ -82,36 +82,27 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     public void QueueDash() {
-        dashQueued = true; // lets FixedUpdate know to dash
         Timing.RunCoroutine(_Dash());
     }
 
     private IEnumerator<float> _Dash() {
         Vector2 normMoveDir = playerMove.ReadValue<Vector2>().normalized;
-        Vector2 normVel = rb.velocity.normalized;
         float speed = rb.velocity.magnitude;
 
-        // if not pressing anything and moving, dash in dir
-        if (normMoveDir.magnitude < 0.5) {
-            if (speed > dashSpeed) {
-                rb.velocity = speed * normVel;
-            } else if (speed > 0.001) {
-                rb.velocity = dashSpeed * normVel;
-            }
-        } else { // pressing something
+        // if pressing anything, dash in direction of press
+        if (normMoveDir.magnitude > 0.5) {
+            dashQueued = true; // lets FixedUpdate know to dash
             if (speed > dashSpeed) {
                 rb.velocity = speed * normMoveDir;
             } else {
                 rb.velocity = dashSpeed * normMoveDir;
             }
-            
+            yield return Timing.WaitForSeconds(dashDuration / 2);
+            dashEnding = true;
+            dashQueued = false;
+            yield return Timing.WaitForSeconds(dashDuration / 2);
+            dashEnding = false;
         }
-
-        yield return Timing.WaitForSeconds(dashDuration / 2);
-        dashEnding = true;
-        dashQueued = false;
-        yield return Timing.WaitForSeconds(dashDuration / 2);
-        dashEnding = false;
     }
 
     void FixedUpdate() {
