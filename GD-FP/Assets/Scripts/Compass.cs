@@ -52,10 +52,10 @@ public class Compass : MonoBehaviour
 
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
 
+        CalculatePixelRadius(cam.pixelRect);
+
         EventManager.onArtifactPickup += UpdateProgression;
         EventManager.onEnterCluster += UpdateMinor; // TRIGGER THIS EVENT
-
-        
     }
 
     public void InitializeCompass(Cluster[] l1, Cluster[][] l2) {
@@ -73,6 +73,7 @@ public class Compass : MonoBehaviour
             GameObject minorArrow = Instantiate(compassArrow, Vector3.zero, Quaternion.identity, transform);
             minorArrowTransforms[i] = minorArrow.GetComponent<RectTransform>();
         }
+        showCompass = true;
     }
 
     private void LeavingCluster(int clusterNum) {
@@ -136,7 +137,7 @@ public class Compass : MonoBehaviour
             Vector2 majorDiff = major - playerRB.position;
             // major
             majorArrowTransform.anchoredPosition = DiffToCompassSpace(majorDiff);
-            Debug.Log(majorArrowTransform.anchoredPosition);
+            majorArrowTransform.localRotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, majorDiff));
             // minor
             if (currCluster > 0) {
                 for (int i = 0; i < minor.Count; i++) {
