@@ -42,6 +42,7 @@ public class Compass : MonoBehaviour
     // Visual elements
     [SerializeField] private GameObject compassArrow;
     private Color majorArrowColor = new Color(0, 0, 1, 0.5f);
+    private Color minorArrowColor = new Color(1, 1, 1, 0.5f);
 
     // Whether to display the compass
     private bool showCompass = false;
@@ -55,13 +56,13 @@ public class Compass : MonoBehaviour
         CalculatePixelRadius(cam.pixelRect);
 
         EventManager.onArtifactPickup += UpdateProgression;
-        EventManager.onEnterCluster += UpdateMinor; // TRIGGER THIS EVENT
+        EventManager.onEnterCluster += UpdateMinor;
     }
 
     public void InitializeCompass(Cluster[] l1, Cluster[][] l2) {
         level1 = l1;
         level2 = l2;
-        UpdateMajor(0);
+        UpdateMajor(1);
 
         // create arrows which are children of the compass
         GameObject majorArrow = Instantiate(compassArrow, Vector3.zero, Quaternion.identity, transform);
@@ -72,6 +73,7 @@ public class Compass : MonoBehaviour
         for (int i = 0; i < minorArrowTransforms.Length; i++) {
             GameObject minorArrow = Instantiate(compassArrow, Vector3.zero, Quaternion.identity, transform);
             minorArrowTransforms[i] = minorArrow.GetComponent<RectTransform>();
+            minorArrow.GetComponent<Image>().color = Color.clear;
         }
         showCompass = true;
     }
@@ -90,7 +92,8 @@ public class Compass : MonoBehaviour
             for (int i = 1; i <= level1.Length; i++) {
                 // the next goal is the first artifact that is not in the list of reached artifacts
                 if (!majorProg.Contains(i * 10)) {
-                    UpdateMajor(firstDigit);
+                    UpdateMajor(i);
+                    break;
                 }
             }
         } else { // minor
@@ -100,26 +103,35 @@ public class Compass : MonoBehaviour
     }
 
     // point to the next major or zero if not
-    private void UpdateMajor(int firstDigit) {
-        if (firstDigit < level1.Length) {
-            major = level1[firstDigit].getCorePosition();
+    private void UpdateMajor(int clusterNum) {
+        Debug.Log(clusterNum);
+        if (clusterNum < level1.Length) {
+            major = level1[clusterNum - 1].getCorePosition();
         } else {
             major = Vector2.zero;
         }
     }
 
+    // point to the minor objectives of the cluster entered
     private void UpdateMinor(int clusterNum) {
         currCluster = clusterNum;
         int clusterIndex = clusterNum - 1;
         int numMinor = level2[clusterIndex].Length;
         minor.Clear();
-        for (int i = 1; i <= numMinor; i++) {
-            if (!minorProg.Contains(clusterNum * 10 + i)) {
-                minor.Add(level2[clusterIndex][i-1].getCorePosition());
+        for (int i = 0; i < numMinor; i++) {
+            if (!minorProg.Contains(clusterNum * 10 + i + 1)) {
+                minorArrowTransforms[i].gameObject.GetComponent<Image>().color = minorArrowColor;
+                minor.Add(level2[clusterIndex][i].getCorePosition());
             }
+        }
+
+        // any remaining unused arrows set opacity 0
+        for (int i = minor.Count; i < numMinor; i++) {
+            minorArrowTransforms[i].gameObject.GetComponent<Image>().color = Color.clear;
         }
     }
 
+    // calculate radius, re-called on camera rect change
     public void CalculatePixelRadius(Rect cameraRect) {
         if (cam.aspect >= 1) { // landscape screen
             radius = cameraRect.height * cameraRatio;
@@ -128,10 +140,12 @@ public class Compass : MonoBehaviour
         }
     }
 
+    // convert a diff to a compass vector
     private Vector2 DiffToCompassSpace(Vector2 diff) {
         return radius * diff.normalized;
     }
 
+    // update compass arrows
     void Update() {
         if (showCompass) {
             Vector2 majorDiff = major - playerRB.position;
@@ -142,7 +156,8 @@ public class Compass : MonoBehaviour
             if (currCluster > 0) {
                 for (int i = 0; i < minor.Count; i++) {
                     Vector2 minorDiff = minor[i] - playerRB.position;
-
+                    minorArrowTransforms[i].anchoredPosition = DiffToCompassSpace(minorDiff);
+                    minorArrowTransforms[i].localRotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, minorDiff));
                 }
             }
         }

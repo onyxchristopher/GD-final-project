@@ -47,6 +47,7 @@ public class GameController : MonoBehaviour {
         int seed = 42; // Random.Range(0, 1000000);
         (Cluster level0, Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
         compass.InitializeCompass(level1, level2);
+        EventManager.EnterCluster(1);
     }
 
     public void Pause() {
