@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class Compass : MonoBehaviour
 {
      // the camera
     private Camera cam;
-
-    private Vector3 center;
 
     // how much of the screen the compass radius takes
     [SerializeField] private float cameraRatio;
@@ -36,27 +35,44 @@ public class Compass : MonoBehaviour
     private List<int> majorProg = new List<int>();
     private List<int> minorProg = new List<int>();
 
+    // Compass arrow references
+    private RectTransform majorArrowTransform;
+    private RectTransform[] minorArrowTransforms;
+
+    // Visual elements
+    [SerializeField] private GameObject compassArrow;
+    private Color majorArrowColor = new Color(0, 0, 1, 0.5f);
+
+    // Whether to display the compass
+    private bool showCompass = false;
+
     void Start()
     {
         cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
-        if (cam.aspect >= 1) { // landscape screen
-            radius = cam.orthographicSize * cameraRatio;
-        } else { // portrait
-            radius = cam.orthographicSize * cam.aspect * cameraRatio;
-        }
 
-        center = new Vector3(0.5f, 0.5f, 0);
-
-        playerRB = transform.parent.gameObject.GetComponent<Rigidbody2D>();
+        playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
 
         EventManager.onArtifactPickup += UpdateProgression;
-        EventManager.onEnterCluster += UpdateMinor;
+        EventManager.onEnterCluster += UpdateMinor; // TRIGGER THIS EVENT
+
+        
     }
 
     public void InitializeCompass(Cluster[] l1, Cluster[][] l2) {
         level1 = l1;
         level2 = l2;
-        major = level1[0].getCorePosition();
+        UpdateMajor(0);
+
+        // create arrows which are children of the compass
+        GameObject majorArrow = Instantiate(compassArrow, Vector3.zero, Quaternion.identity, transform);
+        majorArrowTransform = majorArrow.GetComponent<RectTransform>();
+        majorArrow.GetComponent<Image>().color = majorArrowColor;
+
+        minorArrowTransforms = new RectTransform[level2[0].Length];
+        for (int i = 0; i < minorArrowTransforms.Length; i++) {
+            GameObject minorArrow = Instantiate(compassArrow, Vector3.zero, Quaternion.identity, transform);
+            minorArrowTransforms[i] = minorArrow.GetComponent<RectTransform>();
+        }
     }
 
     private void LeavingCluster(int clusterNum) {
@@ -93,34 +109,41 @@ public class Compass : MonoBehaviour
 
     private void UpdateMinor(int clusterNum) {
         currCluster = clusterNum;
-        int clusterIndex = clusterNum + 1;
+        int clusterIndex = clusterNum - 1;
         int numMinor = level2[clusterIndex].Length;
+        minor.Clear();
         for (int i = 1; i <= numMinor; i++) {
             if (!minorProg.Contains(clusterNum * 10 + i)) {
-                minor.Add(level2[clusterIndex][i].getCorePosition());
+                minor.Add(level2[clusterIndex][i-1].getCorePosition());
             }
         }
     }
 
-    // input angle theta, coord is costheta, sintheta
-    private void calculateCoordinate(float theta) {
-        float unitX = Mathf.Cos(theta);
-        float unitY = Mathf.Sin(theta);
-        
+    public void CalculatePixelRadius(Rect cameraRect) {
+        if (cam.aspect >= 1) { // landscape screen
+            radius = cameraRect.height * cameraRatio;
+        } else { // portrait
+            radius = cameraRect.width * cameraRatio;
+        }
     }
 
     private Vector2 DiffToCompassSpace(Vector2 diff) {
-        Debug.Log(radius);
-        return radius * diff.normalized + playerRB.position;
+        return radius * diff.normalized;
     }
 
     void Update() {
-        Vector2 majorDiff = major - playerRB.position;
-        // major
-        Debug.DrawLine((Vector3) DiffToCompassSpace(majorDiff), cam.ViewportToWorldPoint(center), Color.blue, 0.25f, false);
-        // minor
-        if (currCluster > 0) {
+        if (showCompass) {
+            Vector2 majorDiff = major - playerRB.position;
+            // major
+            majorArrowTransform.anchoredPosition = DiffToCompassSpace(majorDiff);
+            Debug.Log(majorArrowTransform.anchoredPosition);
+            // minor
+            if (currCluster > 0) {
+                for (int i = 0; i < minor.Count; i++) {
+                    Vector2 minorDiff = minor[i] - playerRB.position;
 
+                }
+            }
         }
     }
 }

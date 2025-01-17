@@ -18,8 +18,12 @@ public class GameController : MonoBehaviour {
     private Generation gen;
     private Compass compass;
 
+    // Camera
+    private Camera cam;
+    private Rect cameraRect;
+    
+
     void Awake() {
-        Screen.SetResolution(1080, 1080, true);
         bossBar = GameObject.FindWithTag("BossBar");
         bossText = GameObject.FindWithTag("BossText");
         bossHealthBar = bossBar.GetComponent<Slider>();
@@ -31,8 +35,11 @@ public class GameController : MonoBehaviour {
     void Start() {
         gen = gameObject.GetComponent<Generation>();
         compass = GameObject.FindWithTag("Compass").GetComponent<Compass>();
+        cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        cameraRect = cam.pixelRect;
 
         InitializeUniverse();
+        Timing.RunCoroutine(_CameraChangeCheck(), Segment.SlowUpdate);
     }
 
     private void InitializeUniverse() {
@@ -44,6 +51,15 @@ public class GameController : MonoBehaviour {
 
     public void Pause() {
 
+    }
+
+    private IEnumerator<float> _CameraChangeCheck() {
+        if (cam.pixelRect.ToString() != cameraRect.ToString()) {
+            cameraRect = cam.pixelRect;
+            compass.CalculatePixelRadius(cameraRect);
+        }
+        yield return Timing.WaitForOneFrame;
+        Timing.RunCoroutine(_CameraChangeCheck(), Segment.SlowUpdate);
     }
 
     public void DisplayBossUI(string name) {
