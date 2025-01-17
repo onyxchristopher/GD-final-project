@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour {
 
     // Script refs
     private Generation gen;
+    private Compass compass;
 
     void Awake() {
         Screen.SetResolution(1080, 1080, true);
@@ -29,14 +30,16 @@ public class GameController : MonoBehaviour {
     
     void Start() {
         gen = gameObject.GetComponent<Generation>();
+        compass = GameObject.FindWithTag("Compass").GetComponent<Compass>();
 
         InitializeUniverse();
     }
 
-    void InitializeUniverse() {
+    private void InitializeUniverse() {
         EventManager.NewUniverse();
         int seed = 42; // Random.Range(0, 1000000);
         (Cluster level0, Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
+        compass.InitializeCompass(level1, level2);
     }
 
     public void Pause() {

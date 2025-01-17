@@ -30,4 +30,12 @@ public class EventManager : MonoBehaviour {
     public static void NewUniverse() {
         onNewUniverse?.Invoke();
     }
+
+    public delegate void NotifyEnterCluster(int clusterNum);
+    public static event NotifyEnterCluster onEnterCluster;
+    public static void EnterCluster(int clusterNum) {
+        if (onEnterCluster != null) {
+            onEnterCluster(clusterNum);
+        }
+    }
 }

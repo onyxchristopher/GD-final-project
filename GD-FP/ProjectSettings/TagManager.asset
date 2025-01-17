@@ -19,6 +19,7 @@ TagManager:
   - BossText
   - Planetguard
   - Shield
+  - Compass
   layers:
   - Default
   - TransparentFX
