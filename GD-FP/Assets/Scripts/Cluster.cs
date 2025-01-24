@@ -16,7 +16,7 @@ public class Cluster
     // the parent core
     private Cluster parentCore;
 
-    // unique id for that hierarchy level
+    // unique id among children of the same parent
     private int id;
 
     public Cluster(int lvl, Rect rect, Vector2 corePos, Cluster parent) {
@@ -47,7 +47,7 @@ public class Cluster
         return id;
     }
 
-    public void setId(int newid) {
-        id = newid;
+    public void setId(int newId) {
+        id = newId;
     }
 }

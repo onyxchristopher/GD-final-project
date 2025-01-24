@@ -104,7 +104,6 @@ public class Compass : MonoBehaviour
 
     // point to the next major or zero if not
     private void UpdateMajor(int clusterNum) {
-        Debug.Log(clusterNum);
         if (clusterNum < level1.Length) {
             major = level1[clusterNum - 1].getCorePosition();
         } else {

@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class Blade : MonoBehaviour {
     private GameObject player;
+    private float degreesToRotate = 360;
+    private float duration = 0.25f;
+    private float angularSpeed;
     private int damage;
 
     void Start() {
         player = transform.parent.gameObject;
-        Destroy(gameObject, 0.5f);
+        angularSpeed = degreesToRotate / duration;
+        Destroy(gameObject, duration);
     }
 
-    void FixedUpdate() {
-        transform.RotateAround(player.transform.position, Vector3.forward, 14.4f);
+    void Update() {
+        transform.RotateAround(player.transform.position, Vector3.forward, angularSpeed * Time.deltaTime);
     }
 
     public void SetDamage(int d) {

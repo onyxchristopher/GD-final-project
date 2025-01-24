@@ -38,4 +38,12 @@ public class EventManager : MonoBehaviour {
             onEnterCluster(clusterNum);
         }
     }
+
+    public delegate void NotifyExitCluster(int clusterNum);
+    public static event NotifyExitCluster onExitCluster;
+    public static void ExitCluster(int clusterNum) {
+        if (onExitCluster != null) {
+            onExitCluster(clusterNum);
+        }
+    }
 }

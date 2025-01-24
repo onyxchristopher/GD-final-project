@@ -11,7 +11,7 @@ public class PlayerAbilities : MonoBehaviour
     [SerializeField] private GameObject shield;
 
     // Starter settings
-
+    [SerializeField] private float startingBladeCooldown;
     [SerializeField] private float startingBladeLength;
     [SerializeField] private int startingBladeDamage;
 
@@ -22,8 +22,10 @@ public class PlayerAbilities : MonoBehaviour
     [SerializeField] private float startingShieldDuration;
 
     // Current settings
+    private float bladeCooldown;
     private float bladeLength;
     private int bladeDamage;
+    
 
     private float trapCooldown;
     private int trapDamage;
@@ -32,6 +34,8 @@ public class PlayerAbilities : MonoBehaviour
     private float shieldDuration;
 
     // Availability booleans
+    private bool bladeOnCd = false;
+
     private bool trapUnlocked = false;
     private bool trapOnCd = false;
 
@@ -48,10 +52,13 @@ public class PlayerAbilities : MonoBehaviour
     }
 
     public void InitializeAbilities() {
+        bladeCooldown = startingBladeCooldown;
         bladeLength = startingBladeLength;
         bladeDamage = startingBladeDamage;
+
         trapCooldown = startingTrapCooldown;
         trapDamage = startingTrapDamage;
+
         shieldCooldown = startingShieldCooldown;
         shieldDuration = startingShieldDuration;
 
@@ -60,9 +67,11 @@ public class PlayerAbilities : MonoBehaviour
     }
 
     private void OnAction1() {
-        if (!GameObject.FindWithTag("Blade")) {
+        if (!bladeOnCd) {
             GameObject bladeInstance = Instantiate(blade, transform.position + Vector3.up * bladeLength / 2, Quaternion.identity, transform);
             bladeInstance.GetComponent<Blade>().SetDamage(bladeDamage);
+            bladeOnCd = true;
+            Timing.RunCoroutine(_BladeCooldown());
         } 
     }
 
@@ -87,6 +96,11 @@ public class PlayerAbilities : MonoBehaviour
         }
     }
 
+    private IEnumerator<float> _BladeCooldown() {
+        yield return Timing.WaitForSeconds(bladeCooldown);
+        bladeOnCd = false;
+    }
+
     private IEnumerator<float> _TrapCooldown() {
         yield return Timing.WaitForSeconds(trapCooldown);
         trapOnCd = false;
@@ -103,6 +117,10 @@ public class PlayerAbilities : MonoBehaviour
 
     public void UnlockShield() {
         shieldUnlocked = true;
+    }
+
+    public void SetBladeCooldown(float cd) {
+        bladeCooldown = cd;
     }
 
     public void SetBladeLength(float length) {

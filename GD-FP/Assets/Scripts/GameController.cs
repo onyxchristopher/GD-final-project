@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using MEC;
 
-public class GameController : MonoBehaviour {
-    
+public class GameController : MonoBehaviour
+{    
     // Boss management
     private GameObject activeBoss;
     private int activeBossHealth;
@@ -21,6 +21,11 @@ public class GameController : MonoBehaviour {
     // Camera
     private Camera cam;
     private Rect cameraRect;
+
+    // Universe building refs
+    private GameObject universe;
+    [SerializeField] GameObject cluster;
+    [SerializeField] GameObject clusterSceneBoundary;
     
 
     void Awake() {
@@ -44,10 +49,29 @@ public class GameController : MonoBehaviour {
 
     private void InitializeUniverse() {
         EventManager.NewUniverse();
+
+        // Procedurally generate world and then initialize compass
         int seed = 42; // Random.Range(0, 1000000);
         (Cluster level0, Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
         compass.InitializeCompass(level1, level2);
-        EventManager.EnterCluster(1);
+
+        // Initialize universe and cluster objects
+        universe = new GameObject("Universe");
+        for (int i = 0; i < level1.Length; i++) {
+            Vector2 boundingSize = level1[i].getBounds().size;
+            Vector3 corePos = (Vector3) level1[i].getCorePosition();
+
+            // instantiate cluster at core, set collider size, set name and id
+            GameObject clusterI = Instantiate(cluster, corePos, Quaternion.identity, universe.transform);
+            clusterI.GetComponent<BoxCollider2D>().size = boundingSize;
+            clusterI.name = $"Cluster{i+1}";
+            clusterI.GetComponent<ClusterBoundary>().setId(level1[i].getId());
+
+            // instantiate cluster scene boundary at core, set collider size and id
+            GameObject csb = Instantiate(clusterSceneBoundary, corePos, Quaternion.identity, clusterI.transform);
+            csb.GetComponent<BoxCollider2D>().size = boundingSize;
+            csb.GetComponent<ClusterSceneBoundary>().setId(level1[i].getId());
+        }
     }
 
     public void Pause() {
