@@ -36,7 +36,7 @@ public class Projectile : MonoBehaviour
         } else if (!other.isTrigger && other.tag == "Damageable") {
             other.gameObject.GetComponent<Damageable>().Damage(Mathf.RoundToInt(reflectScaling * damage));
             Destroy(gameObject);
-        } else if (!other.isTrigger || other.tag == "Blade") {
+        } else if (!other.isTrigger) {
             Destroy(gameObject);
         }
     }
