@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour
     // Script refs
     private Generation gen;
     private Compass compass;
+    private Scenes scenes;
 
     // Camera
     private Camera cam;
@@ -26,6 +27,9 @@ public class GameController : MonoBehaviour
     private GameObject universe;
     [SerializeField] GameObject cluster;
     [SerializeField] GameObject clusterSceneBoundary;
+
+
+    private float sceneLoadingRadius = 75;
     
 
     void Awake() {
@@ -40,6 +44,8 @@ public class GameController : MonoBehaviour
     void Start() {
         gen = gameObject.GetComponent<Generation>();
         compass = GameObject.FindWithTag("Compass").GetComponent<Compass>();
+        scenes = GameObject.FindWithTag("GameController").GetComponent<Scenes>();
+
         cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         cameraRect = cam.pixelRect;
 
@@ -67,11 +73,14 @@ public class GameController : MonoBehaviour
             clusterI.name = $"Cluster{i+1}";
             clusterI.GetComponent<ClusterBoundary>().setId(level1[i].getId());
 
-            // instantiate cluster scene boundary at core, set collider size and id
-            GameObject csb = Instantiate(clusterSceneBoundary, corePos, Quaternion.identity, clusterI.transform);
-            csb.GetComponent<BoxCollider2D>().size = boundingSize;
+            // instantiate cluster scene boundary at core, set collider size, set name and id
+            GameObject csb = Instantiate(clusterSceneBoundary, corePos, Quaternion.identity);
+            csb.GetComponent<BoxCollider2D>().size = boundingSize + Vector2.one * sceneLoadingRadius * 2;
+            csb.name = $"CSB{i+1}";
             csb.GetComponent<ClusterSceneBoundary>().setId(level1[i].getId());
         }
+
+        scenes.InitializeScenes(level1.Length, level1, level2);
     }
 
     public void Pause() {

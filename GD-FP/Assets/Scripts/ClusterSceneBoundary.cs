@@ -17,10 +17,10 @@ public class ClusterSceneBoundary : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        scenes.Load(id);
+        scenes.QueueLoad(id);
     }
 
     void OnTriggerExit2D(Collider2D other) {
-        scenes.Unload(id);
+        scenes.QueueUnload(id);
     }
 }
