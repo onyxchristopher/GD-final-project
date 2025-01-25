@@ -140,7 +140,7 @@ public class PlayerMovement : MonoBehaviour {
         }
         
         // spend fuel
-        if (moveDir != Vector2.zero) {
+        if ((moveDir != Vector2.zero) && !dashQueued && !dashEnding) {
             fuel -= Time.deltaTime; // spend 1 fuel/sec during movement
             fuelBarSlider.value = fuel;
             if (fuel <= 0) {

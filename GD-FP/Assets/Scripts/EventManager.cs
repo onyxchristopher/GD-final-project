@@ -46,4 +46,18 @@ public class EventManager : MonoBehaviour {
             onExitCluster(clusterNum);
         }
     }
+
+    public delegate void NotifyEnteringBossArea(string bossName);
+    public static event NotifyEnteringBossArea onEnterBossArea;
+    public static void EnterBossArea(string bossName) {
+        if (onEnterBossArea != null) {
+            onEnterBossArea(bossName);
+        }
+    }
+
+    public delegate void NotifyExitingBossArea();
+    public static event NotifyExitingBossArea onExitBossArea;
+    public static void ExitBossArea() {
+        onExitBossArea?.Invoke();
+    }
 }

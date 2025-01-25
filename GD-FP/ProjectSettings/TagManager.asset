@@ -21,6 +21,7 @@ TagManager:
   - Shield
   - Compass
   - Universe
+  - Messages
   layers:
   - Default
   - TransparentFX

@@ -24,6 +24,7 @@ public class PlanetguardBossEnemy : Enemy {
     private GameObject turret;
     private PlanetguardTurretEnemy turretControl;
     private Damageable damageable;
+    [SerializeField] private string bossName;
 
     // Awake encodes the enemy FSM
     void Awake() {
@@ -63,7 +64,7 @@ public class PlanetguardBossEnemy : Enemy {
         if (other.tag == "Player") {
             state = State.TRACK;
             StateTransition();
-            gameController.DisplayBossUI("Planetguard");
+            EventManager.EnterBossArea(bossName);
         }
     }
 
@@ -71,7 +72,7 @@ public class PlanetguardBossEnemy : Enemy {
         if (other.tag == "Player") {
             state = State.IDLE;
             StateTransition();
-            gameController.HideBossUI();
+            EventManager.ExitBossArea();
         }
     }
 

@@ -5,6 +5,11 @@ using UnityEngine;
 public class Trap : MonoBehaviour
 {
     private int damage;
+    private float duration = 20;
+
+    void Start() {
+        Destroy(gameObject, duration);
+    }
 
     public void SetDamage(int d) {
         damage = d;

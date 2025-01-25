@@ -51,6 +51,9 @@ public class GameController : MonoBehaviour
 
         InitializeUniverse();
         Timing.RunCoroutine(_CameraChangeCheck(), Segment.SlowUpdate);
+
+        EventManager.onEnterBossArea += DisplayBossUI;
+        EventManager.onExitBossArea += HideBossUI;
     }
 
     private void InitializeUniverse() {

@@ -12,9 +12,6 @@ public class Compass : MonoBehaviour
     // how much of the screen the compass radius takes
     [SerializeField] private float cameraRatio;
 
-    // the radius in non-rounded pixels
-    private Vector2 anchor;
-
     // First and second-level clusters
     private Cluster[] level1;
     private Cluster[][] level2;
@@ -40,9 +37,8 @@ public class Compass : MonoBehaviour
     private RectTransform[] minorArrowTransforms;
 
     // Visual elements
-    [SerializeField] private GameObject compassArrow;
-    private Color majorArrowColor = new Color(0, 0, 1, 0.5f);
-    private Color minorArrowColor = new Color(1, 1, 1, 0.5f);
+    [SerializeField] private GameObject majorCompassArrow;
+    [SerializeField] private GameObject minorCompassArrow;
 
     // Whether to display the compass
     private bool showCompass = false;
@@ -56,7 +52,10 @@ public class Compass : MonoBehaviour
         CalculateAnchorRadius(cam.pixelRect);
 
         EventManager.onArtifactPickup += UpdateProgression;
-        EventManager.onEnterCluster += UpdateMinor;
+        EventManager.onEnterCluster += EnteringCluster;
+        EventManager.onExitCluster += LeavingCluster;
+        EventManager.onEnterBossArea += HideCompass;
+        EventManager.onExitBossArea += ShowCompass;
     }
 
     public void InitializeCompass(Cluster[] l1, Cluster[][] l2) {
@@ -65,21 +64,50 @@ public class Compass : MonoBehaviour
         UpdateMajor(1);
 
         // create arrows which are children of the compass
-        GameObject majorArrow = Instantiate(compassArrow, Vector3.zero, Quaternion.identity, transform);
-        majorArrowTransform = majorArrow.GetComponent<RectTransform>();
-        majorArrow.GetComponent<Image>().color = majorArrowColor;
-
         minorArrowTransforms = new RectTransform[level2[0].Length];
         for (int i = 0; i < minorArrowTransforms.Length; i++) {
-            GameObject minorArrow = Instantiate(compassArrow, Vector3.zero, Quaternion.identity, transform);
+            GameObject minorArrow = Instantiate(minorCompassArrow, Vector3.zero, Quaternion.identity, transform);
             minorArrowTransforms[i] = minorArrow.GetComponent<RectTransform>();
             minorArrow.GetComponent<Image>().color = Color.clear;
         }
+
+        GameObject majorArrow = Instantiate(majorCompassArrow, Vector3.zero, Quaternion.identity, transform);
+        majorArrowTransform = majorArrow.GetComponent<RectTransform>();
+        majorArrow.GetComponent<Image>().color = new Color(0, 0, 1, 0.5f);
+
         showCompass = true;
+    }
+
+    private void EnteringCluster(int clusterNum) {
+        currCluster = clusterNum;
+        UpdateMinor(clusterNum, true);
     }
 
     private void LeavingCluster(int clusterNum) {
         currCluster = 0;
+        UpdateMinor(clusterNum, false);
+    }
+
+    private void HideCompass(string bossName) {
+        showCompass = false;
+        if (currCluster == 0) {
+            return;
+        }
+        for (int i = 0; i < level2[currCluster - 1].Length; i++) {
+            minorArrowTransforms[i].gameObject.GetComponent<Animator>().SetTrigger("HideCompass");
+        }
+        majorArrowTransform.gameObject.GetComponent<Animator>().SetTrigger("HideCompass");
+    }
+
+    private void ShowCompass() {
+        showCompass = true;
+        if (currCluster == 0) {
+            return;
+        }
+        for (int i = 0; i < level2[currCluster - 1].Length; i++) {
+            minorArrowTransforms[i].gameObject.GetComponent<Animator>().SetTrigger("ShowCompass");
+        }
+        majorArrowTransform.gameObject.GetComponent<Animator>().SetTrigger("ShowCompass");
     }
 
     public void UpdateProgression(int id) {
@@ -98,7 +126,7 @@ public class Compass : MonoBehaviour
             }
         } else { // minor
             minorProg.Add(id);
-            UpdateMinor(firstDigit);
+            UpdateMinor(firstDigit, true);
         }
     }
 
@@ -112,14 +140,18 @@ public class Compass : MonoBehaviour
     }
 
     // point to the minor objectives of the cluster entered
-    private void UpdateMinor(int clusterNum) {
-        currCluster = clusterNum;
+    private void UpdateMinor(int clusterNum, bool show) {
         int clusterIndex = clusterNum - 1;
         int numMinor = level2[clusterIndex].Length;
         minor.Clear();
         for (int i = 0; i < numMinor; i++) {
             if (!minorProg.Contains(clusterNum * 10 + i + 1)) {
-                minorArrowTransforms[i].gameObject.GetComponent<Image>().color = minorArrowColor;
+                if (show) {
+                    minorArrowTransforms[i].gameObject.GetComponent<Animator>().SetTrigger("ShowCompass");
+                } else {
+                    minorArrowTransforms[i].gameObject.GetComponent<Animator>().SetTrigger("HideCompass");
+                }
+                
                 minor.Add(level2[clusterIndex][i].getCorePosition());
             }
         }
