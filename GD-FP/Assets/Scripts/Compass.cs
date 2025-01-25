@@ -13,7 +13,7 @@ public class Compass : MonoBehaviour
     [SerializeField] private float cameraRatio;
 
     // the radius in non-rounded pixels
-    private float radius;
+    private Vector2 anchor;
 
     // First and second-level clusters
     private Cluster[] level1;
@@ -53,7 +53,7 @@ public class Compass : MonoBehaviour
 
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
 
-        CalculatePixelRadius(cam.pixelRect);
+        CalculateAnchorRadius(cam.pixelRect);
 
         EventManager.onArtifactPickup += UpdateProgression;
         EventManager.onEnterCluster += UpdateMinor;
@@ -131,17 +131,36 @@ public class Compass : MonoBehaviour
     }
 
     // calculate radius, re-called on camera rect change
-    public void CalculatePixelRadius(Rect cameraRect) {
-        if (cam.aspect >= 1) { // landscape screen
-            radius = cameraRect.height * cameraRatio;
+    public void CalculateAnchorRadius(Rect cameraRect) {
+        float aspect = cam.aspect;
+        RectTransform canvasTransform = transform.parent.gameObject.GetComponent<RectTransform>();
+        RectTransform compassTransform = gameObject.GetComponent<RectTransform>();
+        if (aspect >= 1) { // landscape screen
+            float insetDistance = (canvasTransform.rect.width - canvasTransform.rect.height) / 2;
+            compassTransform.SetInsetAndSizeFromParentEdge(
+                RectTransform.Edge.Left,
+                insetDistance,
+                canvasTransform.rect.width - 2 * insetDistance);
+            compassTransform.SetInsetAndSizeFromParentEdge(
+                RectTransform.Edge.Top,
+                0,
+                canvasTransform.rect.height);
         } else { // portrait
-            radius = cameraRect.width * cameraRatio;
+            float insetDistance = (canvasTransform.rect.height - canvasTransform.rect.width) / 2;
+            compassTransform.SetInsetAndSizeFromParentEdge(
+                RectTransform.Edge.Top,
+                insetDistance,
+                canvasTransform.rect.height - 2 * insetDistance);
+            compassTransform.SetInsetAndSizeFromParentEdge(
+                RectTransform.Edge.Left,
+                0,
+                canvasTransform.rect.width);
         }
     }
 
-    // convert a diff to a compass vector
     private Vector2 DiffToCompassSpace(Vector2 diff) {
-        return radius * diff.normalized;
+        // return a normalized anchor vector weighted from the center
+        return (Vector2.one / 2) + diff.normalized * cameraRatio;
     }
 
     // update compass arrows
@@ -149,13 +168,20 @@ public class Compass : MonoBehaviour
         if (showCompass) {
             Vector2 majorDiff = major - playerRB.position;
             // major
-            majorArrowTransform.anchoredPosition = DiffToCompassSpace(majorDiff);
+            Vector2 majorArrowAnchor = DiffToCompassSpace(majorDiff);
+            majorArrowTransform.anchorMin = majorArrowAnchor;
+            majorArrowTransform.anchorMax = majorArrowAnchor;
+            majorArrowTransform.anchoredPosition = Vector2.zero;
             majorArrowTransform.localRotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, majorDiff));
             // minor
             if (currCluster > 0) {
                 for (int i = 0; i < minor.Count; i++) {
                     Vector2 minorDiff = minor[i] - playerRB.position;
-                    minorArrowTransforms[i].anchoredPosition = DiffToCompassSpace(minorDiff);
+
+                    Vector2 minorArrowAnchor = DiffToCompassSpace(minorDiff);
+                    minorArrowTransforms[i].anchorMin = minorArrowAnchor;
+                    minorArrowTransforms[i].anchorMax = minorArrowAnchor;
+                    minorArrowTransforms[i].anchoredPosition = Vector2.zero;
                     minorArrowTransforms[i].localRotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, minorDiff));
                 }
             }

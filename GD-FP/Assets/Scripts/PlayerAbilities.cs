@@ -87,6 +87,8 @@ public class PlayerAbilities : MonoBehaviour
     }
 
     private void OnAction3() {
+        Debug.Log(GameObject.FindWithTag("Compass").transform.GetChild(0).GetComponent<RectTransform>().rect.yMax);
+        Debug.Log(GameObject.FindWithTag("MainCamera").GetComponent<Camera>().pixelRect);
         if (shieldUnlocked && !shieldOnCd) {
             // shield
             GameObject shieldInstance = Instantiate(shield, transform.position, Quaternion.identity, transform);

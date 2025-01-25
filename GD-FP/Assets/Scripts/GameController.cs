@@ -90,7 +90,7 @@ public class GameController : MonoBehaviour
     private IEnumerator<float> _CameraChangeCheck() {
         if (cam.pixelRect.ToString() != cameraRect.ToString()) {
             cameraRect = cam.pixelRect;
-            compass.CalculatePixelRadius(cameraRect);
+            compass.CalculateAnchorRadius(cameraRect);
         }
         yield return Timing.WaitForOneFrame;
         Timing.RunCoroutine(_CameraChangeCheck(), Segment.SlowUpdate);

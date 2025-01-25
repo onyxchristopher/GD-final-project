@@ -75,6 +75,7 @@ public class PlayerMovement : MonoBehaviour {
     public void ResetPlayer() {
         SetFuel(maxFuel);
         transform.position = origin;
+        rb.velocity = Vector2.zero;
     }
 
     public void SetSpawn(Vector3 spawn) {
