@@ -34,7 +34,9 @@ public class SentryTurretEnemy : Enemy {
         if (state == State.IDLE || firedWithinDelay) {
             return;
         }
-        Timing.RunCoroutine(_SentryFire());
+        if (gameObject != null && gameObject.activeInHierarchy) {
+            Timing.RunCoroutine(_SentryFire());
+        }
     }
 
     private IEnumerator<float> _SentryFire() {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Blade : MonoBehaviour {
     private GameObject player;
-    private float degreesToRotate = 360;
+    private float degreesToRotate = 180;
     private float duration = 0.25f;
     private float angularSpeed;
     private int damage;

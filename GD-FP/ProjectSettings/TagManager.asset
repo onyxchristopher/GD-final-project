@@ -22,6 +22,7 @@ TagManager:
   - Compass
   - Universe
   - Messages
+  - CooldownIcons
   layers:
   - Default
   - TransparentFX

@@ -29,7 +29,9 @@ public class PlanetguardTurretEnemy : Enemy {
         if (state != State.ATTACK) {
             return;
         }
-        Timing.RunCoroutine(_TurretFire());
+        if (gameObject != null && gameObject.activeInHierarchy) {
+            Timing.RunCoroutine(_TurretFire());
+        }
     }
 
     private IEnumerator<float> _TurretFire() {

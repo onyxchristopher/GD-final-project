@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour {
 
     public virtual void EnemyDeath() {
         if (fuelDrop) {
-            GameObject droppedFuel = Instantiate(fuelDrop, transform.position, Quaternion.identity);
+            GameObject droppedFuel = Instantiate(fuelDrop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
             droppedFuel.GetComponent<FuelDrop>().fuel = 10;
         }
         Destroy(gameObject);

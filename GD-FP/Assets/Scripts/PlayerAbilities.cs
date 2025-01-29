@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MEC;
 
 public class PlayerAbilities : MonoBehaviour
@@ -22,105 +23,147 @@ public class PlayerAbilities : MonoBehaviour
     [SerializeField] private float startingShieldDuration;
 
     // Current settings
-    private float bladeCooldown;
+    private float bladeCooldownTime;
     private float bladeLength;
     private int bladeDamage;
     
 
-    private float trapCooldown;
+    private float trapCooldownTime;
     private int trapDamage;
 
-    private float shieldCooldown;
+    private float shieldCooldownTime;
     private float shieldDuration;
 
-    // Availability booleans
-    private bool bladeOnCd = false;
+    // Availability
+    private float bladeCd;
 
     private bool trapUnlocked = false;
-    private bool trapOnCd = false;
+    private float trapCd;
 
     private bool shieldUnlocked = false;
-    private bool shieldOnCd = false;
+    private float shieldCd;
+
 
     // Script refs
     private PlayerMovement pMove;
+    
+    // UI refs
+    private Slider bladeCdSlider;
+    private Slider trapCdSlider;
+    private Slider shieldCdSlider;
 
     void Start() {
         EventManager.onNewUniverse += InitializeAbilities;
 
         pMove = gameObject.GetComponent<PlayerMovement>();
+        GameObject cooldownIcons = GameObject.FindWithTag("CooldownIcons");
+        bladeCdSlider = cooldownIcons.transform.GetChild(0).gameObject.GetComponent<Slider>();
+        trapCdSlider = cooldownIcons.transform.GetChild(1).gameObject.GetComponent<Slider>();
+        shieldCdSlider = cooldownIcons.transform.GetChild(2).gameObject.GetComponent<Slider>();
     }
 
     public void InitializeAbilities() {
-        bladeCooldown = startingBladeCooldown;
+        bladeCooldownTime = startingBladeCooldown;
         bladeLength = startingBladeLength;
         bladeDamage = startingBladeDamage;
 
-        trapCooldown = startingTrapCooldown;
+        trapCooldownTime = startingTrapCooldown;
         trapDamage = startingTrapDamage;
 
-        shieldCooldown = startingShieldCooldown;
+        shieldCooldownTime = startingShieldCooldown;
         shieldDuration = startingShieldDuration;
 
         trapUnlocked = false;
         shieldUnlocked = false;
+
+        bladeCdSlider.maxValue = startingBladeCooldown;
+        trapCdSlider.maxValue = startingTrapCooldown;
+        shieldCdSlider.maxValue = startingShieldCooldown;
+        
+        trapCdSlider.value = startingTrapCooldown;
+        shieldCdSlider.value = startingShieldCooldown;
+
     }
 
+    // blade
     private void OnAction1() {
-        if (!bladeOnCd) {
-            GameObject bladeInstance = Instantiate(blade, transform.position + Vector3.up * bladeLength / 2, Quaternion.identity, transform);
+        if (bladeCd <= 0) {
+            // Spawn blade and set its damage
+            GameObject bladeInstance = Instantiate(blade, transform.position, Quaternion.identity, transform);
             bladeInstance.GetComponent<Blade>().SetDamage(bladeDamage);
-            bladeOnCd = true;
+
+            // Start the cooldown
+            bladeCd = bladeCooldownTime;
             Timing.RunCoroutine(_BladeCooldown());
         } 
     }
 
+    // trap
     private void OnAction2() {
-        if (trapUnlocked && !trapOnCd) {
-            // move + trap
+        if (trapUnlocked && trapCd <= 0) {
+            // Queue the dash
             pMove.QueueDash();
+
+            // Spawn trap and set its damage
             GameObject trapInstance = Instantiate(trap, transform.position, Quaternion.identity);
             trapInstance.GetComponent<Trap>().SetDamage(trapDamage);
-            trapOnCd = true;
+
+            // Start the cooldown
+            trapCd = trapCooldownTime;
             Timing.RunCoroutine(_TrapCooldown());
         }
     }
 
+    // shield
     private void OnAction3() {
-        if (shieldUnlocked && !shieldOnCd) {
-            // shield
+        if (shieldUnlocked && shieldCd <= 0) {
+            // Spawn shield and set its duration
             GameObject shieldInstance = Instantiate(shield, transform.position, Quaternion.identity, transform);
             shieldInstance.GetComponent<Shield>().SetDuration(shieldDuration);
-            shieldOnCd = true;
+
+            // Start the cooldown
+            shieldCd = shieldCooldownTime;
             Timing.RunCoroutine(_ShieldCooldown());
         }
     }
 
     private IEnumerator<float> _BladeCooldown() {
-        yield return Timing.WaitForSeconds(bladeCooldown);
-        bladeOnCd = false;
+        while (bladeCd > 0) {
+            yield return Timing.WaitForOneFrame;
+            bladeCd -= Time.deltaTime;
+            bladeCdSlider.value = Mathf.Max(0, bladeCd);
+        }
     }
 
     private IEnumerator<float> _TrapCooldown() {
-        yield return Timing.WaitForSeconds(trapCooldown);
-        trapOnCd = false;
+        while (trapCd > 0) {
+            yield return Timing.WaitForOneFrame;
+            trapCd -= Time.deltaTime;
+            trapCdSlider.value = Mathf.Max(0, trapCd);
+        }
     }
 
     private IEnumerator<float> _ShieldCooldown() {
-        yield return Timing.WaitForSeconds(shieldCooldown);
-        shieldOnCd = false;
+        while (shieldCd > 0) {
+            yield return Timing.WaitForOneFrame;
+            shieldCd -= Time.deltaTime;
+            shieldCdSlider.value = Mathf.Max(0, shieldCd);
+        }
     }
 
     public void UnlockTrap() {
         trapUnlocked = true;
+        trapCd = 0;
     }
 
     public void UnlockShield() {
         shieldUnlocked = true;
+        shieldCd = 0;
     }
 
     public void SetBladeCooldown(float cd) {
-        bladeCooldown = cd;
+        bladeCooldownTime = cd;
+        bladeCdSlider.maxValue = cd;
     }
 
     public void SetBladeLength(float length) {
@@ -132,7 +175,8 @@ public class PlayerAbilities : MonoBehaviour
     }
 
     public void SetTrapCooldown(float cd) {
-        trapCooldown = cd;
+        trapCooldownTime = cd;
+        trapCdSlider.maxValue = cd;
     }
 
     public void SetTrapDamage(int damage) {
@@ -140,10 +184,12 @@ public class PlayerAbilities : MonoBehaviour
     }
 
     public void SetShieldCooldown(float cd) {
-        shieldCooldown = cd;
+        shieldCooldownTime = cd;
+        shieldCdSlider.maxValue = cd;
     }
 
     public void SetShieldDuration(float duration) {
         shieldDuration = duration;
     }
+    
 }
