@@ -4,7 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour {
-    [SerializeField] private GameObject fuelDrop;
+
+    // the item the enemy drops (fuel, artifact)
+    [SerializeField] protected GameObject drop;
+
+    // the enemy's spawnpoint
     [SerializeField] protected Vector2 spawnpoint;
 
     // the current state
@@ -43,10 +47,6 @@ public class Enemy : MonoBehaviour {
     }
 
     public virtual void EnemyDeath() {
-        if (fuelDrop) {
-            GameObject droppedFuel = Instantiate(fuelDrop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
-            droppedFuel.GetComponent<FuelDrop>().fuel = 10;
-        }
         Destroy(gameObject);
     }
 }

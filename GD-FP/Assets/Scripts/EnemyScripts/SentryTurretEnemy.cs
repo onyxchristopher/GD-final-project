@@ -51,6 +51,7 @@ public class SentryTurretEnemy : Enemy {
         if (other.tag == "Player") {
             state = State.ATTACK;
             StateTransition();
+            EventManager.EnterEnemyArea();
         }
     }
 
@@ -59,5 +60,13 @@ public class SentryTurretEnemy : Enemy {
             state = State.IDLE;
             StateTransition();
         }
+    }
+
+    public override void EnemyDeath() {
+        if (drop) {
+            GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
+            droppedFuel.GetComponent<FuelDrop>().fuel = 10;
+        }
+        Destroy(gameObject);
     }
 }

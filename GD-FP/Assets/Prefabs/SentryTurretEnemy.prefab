@@ -139,8 +139,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaf63ef36a039460e9c888c3d11d3c58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuelDrop: {fileID: 5922313539474208338, guid: 3007814f33983497da3e0b174119cd8c,
-    type: 3}
+  drop: {fileID: 5922313539474208338, guid: 3007814f33983497da3e0b174119cd8c, type: 3}
+  spawnpoint: {x: 0, y: 0}
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
 --- !u!114 &4187135916521462681
@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 747cb28c910544d55bb55904fa8ef295, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 8
+  maxHealth: 5
   health: 0
   isBoss: 0
   enemy: {fileID: 0}

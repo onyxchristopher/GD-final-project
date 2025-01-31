@@ -12,8 +12,14 @@ public class MessageDashboard : MonoBehaviour
     {
         textComponent = gameObject.GetComponent<Text>();
 
-        EventManager.onEnterCluster += EnterClusterMsg;
-        EventManager.onExitCluster += ExitClusterMsg;
+        EventManager.onEnterEnemyArea += WeaponTutorialMsg;
+
+        //EventManager.onEnterCluster += EnterClusterMsg;
+        //EventManager.onExitCluster += ExitClusterMsg;
+        EventManager.onEnterBossArea += ApproachingBossMsg;
+        EventManager.onBossDefeat += BossDefeatedMsg;
+        EventManager.onArtifactPickup += ArtifactPickupMsg;
+        
     }
 
     public void EnterClusterMsg(int clusterNum) {
@@ -22,6 +28,24 @@ public class MessageDashboard : MonoBehaviour
 
     public void ExitClusterMsg(int clusterNum) {
         ChangeTextTo($"Leaving cluster {clusterNum}");
+    }
+
+    public void BossDefeatedMsg(string bossName) {
+        ChangeTextTo($"{bossName} defeated.\nCongratulations! You can pick up the artifact to improve your abilities.");
+    }
+
+    public void ArtifactPickupMsg(int id) {
+        if (id == 10) {
+            ChangeTextTo("Blade length increased by 40%!\nThat's all for the demo. Thanks for playing!");
+        }
+    }
+
+    public void WeaponTutorialMsg() {
+        ChangeTextTo("Your blade ability can hit enemies.\n\nPress 1 to use it.");
+    }
+
+    public void ApproachingBossMsg(string bossName) {
+        ChangeTextTo("The artifact is guarded by a powerful foe that you must figure out how to defeat.");
     }
 
     private void ChangeTextTo(string msg) {

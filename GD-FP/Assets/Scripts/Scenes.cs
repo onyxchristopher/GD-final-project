@@ -52,7 +52,9 @@ public class Scenes : MonoBehaviour
         // Assign positions to objects
         Vector3 rootPosition = level1[clusterIndex].getCorePosition();
         root.transform.position = rootPosition;
-        root.transform.GetChild(0).gameObject.GetComponent<Enemy>().ReassignSpawn(level1[clusterIndex].getCorePosition());
+        if (id <= 1) {
+            root.transform.GetChild(0).gameObject.GetComponent<Enemy>().ReassignSpawn(level1[clusterIndex].getCorePosition());
+        }
     }
 
     public void QueueUnload(int newId) {

@@ -72,6 +72,11 @@ public class PlanetguardBossEnemy : Enemy {
     }
 
     public override void EnemyDeath() {
+        EventManager.BossDefeat(bossName);
+        if (drop) {
+            GameObject artifact = Instantiate(drop, transform.position + Vector3.up * 25, Quaternion.identity);
+            artifact.GetComponent<Artifact>().setId(10);
+        }
         Destroy(gameObject);
     }
 }

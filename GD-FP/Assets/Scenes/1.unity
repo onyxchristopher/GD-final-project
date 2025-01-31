@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f717eccd699cd4857b5d5b49f030c662, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuelDrop: {fileID: 0}
+  drop: {fileID: 0}
   spawnpoint: {x: 0, y: 0}
   damagedHull: {fileID: 21300000, guid: b8650924c356e43348c86d87224dae3d, type: 3}
 --- !u!61 &121745563
@@ -324,7 +324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f717eccd699cd4857b5d5b49f030c662, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuelDrop: {fileID: 0}
+  drop: {fileID: 0}
   spawnpoint: {x: 0, y: 0}
   damagedHull: {fileID: 21300000, guid: b8650924c356e43348c86d87224dae3d, type: 3}
 --- !u!61 &141449494
@@ -449,7 +449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d786eff164644fd980cf132d707070, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuelDrop: {fileID: 0}
+  drop: {fileID: 0}
   spawnpoint: {x: 0, y: 0}
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
@@ -724,7 +724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d786eff164644fd980cf132d707070, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuelDrop: {fileID: 0}
+  drop: {fileID: 0}
   spawnpoint: {x: 0, y: 0}
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
@@ -1097,9 +1097,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 249890f139f9f4048a9b252354a0ab06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuelDrop: {fileID: 0}
+  drop: {fileID: 5171839951300311743, guid: 5a50d14f0ce72435e9783f74cca39686, type: 3}
   spawnpoint: {x: 0, y: 0}
-  rotationVector: {x: 0, y: 0, z: 0.4}
+  rotationVector: {x: 0, y: 0, z: 0.3}
   bossName: Planetguard
 --- !u!58 &1036854089
 CircleCollider2D:
@@ -1116,7 +1116,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 65
+  m_Radius: 75
 --- !u!114 &1036854090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1365,7 +1365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d786eff164644fd980cf132d707070, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuelDrop: {fileID: 0}
+  drop: {fileID: 0}
   spawnpoint: {x: 0, y: 0}
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
@@ -1534,7 +1534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f717eccd699cd4857b5d5b49f030c662, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuelDrop: {fileID: 0}
+  drop: {fileID: 0}
   spawnpoint: {x: 0, y: 0}
   damagedHull: {fileID: 21300000, guid: b8650924c356e43348c86d87224dae3d, type: 3}
 --- !u!61 &1595327472
@@ -1659,7 +1659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d786eff164644fd980cf132d707070, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuelDrop: {fileID: 0}
+  drop: {fileID: 0}
   spawnpoint: {x: 0, y: 0}
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
@@ -1898,6 +1898,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f717eccd699cd4857b5d5b49f030c662, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuelDrop: {fileID: 0}
+  drop: {fileID: 0}
   spawnpoint: {x: 0, y: 0}
   damagedHull: {fileID: 21300000, guid: b8650924c356e43348c86d87224dae3d, type: 3}

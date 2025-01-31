@@ -24,6 +24,8 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float slowAccel; // acceleration at speed f to m (d)
     [SerializeField] private float maxSpeed; // speed cap (m)
     [SerializeField] private float brakeConstant; // the multiplier for braking
+    [SerializeField] private float decelConstant; // the multiplier for deceleration
+    [SerializeField] private float decelThreshold; // above what velocity the deceleration can occur
 
     private bool dashQueued = false;
     private bool dashEnding = false;
@@ -111,13 +113,16 @@ public class PlayerMovement : MonoBehaviour {
         Vector2 normMoveDir = moveDir.normalized; // normalized player input vector
         Vector2 normVel = rb.velocity.normalized; // normalized player velocity
 
+        Debug.Log(rb.velocity.magnitude);
+
         // check if player is over the speed limit, and limit them if so
         /*float speedDifference = rb.velocity.magnitude - maxSpeed;
         if (speedDifference > 0 && !dashQueued) {
             rb.AddForce(-normVel * slowAccel * 2, ForceMode2D.Impulse);
         }*/
-
-        if (!dashQueued && !dashEnding) {
+        if (normMoveDir == Vector2.zero && rb.velocity.magnitude > decelThreshold) {
+            rb.AddForce(-normVel * decelConstant, ForceMode2D.Impulse);
+        } else if (!dashQueued && !dashEnding) {
             // consider x and y axes seperately
             for (int axis = 0; axis <= 1; axis++) {
                 Vector2 acceleration = Vector2.zero;

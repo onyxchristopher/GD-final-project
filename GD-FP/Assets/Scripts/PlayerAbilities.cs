@@ -11,6 +11,9 @@ public class PlayerAbilities : MonoBehaviour
     [SerializeField] private GameObject trap;
     [SerializeField] private GameObject shield;
 
+    // Longer blade prefab
+    [SerializeField] private GameObject longBlade;
+
     // Starter settings
     [SerializeField] private float startingBladeCooldown;
     [SerializeField] private float startingBladeLength;
@@ -168,6 +171,7 @@ public class PlayerAbilities : MonoBehaviour
 
     public void SetBladeLength(float length) {
         bladeLength = length;
+        blade = longBlade;
     }
 
     public void SetBladeDamage(int damage) {
