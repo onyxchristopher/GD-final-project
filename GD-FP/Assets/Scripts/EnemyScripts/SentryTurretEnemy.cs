@@ -14,7 +14,6 @@ It moves back to IDLE when its trigger is exited by the player.
 public class SentryTurretEnemy : Enemy {
     [SerializeField] private GameObject projectile;
     private Rigidbody2D playerRB;
-    private Vector2 spawnpoint;
     private float delay = 2;
     private bool firedWithinDelay = false;
 
@@ -26,8 +25,8 @@ public class SentryTurretEnemy : Enemy {
 
     void Start() {
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
-        spawnpoint = new Vector2(transform.position.x, transform.position.y);
         gameObject.GetComponent<Damageable>().enemy = this;
+        ReassignSpawn(transform.position);
     }
 
     private void AttackLoop() {

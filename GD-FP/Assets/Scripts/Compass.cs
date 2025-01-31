@@ -56,6 +56,7 @@ public class Compass : MonoBehaviour
         EventManager.onExitCluster += LeavingCluster;
         EventManager.onEnterBossArea += HideCompass;
         EventManager.onExitBossArea += ShowCompass;
+        EventManager.onPlayerDeath += ShowCompass;
     }
 
     public void InitializeCompass(Cluster[] l1, Cluster[][] l2) {

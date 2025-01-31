@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
     [SerializeField] private GameObject fuelDrop;
+    [SerializeField] protected Vector2 spawnpoint;
 
     // the current state
     protected enum State {
@@ -20,6 +21,10 @@ public class Enemy : MonoBehaviour {
     void Start() {
         state = State.IDLE;
         prevState = state;
+    }
+
+    public void ReassignSpawn(Vector3 newSpawn) {
+        spawnpoint = (Vector2) newSpawn;
     }
 
     protected void StateTransition() {

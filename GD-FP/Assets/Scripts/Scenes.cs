@@ -9,10 +9,13 @@ public class Scenes : MonoBehaviour
     private int id;
 
     // References to clusters
+    private Cluster level0;
     private Cluster[] level1;
     private Cluster[][] level2;
 
-    public void InitializeScenes(int num, Cluster[] lvl1, Cluster[][] lvl2) {
+    [SerializeField] private GameObject[][] pathModules;
+
+    public void InitializeScenes(int num, Cluster lvl0, Cluster[] lvl1, Cluster[][] lvl2) {
         // Unload any loaded scene
         for (int i = 1; i <= num; i++) {
             if (SceneManager.GetSceneByBuildIndex(i).isLoaded) {
@@ -20,6 +23,7 @@ public class Scenes : MonoBehaviour
             }
         }
         // Set cluster arrays for easy access when loading
+        level0 = lvl0;
         level1 = lvl1;
         level2 = lvl2;
     }
@@ -42,12 +46,13 @@ public class Scenes : MonoBehaviour
         // Get scene's root object
         GameObject root = loadedScene.GetRootGameObjects()[0];
 
-        // Get cluster index to avoid confusion
+        // Get cluster index
         int clusterIndex = id - 1;
 
         // Assign positions to objects
         Vector3 rootPosition = level1[clusterIndex].getCorePosition();
         root.transform.position = rootPosition;
+        root.transform.GetChild(0).gameObject.GetComponent<Enemy>().ReassignSpawn(level1[clusterIndex].getCorePosition());
     }
 
     public void QueueUnload(int newId) {
@@ -58,5 +63,12 @@ public class Scenes : MonoBehaviour
     private IEnumerator _Unload() {
         SceneManager.UnloadSceneAsync(id);
         yield return null;
+    }
+
+    // Generate the path modules starting from cluster pathStartClusterID
+    public void GeneratePathModules(int pathStartClusterID) {
+        for (int i = 0; i < pathModules[pathStartClusterID].Length; i++) {
+
+        }
     }
 }

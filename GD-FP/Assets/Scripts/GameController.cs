@@ -83,7 +83,7 @@ public class GameController : MonoBehaviour
             csb.GetComponent<ClusterSceneBoundary>().setId(level1[i].getId());
         }
 
-        scenes.InitializeScenes(level1.Length, level1, level2);
+        scenes.InitializeScenes(level1.Length, level0, level1, level2);
     }
 
     public void Pause() {

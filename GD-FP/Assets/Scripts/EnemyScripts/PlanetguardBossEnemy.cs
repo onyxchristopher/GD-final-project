@@ -19,11 +19,6 @@ when this happens. Any crack becomes invulnerable when damaged.
 public class PlanetguardBossEnemy : Enemy {
     [SerializeField] private Vector3 rotationVector;
     private Rigidbody2D playerRB;
-    private Vector2 spawnpoint;
-    private GameObject turret1;
-    private GameObject turret2;
-    private PlanetguardTurretEnemy turretControl1;
-    private PlanetguardTurretEnemy turretControl2;
     private Damageable damageable;
     [SerializeField] private string bossName;
 
@@ -35,11 +30,6 @@ public class PlanetguardBossEnemy : Enemy {
 
     void Start() {
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
-        spawnpoint = new Vector2(transform.position.x, transform.position.y);
-        turret1 = transform.GetChild(1).gameObject;
-        turret2 = transform.GetChild(2).gameObject;
-        turretControl1 = turret1.GetComponent<PlanetguardTurretEnemy>();
-        turretControl2 = turret2.GetComponent<PlanetguardTurretEnemy>();
         gameObject.GetComponent<Damageable>().enemy = this;
     }
 
@@ -53,17 +43,13 @@ public class PlanetguardBossEnemy : Enemy {
     }
 
     private IEnumerator<float> _RotatePlanetguard() {
-        Vector2 dirToPlayer = playerRB.position - spawnpoint;
-
-        // rotate the closest turret towards the player
-        float angle = Vector2.SignedAngle(transform.up, dirToPlayer);
-        if ((angle > 0 && angle <= 90) || (angle > -180 && angle <= -90)) {
+        Vector2 dirToPlayer = playerRB.position - (Vector2) spawnpoint;
+        float angle = Vector2.SignedAngle(dirToPlayer, playerRB.velocity);
+        if (angle > 0) {
             transform.Rotate(rotationVector);
         } else {
             transform.Rotate(-rotationVector);
         }
-        turretControl1.location = (Vector2) turret1.transform.position;
-        turretControl2.location = (Vector2) turret2.transform.position;
 
         yield return Timing.WaitForOneFrame;
         TrackLoop();

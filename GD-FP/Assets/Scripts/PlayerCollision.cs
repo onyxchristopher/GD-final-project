@@ -51,6 +51,8 @@ public class PlayerCollision : MonoBehaviour {
             if (health == 0) {
                 EventManager.PlayerDeath();
                 return;
+            } else {
+                gameObject.GetComponent<Animator>().SetTrigger("Damaged");
             }
             invuln = true;
             Timing.RunCoroutine(_IFrames());
