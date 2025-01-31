@@ -17,8 +17,7 @@ public class CameraMovement : MonoBehaviour {
         transform.position = player.transform.position + cameraOffset;
     }
 
-    // Update is called once per frame
-    void Update() {
+    void FixedUpdate() {
         transform.position = Vector3.SmoothDamp(transform.position,
         player.transform.position + cameraOffset, ref velocity, smoothingTime);
     }

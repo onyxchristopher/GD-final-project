@@ -4,7 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour {
-    [SerializeField] private GameObject fuelDrop;
+
+    // the item the enemy drops (fuel, artifact)
+    [SerializeField] protected GameObject drop;
+
+    // the enemy's spawnpoint
+    [SerializeField] protected Vector2 spawnpoint;
 
     // the current state
     protected enum State {
@@ -20,6 +25,10 @@ public class Enemy : MonoBehaviour {
     void Start() {
         state = State.IDLE;
         prevState = state;
+    }
+
+    public void ReassignSpawn(Vector3 newSpawn) {
+        spawnpoint = (Vector2) newSpawn;
     }
 
     protected void StateTransition() {
@@ -38,10 +47,6 @@ public class Enemy : MonoBehaviour {
     }
 
     public virtual void EnemyDeath() {
-        if (fuelDrop) {
-            GameObject droppedFuel = Instantiate(fuelDrop, transform.position, Quaternion.identity);
-            droppedFuel.GetComponent<FuelDrop>().fuel = 10;
-        }
         Destroy(gameObject);
     }
 }

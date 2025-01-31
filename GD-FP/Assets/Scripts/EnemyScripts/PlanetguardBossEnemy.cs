@@ -7,7 +7,7 @@ using MEC;
 /*
 The planetguard has three states: IDLE, TRACK, and ATTACK.
 It starts in IDLE, and when its trigger is entered by the player, moves to TRACK.
-In TRACK, it rotates so its turret is facing the player. When the player is
+In TRACK, it rotates so one of its turrets is facing the player. When the player is
 in front of the turret, it moves to ATTACK. It moves back to TRACK when the player
 gets out of the line of fire, and back to IDLE if the player moves out of range.
 
@@ -17,13 +17,10 @@ when this happens. Any crack becomes invulnerable when damaged.
 */
 
 public class PlanetguardBossEnemy : Enemy {
-    private GameController gameController;
-    [SerializeField] private float rotationSpeed;
+    [SerializeField] private Vector3 rotationVector;
     private Rigidbody2D playerRB;
-    private Vector2 spawnpoint;
-    private GameObject turret;
-    private PlanetguardTurretEnemy turretControl;
     private Damageable damageable;
+    [SerializeField] private string bossName;
 
     // Awake encodes the enemy FSM
     void Awake() {
@@ -33,28 +30,27 @@ public class PlanetguardBossEnemy : Enemy {
 
     void Start() {
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
-        spawnpoint = new Vector2(transform.position.x, transform.position.y);
-        turret = transform.GetChild(1).gameObject;
-        turretControl = turret.GetComponent<PlanetguardTurretEnemy>();
         gameObject.GetComponent<Damageable>().enemy = this;
-        gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
     }
 
     private void TrackLoop() {
         if (state != State.TRACK) {
             return;
         }
-        Timing.RunCoroutine(_RotatePlanetguard(), Segment.FixedUpdate);
+        if (gameObject != null && gameObject.activeInHierarchy) {
+            Timing.RunCoroutine(_RotatePlanetguard(), Segment.FixedUpdate);
+        }
     }
 
     private IEnumerator<float> _RotatePlanetguard() {
-        Vector2 dirToPlayer = playerRB.position - spawnpoint;
-        if (Vector2.SignedAngle(-transform.up, dirToPlayer) < 0) {
-            transform.Rotate(new Vector3(0, 0, -rotationSpeed));
+        Vector2 dirToPlayer = playerRB.position - (Vector2) spawnpoint;
+        float angle = Vector2.SignedAngle(dirToPlayer, playerRB.velocity);
+        if (angle > 0) {
+            transform.Rotate(rotationVector);
         } else {
-            transform.Rotate(new Vector3(0, 0, rotationSpeed));
+            transform.Rotate(-rotationVector);
         }
-        turretControl.location = new Vector2(turret.transform.position.x, turret.transform.position.y);
+
         yield return Timing.WaitForOneFrame;
         TrackLoop();
     }
@@ -63,7 +59,7 @@ public class PlanetguardBossEnemy : Enemy {
         if (other.tag == "Player") {
             state = State.TRACK;
             StateTransition();
-            gameController.DisplayBossUI("Planetguard");
+            EventManager.EnterBossArea(bossName);
         }
     }
 
@@ -71,11 +67,16 @@ public class PlanetguardBossEnemy : Enemy {
         if (other.tag == "Player") {
             state = State.IDLE;
             StateTransition();
-            gameController.HideBossUI();
+            EventManager.ExitBossArea();
         }
     }
 
     public override void EnemyDeath() {
+        EventManager.BossDefeat(bossName);
+        if (drop) {
+            GameObject artifact = Instantiate(drop, transform.position + Vector3.up * 25, Quaternion.identity);
+            artifact.GetComponent<Artifact>().setId(10);
+        }
         Destroy(gameObject);
     }
 }

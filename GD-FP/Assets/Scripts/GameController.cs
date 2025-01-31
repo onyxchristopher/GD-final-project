@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using MEC;
 
-public class GameController : MonoBehaviour {
-    
+public class GameController : MonoBehaviour
+{    
     // Boss management
     private GameObject activeBoss;
     private int activeBossHealth;
@@ -16,9 +16,23 @@ public class GameController : MonoBehaviour {
 
     // Script refs
     private Generation gen;
+    private Compass compass;
+    private Scenes scenes;
+
+    // Camera
+    private Camera cam;
+    private Rect cameraRect;
+
+    // Universe building refs
+    private GameObject universe;
+    [SerializeField] GameObject cluster;
+    [SerializeField] GameObject clusterSceneBoundary;
+
+
+    private float sceneLoadingRadius = 75;
+    
 
     void Awake() {
-        Screen.SetResolution(1080, 1080, true);
         bossBar = GameObject.FindWithTag("BossBar");
         bossText = GameObject.FindWithTag("BossText");
         bossHealthBar = bossBar.GetComponent<Slider>();
@@ -29,18 +43,60 @@ public class GameController : MonoBehaviour {
     
     void Start() {
         gen = gameObject.GetComponent<Generation>();
+        compass = GameObject.FindWithTag("Compass").GetComponent<Compass>();
+        scenes = GameObject.FindWithTag("GameController").GetComponent<Scenes>();
+
+        cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        cameraRect = cam.pixelRect;
 
         InitializeUniverse();
+        Timing.RunCoroutine(_CameraChangeCheck(), Segment.SlowUpdate);
+
+        EventManager.onEnterBossArea += DisplayBossUI;
+        EventManager.onExitBossArea += HideBossUI;
     }
 
-    void InitializeUniverse() {
+    private void InitializeUniverse() {
         EventManager.NewUniverse();
+
+        // Procedurally generate world and then initialize compass
         int seed = 42; // Random.Range(0, 1000000);
         (Cluster level0, Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
+        compass.InitializeCompass(level1, level2);
+
+        // Initialize universe and cluster objects
+        universe = new GameObject("Universe");
+        for (int i = 0; i < level1.Length; i++) {
+            Vector2 boundingSize = level1[i].getBounds().size;
+            Vector3 corePos = (Vector3) level1[i].getCorePosition();
+
+            // instantiate cluster at core, set collider size, set name and id
+            GameObject clusterI = Instantiate(cluster, corePos, Quaternion.identity, universe.transform);
+            clusterI.GetComponent<BoxCollider2D>().size = boundingSize;
+            clusterI.name = $"Cluster{i+1}";
+            clusterI.GetComponent<ClusterBoundary>().setId(level1[i].getId());
+
+            // instantiate cluster scene boundary at core, set collider size, set name and id
+            GameObject csb = Instantiate(clusterSceneBoundary, corePos, Quaternion.identity);
+            csb.GetComponent<BoxCollider2D>().size = boundingSize + Vector2.one * sceneLoadingRadius * 2;
+            csb.name = $"CSB{i+1}";
+            csb.GetComponent<ClusterSceneBoundary>().setId(level1[i].getId());
+        }
+
+        scenes.InitializeScenes(level1.Length, level0, level1, level2);
     }
 
     public void Pause() {
 
+    }
+
+    private IEnumerator<float> _CameraChangeCheck() {
+        if (cam.pixelRect.ToString() != cameraRect.ToString()) {
+            cameraRect = cam.pixelRect;
+            compass.CalculateAnchorRadius(cameraRect);
+        }
+        yield return Timing.WaitForOneFrame;
+        Timing.RunCoroutine(_CameraChangeCheck(), Segment.SlowUpdate);
     }
 
     public void DisplayBossUI(string name) {

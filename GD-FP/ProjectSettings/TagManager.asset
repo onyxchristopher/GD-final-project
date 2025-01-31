@@ -19,6 +19,10 @@ TagManager:
   - BossText
   - Planetguard
   - Shield
+  - Compass
+  - Universe
+  - Messages
+  - CooldownIcons
   layers:
   - Default
   - TransparentFX
@@ -34,7 +38,7 @@ TagManager:
   - Enemy
   - Projectile
   - Collectible
-  - 
+  - Boundary
   - 
   - 
   - 

@@ -13,6 +13,7 @@ public class PlanetguardTurretEnemy : Enemy {
     [SerializeField] private GameObject projectile;
     private Rigidbody2D playerRB;
     public Vector2 location;
+    private bool firedWithinDelay = false;
 
     // Awake encodes the enemy FSM
     void Awake() {
@@ -26,16 +27,20 @@ public class PlanetguardTurretEnemy : Enemy {
     }
 
     private void AttackLoop() {
-        if (state != State.ATTACK) {
+        if (state != State.ATTACK || firedWithinDelay) {
             return;
         }
-        Timing.RunCoroutine(_TurretFire());
+        if (gameObject != null && gameObject.activeInHierarchy) {
+            Timing.RunCoroutine(_TurretFire());
+        }
     }
 
     private IEnumerator<float> _TurretFire() {
-        Vector2 dirToPlayer = playerRB.position - location;
+        firedWithinDelay = true;
+        Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
         Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
         yield return Timing.WaitForSeconds(0.5f);
+        firedWithinDelay = false;
         AttackLoop();
     }
 

@@ -30,4 +30,54 @@ public class EventManager : MonoBehaviour {
     public static void NewUniverse() {
         onNewUniverse?.Invoke();
     }
+
+    public delegate void NotifyEnterCluster(int clusterNum);
+    public static event NotifyEnterCluster onEnterCluster;
+    public static void EnterCluster(int clusterNum) {
+        if (onEnterCluster != null) {
+            onEnterCluster(clusterNum);
+        }
+    }
+
+    public delegate void NotifyExitCluster(int clusterNum);
+    public static event NotifyExitCluster onExitCluster;
+    public static void ExitCluster(int clusterNum) {
+        if (onExitCluster != null) {
+            onExitCluster(clusterNum);
+        }
+    }
+
+    public delegate void NotifyEnterBossArea(string bossName);
+    public static event NotifyEnterBossArea onEnterBossArea;
+    public static void EnterBossArea(string bossName) {
+        if (onEnterBossArea != null) {
+            onEnterBossArea(bossName);
+        }
+    }
+
+    public delegate void NotifyExitBossArea();
+    public static event NotifyExitBossArea onExitBossArea;
+    public static void ExitBossArea() {
+        onExitBossArea?.Invoke();
+    }
+
+    public delegate void NotifyBossDefeat(string bossName);
+    public static event NotifyBossDefeat onBossDefeat;
+    public static void BossDefeat(string bossName) {
+        if (onBossDefeat != null) {
+            onBossDefeat(bossName);
+        }
+    }
+
+    public delegate void NotifyEnterEnemyArea();
+    public static event NotifyEnterEnemyArea onEnterEnemyArea;
+    public static void EnterEnemyArea() {
+        onEnterEnemyArea?.Invoke();
+    }
+
+    public delegate void NotifyEnemyDefeat();
+    public static event NotifyEnemyDefeat onEnemyDefeat;
+    public static void EnemyDefeat() {
+        onEnemyDefeat?.Invoke();
+    }
 }
