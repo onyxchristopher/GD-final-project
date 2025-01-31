@@ -74,4 +74,10 @@ public class EventManager : MonoBehaviour {
     public static void EnterEnemyArea() {
         onEnterEnemyArea?.Invoke();
     }
+
+    public delegate void NotifyEnemyDefeat();
+    public static event NotifyEnemyDefeat onEnemyDefeat;
+    public static void EnemyDefeat() {
+        onEnemyDefeat?.Invoke();
+    }
 }

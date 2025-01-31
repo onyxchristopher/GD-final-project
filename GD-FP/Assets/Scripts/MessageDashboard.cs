@@ -7,6 +7,9 @@ public class MessageDashboard : MonoBehaviour
 {
     private Text textComponent;
 
+    private bool weaponTutorialMsgReached = false;
+    private bool fuelPickupMsgReached = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,9 +20,9 @@ public class MessageDashboard : MonoBehaviour
         //EventManager.onEnterCluster += EnterClusterMsg;
         //EventManager.onExitCluster += ExitClusterMsg;
         EventManager.onEnterBossArea += ApproachingBossMsg;
-        EventManager.onBossDefeat += BossDefeatedMsg;
+        EventManager.onBossDefeat += BossDefeatMsg;
         EventManager.onArtifactPickup += ArtifactPickupMsg;
-        
+        EventManager.onEnemyDefeat += FuelPickupMsg;
     }
 
     public void EnterClusterMsg(int clusterNum) {
@@ -30,7 +33,7 @@ public class MessageDashboard : MonoBehaviour
         ChangeTextTo($"Leaving cluster {clusterNum}");
     }
 
-    public void BossDefeatedMsg(string bossName) {
+    public void BossDefeatMsg(string bossName) {
         ChangeTextTo($"{bossName} defeated.\nCongratulations! You can pick up the artifact to improve your abilities.");
     }
 
@@ -41,7 +44,19 @@ public class MessageDashboard : MonoBehaviour
     }
 
     public void WeaponTutorialMsg() {
-        ChangeTextTo("Your blade ability can hit enemies.\n\nPress 1 to use it.");
+        if (!weaponTutorialMsgReached) {
+            ChangeTextTo("Your blade ability can hit enemies.\n\nPress 1 to use it.");
+            weaponTutorialMsgReached = true;
+        }
+        
+    }
+
+    public void FuelPickupMsg() {
+        if (!fuelPickupMsgReached) {
+            ChangeTextTo("Destroyed enemies can drop canisters that replenish some of your fuel.");
+            fuelPickupMsgReached = true;
+        }
+        
     }
 
     public void ApproachingBossMsg(string bossName) {

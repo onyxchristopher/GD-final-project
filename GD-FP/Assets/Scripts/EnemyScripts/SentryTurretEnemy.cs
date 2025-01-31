@@ -67,6 +67,7 @@ public class SentryTurretEnemy : Enemy {
             GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
             droppedFuel.GetComponent<FuelDrop>().fuel = 10;
         }
+        EventManager.EnemyDefeat();
         Destroy(gameObject);
     }
 }

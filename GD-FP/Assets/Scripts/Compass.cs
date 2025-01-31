@@ -17,7 +17,7 @@ public class Compass : MonoBehaviour
     private Cluster[][] level2;
 
     // the cluster in which the player is currently located
-    private int currCluster = 0;
+    public int currCluster = 0;
 
     // the vector location of the next major objective
     private Vector2 major;
@@ -74,7 +74,7 @@ public class Compass : MonoBehaviour
 
         GameObject majorArrow = Instantiate(majorCompassArrow, Vector3.zero, Quaternion.identity, transform);
         majorArrowTransform = majorArrow.GetComponent<RectTransform>();
-        majorArrow.GetComponent<Image>().color = new Color(0, 0, 1, 0.5f);
+        majorArrow.GetComponent<Image>().color = new Color(0, 0.5f, 1, 0.5f);
 
         showCompass = true;
     }

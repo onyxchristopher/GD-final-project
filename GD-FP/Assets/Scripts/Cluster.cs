@@ -19,12 +19,16 @@ public class Cluster
     // unique id among children of the same parent
     private int id;
 
+    // whether the cluster is complete
+    private bool complete;
+
     public Cluster(int lvl, Rect rect, Vector2 corePos, Cluster parent) {
         level = lvl;
         bounds = rect;
         corePosition = corePos;
         parentCore = parent;
         id = -1;
+        complete = false;
     }
 
     public int getLevel() {
@@ -49,5 +53,13 @@ public class Cluster
 
     public void setId(int newId) {
         id = newId;
+    }
+
+    public bool getComplete() {
+        return complete;
+    }
+
+    public void setComplete(bool completion) {
+        complete = completion;
     }
 }

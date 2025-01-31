@@ -15,6 +15,10 @@ public class Scenes : MonoBehaviour
 
     [SerializeField] private GameObject[][] pathModules;
 
+    void Start() {
+        EventManager.onBossDefeat += CompleteCluster;
+    }
+
     public void InitializeScenes(int num, Cluster lvl0, Cluster[] lvl1, Cluster[][] lvl2) {
         // Unload any loaded scene
         for (int i = 1; i <= num; i++) {
@@ -52,9 +56,17 @@ public class Scenes : MonoBehaviour
         // Assign positions to objects
         Vector3 rootPosition = level1[clusterIndex].getCorePosition();
         root.transform.position = rootPosition;
-        if (id <= 1) {
-            root.transform.GetChild(0).gameObject.GetComponent<Enemy>().ReassignSpawn(level1[clusterIndex].getCorePosition());
+
+        if (!level1[clusterIndex].getComplete()) {
+            if (id <= 1) {
+                root.transform.GetChild(0).gameObject.GetComponent<Enemy>().ReassignSpawn(level1[clusterIndex].getCorePosition());
+            }
+        } else {
+            if (id <= 1) {
+                Destroy(root.transform.GetChild(0).gameObject);
+            }
         }
+        
     }
 
     public void QueueUnload(int newId) {
@@ -67,10 +79,16 @@ public class Scenes : MonoBehaviour
         yield return null;
     }
 
+    // set the cluster as complete, avoiding boss respawn
+    public void CompleteCluster(string bossName) {
+        level1[GameObject.FindWithTag("Compass").GetComponent<Compass>().currCluster - 1].setComplete(true);
+    } 
+
+    /*
     // Generate the path modules starting from cluster pathStartClusterID
     public void GeneratePathModules(int pathStartClusterID) {
         for (int i = 0; i < pathModules[pathStartClusterID].Length; i++) {
 
         }
-    }
+    }*/
 }
