@@ -14,7 +14,7 @@ It moves back to IDLE when its trigger is exited by the player.
 public class SentryTurretEnemy : Enemy {
     [SerializeField] private GameObject projectile;
     private Rigidbody2D playerRB;
-    private float delay = 2;
+    [SerializeField] private float delay;
     private bool firedWithinDelay = false;
 
     // Awake encodes the enemy FSM

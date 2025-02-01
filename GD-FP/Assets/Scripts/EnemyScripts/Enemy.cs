@@ -9,7 +9,7 @@ public class Enemy : MonoBehaviour {
     [SerializeField] protected GameObject drop;
 
     // the enemy's spawnpoint
-    [SerializeField] protected Vector2 spawnpoint;
+    [HideInInspector] protected Vector2 spawnpoint;
 
     // the current state
     protected enum State {

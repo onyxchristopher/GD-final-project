@@ -12,7 +12,8 @@ purpose is to track the player and fire at the player.
 public class PlanetguardTurretEnemy : Enemy {
     [SerializeField] private GameObject projectile;
     private Rigidbody2D playerRB;
-    public Vector2 location;
+    [HideInInspector] public Vector2 location;
+    [SerializeField] private float delay;
     private bool firedWithinDelay = false;
 
     // Awake encodes the enemy FSM
@@ -39,7 +40,7 @@ public class PlanetguardTurretEnemy : Enemy {
         firedWithinDelay = true;
         Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
         Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
-        yield return Timing.WaitForSeconds(0.5f);
+        yield return Timing.WaitForSeconds(delay);
         firedWithinDelay = false;
         AttackLoop();
     }

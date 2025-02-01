@@ -140,9 +140,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drop: {fileID: 5922313539474208338, guid: 3007814f33983497da3e0b174119cd8c, type: 3}
-  spawnpoint: {x: 0, y: 0}
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
+  delay: 2
 --- !u!114 &4187135916521462681
 MonoBehaviour:
   m_ObjectHideFlags: 0
