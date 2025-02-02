@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MEC;
 
 public class Sound : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Sound : MonoBehaviour
     public AudioClip playerHit;
     public AudioClip enemyHit;
     public AudioClip fuelPickup;
+    public AudioClip pop;
 
     void Start() {
         EventManager.onArtifactPickup += PlayGetArtifact;
@@ -22,7 +24,13 @@ public class Sound : MonoBehaviour
     }
 
     public void PlayGetArtifact(int _) {
-        PlaySFX(getArtifact, 0.6f);
+        PlaySFX(getArtifact, 0.85f);
+        Timing.RunCoroutine(_PlayArtifactPop());
+    }
+
+    private IEnumerator<float> _PlayArtifactPop() {
+        yield return Timing.WaitForSeconds(2.25f);
+        PlaySFX(pop, 0.15f);
     }
 
     public void PlayBlade() {
