@@ -23,6 +23,7 @@ TagManager:
   - Universe
   - Messages
   - CooldownIcons
+  - Sound
   layers:
   - Default
   - TransparentFX

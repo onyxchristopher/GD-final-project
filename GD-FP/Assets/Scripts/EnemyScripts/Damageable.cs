@@ -15,6 +15,7 @@ public class Damageable : MonoBehaviour {
 
     void Start() {
         gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
+
         health = maxHealth;
     }
     
@@ -27,6 +28,8 @@ public class Damageable : MonoBehaviour {
             if (health <= 0) {
                 enemy.EnemyDeath();
             }
+            EventManager.EnemyHit();
+
             invuln = true;
             Timing.RunCoroutine(_IFrames());
         }

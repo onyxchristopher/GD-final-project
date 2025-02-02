@@ -80,4 +80,28 @@ public class EventManager : MonoBehaviour {
     public static void EnemyDefeat() {
         onEnemyDefeat?.Invoke();
     }
+
+    public delegate void NotifyBladeUse();
+    public static event NotifyBladeUse onBladeUse;
+    public static void BladeUse() {
+        onBladeUse?.Invoke();
+    }
+
+    public delegate void NotifyPlayerHit();
+    public static event NotifyPlayerHit onPlayerHit;
+    public static void PlayerHit() {
+        onPlayerHit?.Invoke();
+    }
+
+    public delegate void NotifyEnemyHit();
+    public static event NotifyEnemyHit onEnemyHit;
+    public static void EnemyHit() {
+        onEnemyHit?.Invoke();
+    }
+
+    public delegate void NotifyFuelPickup();
+    public static event NotifyFuelPickup onFuelPickup;
+    public static void FuelPickup() {
+        onFuelPickup?.Invoke();
+    }
 }

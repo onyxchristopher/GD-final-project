@@ -59,6 +59,7 @@ public class PlayerAbilities : MonoBehaviour
         EventManager.onNewUniverse += InitializeAbilities;
 
         pMove = gameObject.GetComponent<PlayerMovement>();
+
         GameObject cooldownIcons = GameObject.FindWithTag("CooldownIcons");
         bladeCdSlider = cooldownIcons.transform.GetChild(0).gameObject.GetComponent<Slider>();
         trapCdSlider = cooldownIcons.transform.GetChild(1).gameObject.GetComponent<Slider>();
@@ -94,6 +95,8 @@ public class PlayerAbilities : MonoBehaviour
             // Spawn blade and set its damage
             GameObject bladeInstance = Instantiate(blade, transform.position, Quaternion.identity, transform);
             bladeInstance.GetComponent<Blade>().SetDamage(bladeDamage);
+
+            EventManager.BladeUse();
 
             // Start the cooldown
             bladeCd = bladeCooldownTime;

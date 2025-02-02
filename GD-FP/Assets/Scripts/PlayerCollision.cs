@@ -15,7 +15,6 @@ public class PlayerCollision : MonoBehaviour {
     private float invulnDuration = 2;
     private Slider healthBarSlider;
     
-    
     void Start() {
         healthBarSlider = GameObject.FindWithTag("HealthBar").GetComponent<Slider>();
 
@@ -54,6 +53,8 @@ public class PlayerCollision : MonoBehaviour {
             } else {
                 gameObject.GetComponent<Animator>().SetTrigger("Damaged");
             }
+            EventManager.PlayerHit();
+
             invuln = true;
             Timing.RunCoroutine(_IFrames());
         }

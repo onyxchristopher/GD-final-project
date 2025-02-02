@@ -9,6 +9,7 @@ public class FuelDrop : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Player") {
             other.gameObject.GetComponent<PlayerMovement>().SetFuel(fuel);
+            EventManager.FuelPickup();
             Destroy(gameObject);
         }
     }
