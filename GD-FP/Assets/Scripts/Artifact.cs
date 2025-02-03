@@ -10,7 +10,7 @@ public class Artifact : MonoBehaviour
     private Transform playerTransform;
 
     void Start() {
-
+        playerTransform = GameObject.FindWithTag("Player").transform;
     }
 
     public void setId(int newId) {
@@ -18,21 +18,24 @@ public class Artifact : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if ((playerTransform.position - transform.position).magnitude < 10) {
             gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
             gameObject.transform.GetChild(1).GetComponent<Animator>().SetTrigger("Pickup");
+
             EventManager.ArtifactPickup(id);
+            EventManager.SetSpawn(transform.position);
+            
             Destroy(gameObject.GetComponent<BoxCollider2D>());
             Destroy(gameObject, timeToPickup + 0.5f);
-            playerTransform = other.transform;
             Timing.RunCoroutine(_MoveArtifactToPlayer());
         }
     }
 
     private IEnumerator<float> _MoveArtifactToPlayer() {
         float time = 0;
+        Vector3 pos = transform.position;
         while (time < timeToPickup) {
-            transform.position = Vector3.Lerp(transform.position, playerTransform.position, time / timeToPickup);
+            transform.position = Vector3.Lerp(pos, playerTransform.position, time / timeToPickup);
             yield return Timing.WaitForOneFrame;
             time += Time.deltaTime;
         }

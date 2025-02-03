@@ -27,6 +27,8 @@ public class SentryTurretEnemy : Enemy {
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
         gameObject.GetComponent<Damageable>().enemy = this;
         ReassignSpawn(transform.position);
+
+        EventManager.onPlayerDeath += ResetToIdle;
     }
 
     private void AttackLoop() {

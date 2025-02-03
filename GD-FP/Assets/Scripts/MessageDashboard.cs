@@ -23,6 +23,7 @@ public class MessageDashboard : MonoBehaviour
         EventManager.onBossDefeat += BossDefeatMsg;
         EventManager.onArtifactPickup += ArtifactPickupMsg;
         EventManager.onEnemyDefeat += FuelPickupMsg;
+        EventManager.onSetSpawn += CheckpointSetMsg;
     }
 
     public void EnterClusterMsg(int clusterNum) {
@@ -61,6 +62,10 @@ public class MessageDashboard : MonoBehaviour
 
     public void ApproachingBossMsg(string bossName) {
         ChangeTextTo("The artifact is guarded by a powerful foe that you must figure out how to defeat.");
+    }
+
+    public void CheckpointSetMsg(Vector3 spawn) {
+        ChangeTextTo("Checkpoint set");
     }
 
     private void ChangeTextTo(string msg) {

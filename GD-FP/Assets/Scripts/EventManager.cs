@@ -17,6 +17,12 @@ public class EventManager : MonoBehaviour {
         onPlayerDeath?.Invoke();
     }
 
+    public delegate void NotifyPlayerRespawn();
+    public static event NotifyPlayerRespawn onPlayerRespawn;
+    public static void PlayerRespawn() {
+        onPlayerRespawn?.Invoke();
+    }
+
     public delegate void NotifyArtifactPickup(int id);
     public static event NotifyArtifactPickup onArtifactPickup;
     public static void ArtifactPickup(int id) {
@@ -103,5 +109,13 @@ public class EventManager : MonoBehaviour {
     public static event NotifyFuelPickup onFuelPickup;
     public static void FuelPickup() {
         onFuelPickup?.Invoke();
+    }
+
+    public delegate void NotifySetSpawn(Vector3 spawn);
+    public static event NotifySetSpawn onSetSpawn;
+    public static void SetSpawn(Vector3 spawn) {
+        if (onSetSpawn != null) {
+            onSetSpawn(spawn);
+        }
     }
 }

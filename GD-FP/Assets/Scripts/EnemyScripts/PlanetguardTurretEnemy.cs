@@ -6,7 +6,7 @@ using MEC;
 
 /*
 The planetguard turret is a child of the boss enemy of the same name. Its
-purpose is to track the player and fire at the player. 
+purpose is to fire at the player. 
 */
 
 public class PlanetguardTurretEnemy : Enemy {
@@ -54,7 +54,7 @@ public class PlanetguardTurretEnemy : Enemy {
 
     void OnTriggerExit2D(Collider2D other) {
         if (other.tag == "Player") {
-            state = State.TRACK;
+            state = State.IDLE;
             StateTransition();
         }
     }

@@ -46,6 +46,11 @@ public class Enemy : MonoBehaviour {
         }
     }
 
+    public virtual void ResetToIdle() {
+        state = State.IDLE;
+        StateTransition();
+    }
+
     public virtual void EnemyDeath() {
         Destroy(gameObject);
     }

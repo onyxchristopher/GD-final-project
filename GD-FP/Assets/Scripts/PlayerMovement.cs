@@ -33,22 +33,31 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float dashSpeed;
     [SerializeField] private float dashAccel;
     [SerializeField] private float dashDuration;
-    
-    private Vector3 startingOrigin = new Vector3(0, 0.5f, 0);
+
+    [SerializeField] private float deathSequenceTime;
+
+    // Spawnpoint
+    private Vector3 startingOrigin = new Vector3(0, 1, 0); // the player's initial spawnpoint
     private Vector3 origin; // the player's spawnpoint
+
+    // GameController ref
+    private GameController gControl;
 
     void Start() {
         fuelBarSlider = GameObject.FindWithTag("FuelBar").GetComponent<Slider>();
+        gControl = GameObject.FindWithTag("GameController").GetComponent<GameController>();
 
         rb = GetComponent<Rigidbody2D>();
 
         playerInput = GetComponent<PlayerInput>();
         playerMove = playerInput.actions.FindAction("Move");
 
-        EventManager.onPlayerDeath += ResetPlayer;
+        EventManager.onPlayerDeath += DeathSequence;
+        EventManager.onPlayerRespawn += RespawnSequence;
         origin = transform.position;
 
         EventManager.onNewUniverse += InitializeMovement;
+        EventManager.onSetSpawn += SetSpawn;
     }
 
     public void InitializeMovement() {
@@ -71,13 +80,6 @@ public class PlayerMovement : MonoBehaviour {
     public void IncreaseMaxFuel(int max) {
         maxFuel += max;
         fuelBarSlider.maxValue = maxFuel;
-    }
-
-    // reset the player at their spawnpoint with max fuel
-    public void ResetPlayer() {
-        SetFuel(maxFuel);
-        transform.position = origin;
-        rb.velocity = Vector2.zero;
     }
 
     public void SetSpawn(Vector3 spawn) {
@@ -109,11 +111,10 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void FixedUpdate() {
+
         Vector2 moveDir = playerMove.ReadValue<Vector2>(); // get player input
         Vector2 normMoveDir = moveDir.normalized; // normalized player input vector
         Vector2 normVel = rb.velocity.normalized; // normalized player velocity
-
-        Debug.Log(rb.velocity.magnitude);
 
         // check if player is over the speed limit, and limit them if so
         /*float speedDifference = rb.velocity.magnitude - maxSpeed;
@@ -150,12 +151,12 @@ public class PlayerMovement : MonoBehaviour {
             fuelBarSlider.value = fuel;
             if (fuel <= 0) {
                 EventManager.PlayerDeath();
+                gControl.crackBar(fuelBarSlider);
             }
         }
     }
 
-    // helper function that defines the piecewise function that controls acceleration
-    // returns the amount to accelerate
+    // helper function that returns the amount to accelerate defined by a piecewise function
     private float accelCurve(float speed) {
         // this is a piecewise constant function
         if (speed <= softMaxSpeed) {
@@ -165,5 +166,24 @@ public class PlayerMovement : MonoBehaviour {
         } else {
             return 0;
         }
+    }
+
+    // the player dies and their movement is suspended
+    public void DeathSequence() {
+        playerInput.actions.FindActionMap("Player").Disable();
+        Timing.RunCoroutine(_DeathTransport());
+    }
+
+    private IEnumerator<float> _DeathTransport() {
+        yield return Timing.WaitForSeconds(gControl.timeToMove);
+        transform.position = origin;
+        rb.velocity = Vector2.zero;
+    }
+
+
+
+    public void RespawnSequence() {
+        SetFuel(maxFuel);
+        playerInput.actions.FindActionMap("Player").Enable();
     }
 }

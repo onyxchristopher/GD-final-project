@@ -28,8 +28,15 @@ public class GameController : MonoBehaviour
     [SerializeField] GameObject cluster;
     [SerializeField] GameObject clusterSceneBoundary;
 
+    // Sprites
+    private Sprite uncrackedBar;
+    [SerializeField] private Sprite crackedBar;
 
     private float sceneLoadingRadius = 75;
+
+    public float timeToMove = 3;
+    public float timeToRespawn = 2;
+    
     
 
     void Awake() {
@@ -54,6 +61,8 @@ public class GameController : MonoBehaviour
 
         EventManager.onEnterBossArea += DisplayBossUI;
         EventManager.onExitBossArea += HideBossUI;
+
+        EventManager.onPlayerDeath += BeginRespawnCooldown;
     }
 
     private void InitializeUniverse() {
@@ -90,6 +99,7 @@ public class GameController : MonoBehaviour
 
     }
 
+    // Checking if camera resolution has changed
     private IEnumerator<float> _CameraChangeCheck() {
         if (cam.pixelRect.ToString() != cameraRect.ToString()) {
             cameraRect = cam.pixelRect;
@@ -98,6 +108,8 @@ public class GameController : MonoBehaviour
         yield return Timing.WaitForOneFrame;
         Timing.RunCoroutine(_CameraChangeCheck(), Segment.SlowUpdate);
     }
+
+    // Boss UI
 
     public void DisplayBossUI(string name) {
         activeBoss = GameObject.FindWithTag(name);
@@ -118,8 +130,26 @@ public class GameController : MonoBehaviour
         bossText.SetActive(false);
     }
 
-    private IEnumerator<float> _ResetTimer() {
-        yield return Timing.WaitForSeconds(3);
-        EventManager.PlayerDeath();
+    // Player UI bars
+
+    public void crackBar(Slider bar) {
+        Image imgComponent = bar.transform.GetChild(1).GetComponent<Image>();
+        uncrackedBar = imgComponent.sprite;
+        imgComponent.sprite = crackedBar;
+    }
+
+    public void uncrackBar(Slider bar) {
+        bar.transform.GetChild(1).GetComponent<Image>().sprite = uncrackedBar;
+    }
+
+    // Player death
+
+    public void BeginRespawnCooldown() {
+        Timing.RunCoroutine(_RespawnTimer());
+    }
+
+    private IEnumerator<float> _RespawnTimer() {
+        yield return Timing.WaitForSeconds(timeToMove + timeToRespawn);
+        EventManager.PlayerRespawn();
     }
 }

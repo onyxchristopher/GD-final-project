@@ -10,16 +10,23 @@ public class PlayerCollision : MonoBehaviour {
     private int health;
     private int maxHealth;
 
+    private bool inactive = false;
+
     [SerializeField] private int badCollisionDamage = 1;
     private bool invuln = false;
     private float invulnDuration = 2;
     private Slider healthBarSlider;
+
+    // GameController ref
+    private GameController gControl;
     
     void Start() {
         healthBarSlider = GameObject.FindWithTag("HealthBar").GetComponent<Slider>();
+        gControl = GameObject.FindWithTag("GameController").GetComponent<GameController>();
 
         EventManager.onPlayerDamage += Damage;
-        EventManager.onPlayerDeath += ResetPlayerHealth;
+        EventManager.onPlayerDeath += CollisionInactive;
+        EventManager.onPlayerRespawn += CollisionActive;
         EventManager.onNewUniverse += InitializeHealth;
     }
 
@@ -41,7 +48,7 @@ public class PlayerCollision : MonoBehaviour {
     }
 
     public void Damage(int damage) {
-        if (!invuln){
+        if (!invuln && !inactive){
             health -= damage;
             if (health < 0) {
                 health = 0;
@@ -49,11 +56,12 @@ public class PlayerCollision : MonoBehaviour {
             healthBarSlider.value = health;
             if (health == 0) {
                 EventManager.PlayerDeath();
+                gControl.crackBar(healthBarSlider);
                 return;
             } else {
                 gameObject.GetComponent<Animator>().SetTrigger("Damaged");
+                EventManager.PlayerHit();
             }
-            EventManager.PlayerHit();
 
             invuln = true;
             Timing.RunCoroutine(_IFrames());
@@ -75,5 +83,13 @@ public class PlayerCollision : MonoBehaviour {
             health = maxHealth;
         }
         healthBarSlider.value = health;
+    }
+
+    public void CollisionInactive() {
+        inactive = true;
+    }
+
+    public void CollisionActive() {
+        inactive = false;
     }
 }
