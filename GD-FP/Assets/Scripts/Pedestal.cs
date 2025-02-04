@@ -8,6 +8,7 @@ public class Pedestal : MonoBehaviour
     [SerializeField] private GameObject artifact;
     private float setSpawnDelay = 15;
     private bool withinSetSpawnDelay = false;
+    private float fuelPerSecond = 20;
 
     void Start() {
         EventManager.onSetSpawn += CheckSpawnDelay;
@@ -24,6 +25,12 @@ public class Pedestal : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Player" && !withinSetSpawnDelay) {
             EventManager.SetSpawn(transform.position + transform.up * 3);
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D other) {
+        if (other.gameObject.tag == "Player") {
+            other.gameObject.GetComponent<PlayerMovement>().SetFuel(Time.deltaTime * fuelPerSecond);
         }
     }
 

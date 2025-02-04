@@ -45,11 +45,7 @@ public class Compass : MonoBehaviour
 
     void Start()
     {
-        cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
-
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
-
-        CalculateAnchorRadius(cam.pixelRect);
 
         EventManager.onArtifactPickup += UpdateProgression;
         EventManager.onEnterCluster += EnteringCluster;
@@ -171,6 +167,7 @@ public class Compass : MonoBehaviour
 
     // calculate radius, re-called on camera rect change
     public void CalculateAnchorRadius(Rect cameraRect) {
+        cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         float aspect = cam.aspect;
         RectTransform canvasTransform = transform.parent.gameObject.GetComponent<RectTransform>();
         RectTransform compassTransform = gameObject.GetComponent<RectTransform>();

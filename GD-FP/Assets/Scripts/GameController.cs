@@ -54,7 +54,6 @@ public class GameController : MonoBehaviour
         scenes = GameObject.FindWithTag("GameController").GetComponent<Scenes>();
 
         cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
-        cameraRect = cam.pixelRect;
 
         InitializeUniverse();
         Timing.RunCoroutine(_CameraChangeCheck(), Segment.SlowUpdate);
