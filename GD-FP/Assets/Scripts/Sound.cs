@@ -79,9 +79,14 @@ public class Sound : MonoBehaviour
         float time = 0;
         if (combat) {
             BGMSourceIC.Play();
-            while (time < fadeTime + fadeTimeDelay) {
-                BGMSourceIC.volume += Time.deltaTime * icVolumeCap / fadeTime;
-                if (time > 0.25f) {
+            BGMSourceOOC.volume = oocVolumeCap;
+            BGMSourceIC.volume = 0;
+            while (time < fadeTime / 2) {
+                // fade in combat music twice as fast, but only up to cap
+                if (BGMSourceIC.volume < icVolumeCap) {
+                    BGMSourceIC.volume += Time.deltaTime * icVolumeCap * 2 / fadeTime;
+                }
+                if (time > 0.25f) { // float specifying a beat in the music
                     // zero out of combat music
                     BGMSourceOOC.volume = 0;
                 } else {
@@ -96,6 +101,8 @@ public class Sound : MonoBehaviour
             BGMSourceOOC.Pause();
         } else {
             BGMSourceOOC.Play();
+            BGMSourceOOC.volume = 0;
+            BGMSourceIC.volume = icVolumeCap;
             while (time < fadeTime + fadeTimeDelay) {
                 if (time < fadeTimeDelay) {
                     // fade out combat music
@@ -124,7 +131,7 @@ public class Sound : MonoBehaviour
 
     private IEnumerator<float> _PlayArtifactPop() {
         yield return Timing.WaitForSeconds(2.25f);
-        PlaySFX(pop, 0.15f);
+        PlaySFX(pop, 0.25f);
     }
 
     public void PlayBlade() {
@@ -132,11 +139,11 @@ public class Sound : MonoBehaviour
     }
 
     public void PlayPlayerHit() {
-        PlaySFX(playerHit, 0.8f);
+        PlaySFX(playerHit, 0.6f);
     }
 
     public void PlayEnemyHit() {
-        PlaySFX(enemyHit, 0.5f);
+        PlaySFX(enemyHit, 0.6f);
     }
 
     public void PlayFuelPickup() {
