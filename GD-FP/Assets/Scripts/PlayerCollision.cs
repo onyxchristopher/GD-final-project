@@ -60,9 +60,10 @@ public class PlayerCollision : MonoBehaviour {
                 gControl.crackBar(healthBarSlider);
                 return;
             } else {
-                gameObject.GetComponent<Animator>().SetTrigger("Damage");
-                EventManager.PlayerHit();
+                gameObject.GetComponent<Animator>().SetTrigger("Damage");   
             }
+
+            EventManager.PlayerHit();
 
             invuln = true;
             Timing.RunCoroutine(_IFrames());

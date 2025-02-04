@@ -14,19 +14,21 @@ public class Sound : MonoBehaviour
 
     private bool combat = false;
     private float fadeTime = 1.5f;
-    private float fadeTimeDelay = 0.5f;
-    private float oocVolumeCap = 0.35f;
-    private float icVolumeCap = 0.35f;
+    private float fadeTimeDelay = 0f;
+    private float oocVolumeCap = 0.25f;
+    private float icVolumeCap = 0.25f;
     
 
     public AudioClip getArtifact;
+    public AudioClip pop;
     public AudioClip blade;
     public AudioClip playerHit;
     public AudioClip enemyHit;
     public AudioClip fuelPickup;
-    public AudioClip pop;
+    public AudioClip death;
     public AudioClip respawn;
     public AudioClip respawnEnd;
+    public AudioClip explosion;
 
     void Start() {
         EventManager.onArtifactPickup += PlayGetArtifact;
@@ -34,10 +36,14 @@ public class Sound : MonoBehaviour
         EventManager.onPlayerHit += PlayPlayerHit;
         EventManager.onEnemyHit += PlayEnemyHit;
         EventManager.onFuelPickup += PlayFuelPickup;
+        EventManager.onPlayerDeath += PlayDeath;
         EventManager.onPlayerDeath += PlayRespawn;
         EventManager.onPlayerRespawn += PlayRespawnEnd;
+        EventManager.onBossDefeat += PlayExplosion;
+
         EventManager.onEnterBossArea += EnterCombat;
         EventManager.onExitBossArea += ExitCombat;
+        
 
         BGMSourceOOC.clip = outOfCombatBGM;
         BGMSourceOOC.volume = oocVolumeCap;
@@ -74,27 +80,19 @@ public class Sound : MonoBehaviour
         if (combat) {
             BGMSourceIC.Play();
             while (time < fadeTime + fadeTimeDelay) {
-                if (time < fadeTimeDelay) {
+                BGMSourceIC.volume += Time.deltaTime * icVolumeCap / fadeTime;
+                if (time > 0.25f) {
+                    // zero out of combat music
+                    BGMSourceOOC.volume = 0;
+                } else {
                     // fade out noncombat music
                     BGMSourceOOC.volume -= Time.deltaTime * oocVolumeCap / fadeTime;
-                } else if (time > fadeTime) {
-                    // fade in combat music
-                    BGMSourceIC.volume += Time.deltaTime * icVolumeCap / fadeTime;
-                } else {
-                    // fade in combat music, fade out noncombat music
-                    BGMSourceOOC.volume -= Time.deltaTime * oocVolumeCap / fadeTime;
-                    BGMSourceIC.volume += Time.deltaTime * icVolumeCap / fadeTime;
                 }
                 yield return Timing.WaitForOneFrame;
                 time += Time.deltaTime;
-                Debug.Log($"ooc: {BGMSourceOOC.volume}, ic: {BGMSourceIC.volume}");
             }
-            if (BGMSourceIC.volume > icVolumeCap) {
-                BGMSourceIC.volume = icVolumeCap;
-            }
-            if (BGMSourceOOC.volume < 0) {
-                BGMSourceOOC.volume = 0;
-            }
+            BGMSourceIC.volume = icVolumeCap;
+            BGMSourceOOC.volume = 0;
             BGMSourceOOC.Pause();
         } else {
             BGMSourceOOC.Play();
@@ -112,21 +110,16 @@ public class Sound : MonoBehaviour
                 }
                 yield return Timing.WaitForOneFrame;
                 time += Time.deltaTime;
-                Debug.Log($"ooc: {BGMSourceOOC.volume}, ic: {BGMSourceIC.volume}");
             }
-            if (BGMSourceOOC.volume > oocVolumeCap) {
-                BGMSourceOOC.volume = oocVolumeCap;
-            }
-            if (BGMSourceIC.volume < 0) {
-                BGMSourceIC.volume = 0;
-            }
+            BGMSourceOOC.volume = oocVolumeCap;
+            BGMSourceIC.volume = 0;
             BGMSourceIC.Stop();
         }
     }
 
     public void PlayGetArtifact(int _) {
-        PlaySFX(respawn, 0.85f);
-        //Timing.RunCoroutine(_PlayArtifactPop());
+        PlaySFX(getArtifact, 0.85f);
+        Timing.RunCoroutine(_PlayArtifactPop());
     }
 
     private IEnumerator<float> _PlayArtifactPop() {
@@ -139,7 +132,7 @@ public class Sound : MonoBehaviour
     }
 
     public void PlayPlayerHit() {
-        PlaySFX(playerHit, 1);
+        PlaySFX(playerHit, 0.8f);
     }
 
     public void PlayEnemyHit() {
@@ -150,12 +143,20 @@ public class Sound : MonoBehaviour
         PlaySFX(fuelPickup, 1);
     }
 
+    public void PlayDeath() {
+        PlaySFX(death, 1);
+    }
+
     public void PlayRespawn() {
         PlaySFX(respawn, 0.8f);
     }
 
     public void PlayRespawnEnd() {
         //PlaySFX(respawnEnd, 1);
+    }
+
+    public void PlayExplosion(string _) {
+        PlaySFX(explosion, 1);
     }
 
     public void PlaySFX(AudioClip clip, float vol = 1) {
