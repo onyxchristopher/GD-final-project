@@ -37,11 +37,13 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float deathSequenceTime;
 
     // Spawnpoint
-    private Vector3 startingOrigin = new Vector3(0, 1, 0); // the player's initial spawnpoint
+    private Vector3 startingOrigin = new Vector3(0, 2, 0); // the player's initial spawnpoint
     private Vector3 origin; // the player's spawnpoint
 
     // GameController ref
     private GameController gControl;
+
+    [SerializeField] private GameObject playerRespawn;
 
     void Start() {
         fuelBarSlider = GameObject.FindWithTag("FuelBar").GetComponent<Slider>();
@@ -53,8 +55,6 @@ public class PlayerMovement : MonoBehaviour {
         playerMove = playerInput.actions.FindAction("Move");
 
         EventManager.onPlayerDeath += DeathSequence;
-        EventManager.onPlayerRespawn += RespawnSequence;
-        origin = transform.position;
 
         EventManager.onNewUniverse += InitializeMovement;
         EventManager.onSetSpawn += SetSpawn;
@@ -176,14 +176,19 @@ public class PlayerMovement : MonoBehaviour {
 
     private IEnumerator<float> _DeathTransport() {
         yield return Timing.WaitForSeconds(gControl.timeToMove);
+        gameObject.GetComponent<Animator>().SetTrigger("Respawn");
         transform.position = origin;
         rb.velocity = Vector2.zero;
+        GameObject pr = Instantiate(playerRespawn, transform.position, Quaternion.identity);
+        yield return Timing.WaitForSeconds(gControl.timeToRespawn);
+        EventManager.PlayerRespawn();
+        RespawnSequence(pr);
     }
 
-
-
-    public void RespawnSequence() {
+    public void RespawnSequence(GameObject pr) {
+        Destroy(pr);
         SetFuel(maxFuel);
+        gControl.uncrackBar(fuelBarSlider);
         playerInput.actions.FindActionMap("Player").Enable();
     }
 }

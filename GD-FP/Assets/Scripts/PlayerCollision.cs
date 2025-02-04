@@ -56,10 +56,11 @@ public class PlayerCollision : MonoBehaviour {
             healthBarSlider.value = health;
             if (health == 0) {
                 EventManager.PlayerDeath();
+                gameObject.GetComponent<Animator>().SetTrigger("Death");
                 gControl.crackBar(healthBarSlider);
                 return;
             } else {
-                gameObject.GetComponent<Animator>().SetTrigger("Damaged");
+                gameObject.GetComponent<Animator>().SetTrigger("Damage");
                 EventManager.PlayerHit();
             }
 
@@ -71,10 +72,6 @@ public class PlayerCollision : MonoBehaviour {
     private IEnumerator<float> _IFrames() {
         yield return Timing.WaitForSeconds(invulnDuration);
         invuln = false;
-    }
-
-    public void ResetPlayerHealth() {
-        SetHealth(maxHealth);
     }
 
     private void SetHealth(int healthToGain) {
@@ -91,5 +88,7 @@ public class PlayerCollision : MonoBehaviour {
 
     public void CollisionActive() {
         inactive = false;
+        SetHealth(maxHealth);
+        gControl.uncrackBar(healthBarSlider);
     }
 }

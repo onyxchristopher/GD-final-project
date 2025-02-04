@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour
     private float sceneLoadingRadius = 75;
 
     public float timeToMove = 3;
-    public float timeToRespawn = 2;
+    public float timeToRespawn = 1.5f;
     
     
 
@@ -61,8 +61,6 @@ public class GameController : MonoBehaviour
 
         EventManager.onEnterBossArea += DisplayBossUI;
         EventManager.onExitBossArea += HideBossUI;
-
-        EventManager.onPlayerDeath += BeginRespawnCooldown;
     }
 
     private void InitializeUniverse() {
@@ -140,16 +138,5 @@ public class GameController : MonoBehaviour
 
     public void uncrackBar(Slider bar) {
         bar.transform.GetChild(1).GetComponent<Image>().sprite = uncrackedBar;
-    }
-
-    // Player death
-
-    public void BeginRespawnCooldown() {
-        Timing.RunCoroutine(_RespawnTimer());
-    }
-
-    private IEnumerator<float> _RespawnTimer() {
-        yield return Timing.WaitForSeconds(timeToMove + timeToRespawn);
-        EventManager.PlayerRespawn();
     }
 }

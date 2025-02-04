@@ -24,6 +24,7 @@ TagManager:
   - Messages
   - CooldownIcons
   - Sound
+  - PlayerRespawn
   layers:
   - Default
   - TransparentFX
