@@ -987,9 +987,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1036854086}
   - component: {fileID: 1036854085}
+  - component: {fileID: 1036854089}
   - component: {fileID: 1036854087}
   - component: {fileID: 1036854088}
-  - component: {fileID: 1036854089}
   - component: {fileID: 1036854090}
   m_Layer: 11
   m_Name: PlanetguardBossEnemy

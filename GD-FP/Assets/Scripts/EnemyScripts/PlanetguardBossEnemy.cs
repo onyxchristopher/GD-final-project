@@ -62,6 +62,8 @@ public class PlanetguardBossEnemy : Enemy {
             state = State.TRACK;
             StateTransition();
             EventManager.EnterBossArea(bossName);
+            gameObject.GetComponent<CircleCollider2D>().radius += 20;
+            Debug.Log("A");
         }
     }
 
@@ -70,6 +72,7 @@ public class PlanetguardBossEnemy : Enemy {
             state = State.IDLE;
             StateTransition();
             EventManager.ExitBossArea();
+            gameObject.GetComponent<CircleCollider2D>().radius -= 20;
         }
     }
 

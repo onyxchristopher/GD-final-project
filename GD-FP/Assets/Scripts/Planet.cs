@@ -11,6 +11,7 @@ public class Planet : MonoBehaviour
     private float gravitationalConstant = 50;
     private bool suspendGravity = false;
     private GameController gControl;
+    private float fuelPerSecond = 30;
 
     void Start() {
         player = GameObject.FindWithTag("Player");
@@ -41,5 +42,11 @@ public class Planet : MonoBehaviour
         suspendGravity = true;
         yield return Timing.WaitForSeconds(gControl.timeToRespawn);
         suspendGravity = false;
+    }
+
+    void OnCollisionStay2D(Collision2D collision) {
+        if (collision.gameObject.tag == "Player") {
+            collision.gameObject.GetComponent<PlayerMovement>().SetFuel(Time.deltaTime * fuelPerSecond);
+        }
     }
 }
