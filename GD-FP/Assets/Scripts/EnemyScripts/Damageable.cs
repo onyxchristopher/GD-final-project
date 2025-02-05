@@ -15,18 +15,29 @@ public class Damageable : MonoBehaviour {
 
     void Start() {
         gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
+
         health = maxHealth;
     }
     
     public void Damage(int damage) {
         if (!invuln){
             health -= damage;
+
+            // a normal enemy should have hit sounds at all times
+            // a boss should have hit sounds but not on death
             if (isBoss) {
                 gameController.SetBossHealthBar(health);
             }
+
             if (health <= 0) {
                 enemy.EnemyDeath();
+                if (!isBoss) {
+                    EventManager.EnemyHit();
+                }
+            } else {
+                EventManager.EnemyHit();
             }
+
             invuln = true;
             Timing.RunCoroutine(_IFrames());
         }

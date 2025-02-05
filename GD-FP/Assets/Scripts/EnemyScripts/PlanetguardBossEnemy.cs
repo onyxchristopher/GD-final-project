@@ -31,6 +31,8 @@ public class PlanetguardBossEnemy : Enemy {
     void Start() {
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
         gameObject.GetComponent<Damageable>().enemy = this;
+
+        EventManager.onPlayerDeath += ResetToIdle;
     }
 
     private void TrackLoop() {
@@ -60,6 +62,7 @@ public class PlanetguardBossEnemy : Enemy {
             state = State.TRACK;
             StateTransition();
             EventManager.EnterBossArea(bossName);
+            gameObject.GetComponent<CircleCollider2D>().radius += 20;
         }
     }
 
@@ -68,13 +71,14 @@ public class PlanetguardBossEnemy : Enemy {
             state = State.IDLE;
             StateTransition();
             EventManager.ExitBossArea();
+            gameObject.GetComponent<CircleCollider2D>().radius -= 20;
         }
     }
 
     public override void EnemyDeath() {
         EventManager.BossDefeat(bossName);
         if (drop) {
-            GameObject artifact = Instantiate(drop, transform.position + Vector3.up * 25, Quaternion.identity);
+            GameObject artifact = Instantiate(drop, transform.position + Vector3.up * 18, Quaternion.identity);
             artifact.GetComponent<Artifact>().setId(10);
         }
         Destroy(gameObject);

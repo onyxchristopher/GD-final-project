@@ -6,13 +6,14 @@ using MEC;
 
 /*
 The planetguard turret is a child of the boss enemy of the same name. Its
-purpose is to track the player and fire at the player. 
+purpose is to fire at the player. 
 */
 
 public class PlanetguardTurretEnemy : Enemy {
     [SerializeField] private GameObject projectile;
     private Rigidbody2D playerRB;
-    public Vector2 location;
+    [HideInInspector] public Vector2 location;
+    [SerializeField] private float delay;
     private bool firedWithinDelay = false;
 
     // Awake encodes the enemy FSM
@@ -39,7 +40,7 @@ public class PlanetguardTurretEnemy : Enemy {
         firedWithinDelay = true;
         Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
         Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
-        yield return Timing.WaitForSeconds(0.5f);
+        yield return Timing.WaitForSeconds(delay);
         firedWithinDelay = false;
         AttackLoop();
     }
@@ -53,7 +54,7 @@ public class PlanetguardTurretEnemy : Enemy {
 
     void OnTriggerExit2D(Collider2D other) {
         if (other.tag == "Player") {
-            state = State.TRACK;
+            state = State.IDLE;
             StateTransition();
         }
     }

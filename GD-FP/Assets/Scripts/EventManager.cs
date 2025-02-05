@@ -17,6 +17,12 @@ public class EventManager : MonoBehaviour {
         onPlayerDeath?.Invoke();
     }
 
+    public delegate void NotifyPlayerRespawn();
+    public static event NotifyPlayerRespawn onPlayerRespawn;
+    public static void PlayerRespawn() {
+        onPlayerRespawn?.Invoke();
+    }
+
     public delegate void NotifyArtifactPickup(int id);
     public static event NotifyArtifactPickup onArtifactPickup;
     public static void ArtifactPickup(int id) {
@@ -79,5 +85,37 @@ public class EventManager : MonoBehaviour {
     public static event NotifyEnemyDefeat onEnemyDefeat;
     public static void EnemyDefeat() {
         onEnemyDefeat?.Invoke();
+    }
+
+    public delegate void NotifyBladeUse();
+    public static event NotifyBladeUse onBladeUse;
+    public static void BladeUse() {
+        onBladeUse?.Invoke();
+    }
+
+    public delegate void NotifyPlayerHit();
+    public static event NotifyPlayerHit onPlayerHit;
+    public static void PlayerHit() {
+        onPlayerHit?.Invoke();
+    }
+
+    public delegate void NotifyEnemyHit();
+    public static event NotifyEnemyHit onEnemyHit;
+    public static void EnemyHit() {
+        onEnemyHit?.Invoke();
+    }
+
+    public delegate void NotifyPickup();
+    public static event NotifyPickup onPickup;
+    public static void Pickup() {
+        onPickup?.Invoke();
+    }
+
+    public delegate void NotifySetSpawn(Vector3 spawn);
+    public static event NotifySetSpawn onSetSpawn;
+    public static void SetSpawn(Vector3 spawn) {
+        if (onSetSpawn != null) {
+            onSetSpawn(spawn);
+        }
     }
 }

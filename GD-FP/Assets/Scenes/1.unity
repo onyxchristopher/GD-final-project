@@ -184,7 +184,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drop: {fileID: 0}
-  spawnpoint: {x: 0, y: 0}
   damagedHull: {fileID: 21300000, guid: b8650924c356e43348c86d87224dae3d, type: 3}
 --- !u!61 &121745563
 BoxCollider2D:
@@ -325,7 +324,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drop: {fileID: 0}
-  spawnpoint: {x: 0, y: 0}
   damagedHull: {fileID: 21300000, guid: b8650924c356e43348c86d87224dae3d, type: 3}
 --- !u!61 &141449494
 BoxCollider2D:
@@ -450,10 +448,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drop: {fileID: 0}
-  spawnpoint: {x: 0, y: 0}
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
   location: {x: 0, y: 0}
+  delay: 0.75
 --- !u!60 &194304746
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -579,6 +577,7 @@ Transform:
   m_Children:
   - {fileID: 1036854086}
   - {fileID: 1546872782}
+  - {fileID: 673183818}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -725,10 +724,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drop: {fileID: 0}
-  spawnpoint: {x: 0, y: 0}
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
   location: {x: 0, y: 0}
+  delay: 0.75
 --- !u!1 &592294436
 GameObject:
   m_ObjectHideFlags: 0
@@ -891,6 +890,12 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &673183818 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
+    type: 3}
+  m_PrefabInstance: {fileID: 8878907731379359059}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &983980771
 GameObject:
   m_ObjectHideFlags: 0
@@ -982,9 +987,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1036854086}
   - component: {fileID: 1036854085}
+  - component: {fileID: 1036854089}
   - component: {fileID: 1036854087}
   - component: {fileID: 1036854088}
-  - component: {fileID: 1036854089}
   - component: {fileID: 1036854090}
   m_Layer: 11
   m_Name: PlanetguardBossEnemy
@@ -1098,7 +1103,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drop: {fileID: 5171839951300311743, guid: 5a50d14f0ce72435e9783f74cca39686, type: 3}
-  spawnpoint: {x: 0, y: 0}
   rotationVector: {x: 0, y: 0, z: 0.3}
   bossName: Planetguard
 --- !u!58 &1036854089
@@ -1366,10 +1370,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drop: {fileID: 0}
-  spawnpoint: {x: 0, y: 0}
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
   location: {x: 0, y: 0}
+  delay: 0.75
 --- !u!60 &1259808992
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1535,7 +1539,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drop: {fileID: 0}
-  spawnpoint: {x: 0, y: 0}
   damagedHull: {fileID: 21300000, guid: b8650924c356e43348c86d87224dae3d, type: 3}
 --- !u!61 &1595327472
 BoxCollider2D:
@@ -1660,10 +1663,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drop: {fileID: 0}
-  spawnpoint: {x: 0, y: 0}
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
   location: {x: 0, y: 0}
+  delay: 0.75
 --- !u!60 &1625685258
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1899,5 +1902,73 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drop: {fileID: 0}
-  spawnpoint: {x: 0, y: 0}
   damagedHull: {fileID: 21300000, guid: b8650924c356e43348c86d87224dae3d, type: 3}
+--- !u!1001 &8878907731379359059
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 218253970}
+    m_Modifications:
+    - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 14.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878907731781219610, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: m_Name
+      value: Pedestal
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f44c438698b3c44e88b725b36a3c74bc, type: 3}
