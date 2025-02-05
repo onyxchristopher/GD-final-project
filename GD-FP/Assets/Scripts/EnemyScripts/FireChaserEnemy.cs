@@ -17,18 +17,16 @@ public class FireChaserEnemy : Enemy {
     private Rigidbody2D playerRB;
     private Rigidbody2D rb;
     [SerializeField] private float delay;
-    [SerializeField] private Vector2 vel;
+    [SerializeField] private float speed;
     private bool firedWithinDelay = false;
 
     // Awake encodes the enemy FSM
     void Awake() {
         Action chaserAttack = ChaseLoop;
         chaserAttack += FireLoop;
-        chaserAttack += MoveConstantVelocity;
         enterStateLogic.Add(State.ATTACK, chaserAttack);
 
         Action chaserReturn = ReturnLoop;
-        chaserReturn += MoveConstantVelocity;
         exitStateLogic.Add(State.ATTACK, chaserReturn);
     }
 
@@ -39,10 +37,6 @@ public class FireChaserEnemy : Enemy {
         ReassignSpawn(transform.position);
 
         EventManager.onPlayerDeath += ResetToIdle;
-    }
-
-    private void MoveConstantVelocity() {
-        rb.velocity = vel;
     }
 
     private void ChaseLoop() {
@@ -56,9 +50,13 @@ public class FireChaserEnemy : Enemy {
     }
 
     private IEnumerator<float> _Chase() {
+        // set velocity and rotation to chase the player
         Vector2 dirToPlayer = playerRB.position - rb.position;
-        float angle = Vector2.SignedAngle(transform.right, dirToPlayer);
-        rb.rotation += angle;
+        rb.velocity = dirToPlayer.normalized * speed;
+
+        float angle = Vector2.SignedAngle(Vector2.right, dirToPlayer);
+        rb.rotation = angle;
+        
         yield return Timing.WaitForOneFrame;
         ChaseLoop();
     }
@@ -74,6 +72,7 @@ public class FireChaserEnemy : Enemy {
     }
 
     private IEnumerator<float> _Fire() {
+        // fire every delay in the direction of the player
         firedWithinDelay = true;
         Vector2 dirToPlayer = playerRB.position - rb.position;
         Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
@@ -88,12 +87,14 @@ public class FireChaserEnemy : Enemy {
         }
 
         if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.RunCoroutine(_Return());
+            Timing.RunCoroutine(_Return().CancelWith(gameObject));
         }
     }
     
     private IEnumerator<float> _Return() {
+        // move at a constant speed back to spawnpoint
         Vector2 dirToSpawn = spawnpoint - rb.position;
+        rb.velocity = dirToSpawn.normalized * speed;
         if (dirToSpawn.magnitude < 1) {
             rb.velocity = Vector2.zero;
             yield break;
@@ -101,5 +102,27 @@ public class FireChaserEnemy : Enemy {
         yield return Timing.WaitForOneFrame;
         ReturnLoop();
     }
-    
+
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.tag == "Player") {
+            state = State.ATTACK;
+            StateTransition();
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other) {
+        if (other.tag == "Player") {
+            state = State.IDLE;
+            StateTransition();
+        }
+    }
+
+    public override void EnemyDeath() {
+        if (drop) {
+            GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
+            droppedFuel.GetComponent<FuelDrop>().fuel = 10;
+        }
+        EventManager.EnemyDefeat();
+        gameObject.SetActive(false);
+    }
 }
