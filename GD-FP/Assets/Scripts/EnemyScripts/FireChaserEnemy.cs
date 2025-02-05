@@ -94,6 +94,7 @@ public class FireChaserEnemy : Enemy {
     private IEnumerator<float> _Return() {
         // move at a constant speed back to spawnpoint
         Vector2 dirToSpawn = spawnpoint - rb.position;
+        rb.rotation = Vector2.SignedAngle(Vector2.right, dirToSpawn);
         rb.velocity = dirToSpawn.normalized * speed;
         if (dirToSpawn.magnitude < 1) {
             rb.velocity = Vector2.zero;
@@ -120,9 +121,9 @@ public class FireChaserEnemy : Enemy {
     public override void EnemyDeath() {
         if (drop) {
             GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
-            droppedFuel.GetComponent<FuelDrop>().fuel = 10;
+            droppedFuel.GetComponent<HealthDrop>().health = 2;
         }
         EventManager.EnemyDefeat();
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }

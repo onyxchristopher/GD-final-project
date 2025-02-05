@@ -75,7 +75,7 @@ public class PlayerCollision : MonoBehaviour {
         invuln = false;
     }
 
-    private void SetHealth(int healthToGain) {
+    public void SetHealth(int healthToGain) {
         health += healthToGain;
         if (health >= maxHealth) {
             health = maxHealth;

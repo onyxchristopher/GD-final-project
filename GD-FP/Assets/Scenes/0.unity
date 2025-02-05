@@ -1990,7 +1990,7 @@ MonoBehaviour:
   blade: {fileID: 8300000, guid: d79767846710f4808ad3b6785093defa, type: 3}
   playerHit: {fileID: 8300000, guid: 3255c5080fbbe448fa10d39df859e8a1, type: 3}
   enemyHit: {fileID: 8300000, guid: d43afbf5b1b2f4665a040b207cfc6d26, type: 3}
-  fuelPickup: {fileID: 8300000, guid: a660644d2b626437388a9b59b6d39dd7, type: 3}
+  pickup: {fileID: 8300000, guid: a660644d2b626437388a9b59b6d39dd7, type: 3}
   death: {fileID: 8300000, guid: 43d80eed652fa4bbca0fa31b6bdd58ad, type: 3}
   respawn: {fileID: 8300000, guid: 3359c225b0b36498caf2cad315cb5cbc, type: 3}
   respawnEnd: {fileID: 8300000, guid: b142a87115ee9400c8637c3ba1667b1c, type: 3}

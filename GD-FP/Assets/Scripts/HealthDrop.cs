@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FuelDrop : MonoBehaviour
+public class HealthDrop : MonoBehaviour
 {
-    [HideInInspector] public int fuel; // the amount of fuel inside the drop
+    [HideInInspector] public int health; // the amount of fuel inside the drop
 
     void Start() {
         Destroy(gameObject, 20);
@@ -12,7 +12,7 @@ public class FuelDrop : MonoBehaviour
     
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Player") {
-            other.gameObject.GetComponent<PlayerMovement>().SetFuel(fuel);
+            other.gameObject.GetComponent<PlayerCollision>().SetHealth(health);
             EventManager.Pickup();
             Destroy(gameObject);
         }

@@ -105,10 +105,10 @@ public class EventManager : MonoBehaviour {
         onEnemyHit?.Invoke();
     }
 
-    public delegate void NotifyFuelPickup();
-    public static event NotifyFuelPickup onFuelPickup;
-    public static void FuelPickup() {
-        onFuelPickup?.Invoke();
+    public delegate void NotifyPickup();
+    public static event NotifyPickup onPickup;
+    public static void Pickup() {
+        onPickup?.Invoke();
     }
 
     public delegate void NotifySetSpawn(Vector3 spawn);

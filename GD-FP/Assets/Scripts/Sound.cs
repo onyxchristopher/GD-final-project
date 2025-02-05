@@ -24,7 +24,7 @@ public class Sound : MonoBehaviour
     public AudioClip blade;
     public AudioClip playerHit;
     public AudioClip enemyHit;
-    public AudioClip fuelPickup;
+    public AudioClip pickup;
     public AudioClip death;
     public AudioClip respawn;
     public AudioClip respawnEnd;
@@ -35,7 +35,7 @@ public class Sound : MonoBehaviour
         EventManager.onBladeUse += PlayBlade;
         EventManager.onPlayerHit += PlayPlayerHit;
         EventManager.onEnemyHit += PlayEnemyHit;
-        EventManager.onFuelPickup += PlayFuelPickup;
+        EventManager.onPickup += PlayPickup;
         EventManager.onPlayerDeath += PlayDeath;
         EventManager.onPlayerDeath += PlayRespawn;
         EventManager.onPlayerRespawn += PlayRespawnEnd;
@@ -146,8 +146,8 @@ public class Sound : MonoBehaviour
         PlaySFX(enemyHit, 0.6f);
     }
 
-    public void PlayFuelPickup() {
-        PlaySFX(fuelPickup, 1);
+    public void PlayPickup() {
+        PlaySFX(pickup, 1);
     }
 
     public void PlayDeath() {

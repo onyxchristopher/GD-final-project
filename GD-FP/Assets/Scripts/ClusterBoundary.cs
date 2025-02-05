@@ -96,14 +96,16 @@ public class ClusterBoundary : MonoBehaviour
                     bool withinX = Mathf.Abs(diffFromPlayer.x) <= gControl.cam.orthographicSize * gControl.cam.aspect;
                     bool withinY = Mathf.Abs(diffFromPlayer.y) <= gControl.cam.orthographicSize;
                     bool withinViewport = withinX && withinY;
+
+                    // if any child is in the viewport, do not spawn new
+                    // if not, wait till the other children are checked
                     
                     if (withinViewport) {
                         return false;
-                    } else {
-                        Destroy(activeTutorialModules[i]);
                     }
                 }
             }
+            Destroy(activeTutorialModules[i]);
             if (activeChildren == 0) {
                 completedTutorials[activeTutorialModules[i].GetComponent<TutorialModule>().index] = true;
                 Destroy(activeTutorialModules[i].gameObject);

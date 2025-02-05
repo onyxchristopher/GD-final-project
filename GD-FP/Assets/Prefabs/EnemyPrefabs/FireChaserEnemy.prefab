@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86141ff5e1d4e4dfb82da0606aa0f9ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drop: {fileID: 5922313539474208338, guid: 3007814f33983497da3e0b174119cd8c, type: 3}
+  drop: {fileID: 5914062346349983859, guid: 65f6dcbdadc2045f3bca6d972c1447a9, type: 3}
   projectile: {fileID: 4031042227954472179, guid: 04b77801698a94003bf975406a2255e4,
     type: 3}
   delay: 2
