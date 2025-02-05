@@ -7,9 +7,9 @@ public class Projectile : MonoBehaviour
     // the projectile's rigidbody
     private Rigidbody2D rb;
     // the projectile's speed
-    private float speed = 15;
+    [SerializeField] private float speed = 15;
     // the projectile's damage to the player
-    private int damage = 4;
+    [SerializeField] private int damage = 4;
     // how much faster the projectile is when reflected
     [SerializeField] private float reflectScaling = 2;
 
