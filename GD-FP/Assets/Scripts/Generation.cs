@@ -18,6 +18,8 @@ public class Generation : MonoBehaviour
     [SerializeField] private Vector2 largeCoreSize;
     [SerializeField] private Vector2 smallCoreSize;
 
+    public static Vector2 farAway = new Vector2(0, 3000);
+
     public (Cluster, Cluster[], Cluster[][]) generate(int seed) {
 
         // set seed

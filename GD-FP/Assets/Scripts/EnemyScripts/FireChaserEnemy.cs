@@ -87,7 +87,7 @@ public class FireChaserEnemy : Enemy {
         }
 
         if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.RunCoroutine(_Return().CancelWith(gameObject));
+            Timing.RunCoroutine(_Return());
         }
     }
     
@@ -124,6 +124,6 @@ public class FireChaserEnemy : Enemy {
             droppedFuel.GetComponent<HealthDrop>().health = 2;
         }
         EventManager.EnemyDefeat();
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

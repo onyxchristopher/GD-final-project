@@ -76,6 +76,8 @@ public class GameController : MonoBehaviour
             Vector2 boundingSize = level1[i].getBounds().size;
             Vector3 corePos = (Vector3) level1[i].getCorePosition();
 
+            ClusterBoundary.modules = new GameObject[level1.Length];
+
             // instantiate cluster at core, set collider size, set name and id
             GameObject clusterI = Instantiate(cluster, corePos, Quaternion.identity, universe.transform);
             clusterI.GetComponent<BoxCollider2D>().size = boundingSize;
