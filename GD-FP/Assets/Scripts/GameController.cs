@@ -20,8 +20,8 @@ public class GameController : MonoBehaviour
     private Scenes scenes;
 
     // Camera
-    private Camera cam;
-    private Rect cameraRect;
+    public Camera cam;
+    [HideInInspector] public Rect cameraRect;
 
     // Universe building refs
     private GameObject universe;

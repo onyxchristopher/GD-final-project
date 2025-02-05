@@ -25,6 +25,7 @@ TagManager:
   - CooldownIcons
   - Sound
   - PlayerRespawn
+  - TutorialModule
   layers:
   - Default
   - TransparentFX

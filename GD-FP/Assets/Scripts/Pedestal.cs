@@ -5,7 +5,6 @@ using MEC;
 
 public class Pedestal : MonoBehaviour
 {
-    [SerializeField] private GameObject artifact;
     private float setSpawnDelay = 15;
     private bool withinSetSpawnDelay = false;
     private float fuelPerSecond = 20;
