@@ -56,17 +56,24 @@ public class Scenes : MonoBehaviour
         // Assign positions to objects
         Vector3 rootPosition = level1[clusterIndex].getCorePosition();
         root.transform.position = rootPosition;
+        root.transform.GetChild(1).position = level2[clusterIndex][0].getCorePosition();
+        root.transform.GetChild(2).position = level2[clusterIndex][1].getCorePosition();
 
-        if (!level1[clusterIndex].getComplete()) {
-            if (id <= 1) {
-                root.transform.GetChild(0).gameObject.GetComponent<Enemy>().ReassignSpawn(level1[clusterIndex].getCorePosition());
-            }
-        } else {
-            if (id <= 1) {
-                Destroy(root.transform.GetChild(0).gameObject);
+        // Reassign spawnpoints
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("Damageable");
+        for (int i = 0; i < gos.Length; i++) {
+            // find the Damageable script
+            Damageable dmg = gos[i].GetComponent<Damageable>();
+            if (dmg.enemy) {
+                dmg.enemy.ReassignSpawn(gos[i].transform.position);
             }
         }
-        
+
+        if (level1[clusterIndex].getComplete()) {
+            if (id <= 1) {
+                root.transform.GetChild(0).gameObject.SetActive(false);
+            }
+        }
     }
 
     public void QueueUnload(int newId) {

@@ -38,7 +38,6 @@ public class FireChaserEnemy : Enemy {
         rb = gameObject.GetComponent<Rigidbody2D>();
         dmg = gameObject.GetComponent<Damageable>();
         dmg.enemy = this;
-        ReassignSpawn(transform.position);
 
         EventManager.onPlayerDeath += ResetToIdle;
     }

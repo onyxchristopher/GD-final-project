@@ -45,7 +45,7 @@ public class PlanetguardBossEnemy : Enemy {
     }
 
     private IEnumerator<float> _RotatePlanetguard() {
-        Vector2 dirToPlayer = playerRB.position - (Vector2) spawnpoint;
+        Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
         float angle = Vector2.SignedAngle(dirToPlayer, playerRB.velocity);
         if (angle > 0) {
             transform.Rotate(rotationVector);
@@ -81,6 +81,6 @@ public class PlanetguardBossEnemy : Enemy {
             GameObject artifact = Instantiate(drop, transform.position + Vector3.up * 18, Quaternion.identity);
             artifact.GetComponent<Artifact>().setId(10);
         }
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

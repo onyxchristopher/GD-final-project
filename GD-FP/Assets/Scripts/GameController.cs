@@ -65,7 +65,7 @@ public class GameController : MonoBehaviour
     private void InitializeUniverse() {
         EventManager.NewUniverse();
 
-        // Procedurally generate world and then initialize compass
+        // Procedurally generate world and initialize compass
         int seed = 42; // Random.Range(0, 1000000);
         (Cluster level0, Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
         compass.InitializeCompass(level1, level2);
