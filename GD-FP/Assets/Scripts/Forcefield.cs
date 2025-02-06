@@ -7,6 +7,7 @@ public class Forcefield : MonoBehaviour
     // the objects connected to the forcefield
     [SerializeField] private GameObject[] linkedObjects;
     private EdgeCollider2D ec;
+    [SerializeField] public Color color;
 
     void Start() {
         // copy over visual points to collider
@@ -18,6 +19,11 @@ public class Forcefield : MonoBehaviour
         }
         pts[line.positionCount] = pts[0];
         ec.points = pts;
+
+        // link objects
+        for (int i = 0; i < linkedObjects.Length; i++) {
+            linkedObjects[i].GetComponent<Damageable>().FieldLink(gameObject, color);
+        }
     }
 
     // if no linked objects remain, the forcefield is open
