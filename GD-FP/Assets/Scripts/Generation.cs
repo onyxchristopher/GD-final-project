@@ -18,6 +18,11 @@ public class Generation : MonoBehaviour
     [SerializeField] private Vector2 largeCoreSize;
     [SerializeField] private Vector2 smallCoreSize;
 
+    private Rect[] orderedPrevPathRects;
+    private Rect[] orderedNextPathRects;
+
+    public static Vector2 farAway = new Vector2(0, 3000);
+
     public (Cluster, Cluster[], Cluster[][]) generate(int seed) {
 
         // set seed
@@ -37,7 +42,8 @@ public class Generation : MonoBehaviour
             numLargeClusters,
             largeClusterSize,
             coreLocation,
-            largeCoreSize);
+            largeCoreSize
+        );
 
         // create level 1 Cluster objects
         Cluster[] level1Clusters = new Cluster[numLargeClusters];
@@ -51,6 +57,14 @@ public class Generation : MonoBehaviour
 
         // order level 1 Cluster objects
         Cluster[] orderedLevel1Clusters = orderClusters(level1Clusters, numLargeClusters, root);
+
+        orderedPrevPathRects = new Rect[numLargeClusters];
+        orderedNextPathRects = new Rect[numLargeClusters];
+        for (int i = 0; i < numLargeClusters; i++) {
+            (Rect prevRect, Rect nextRect) = pathCalculator(i, orderedLevel1Clusters);
+            orderedPrevPathRects[i] = prevRect;
+            orderedNextPathRects[i] = nextRect;
+        }
 
         visualizeClusters(orderedLevel1Clusters, largeGridSize * totalSize, largeOffset);
 
@@ -74,7 +88,8 @@ public class Generation : MonoBehaviour
                 numSmallClusters,
                 smallClusterSize,
                 coreLocation,
-                smallCoreSize
+                smallCoreSize,
+                i
             );
 
             // initialize subclusters
@@ -86,12 +101,10 @@ public class Generation : MonoBehaviour
                     parent);
             }
 
-            
-
             // add the subcluster array to the main array
             orderedLevel2Clusters[i] = orderClusters(subclusters, numSmallClusters, parent);
 
-            //visualizeClusters(orderedLevel2Clusters[i], largeClusterSize, smallOffset);
+            visualizeClusters(orderedLevel2Clusters[i], largeClusterSize, smallOffset);
         }
 
         return (root, orderedLevel1Clusters, orderedLevel2Clusters);
@@ -112,6 +125,8 @@ public class Generation : MonoBehaviour
 
     Vector2 coreSize, the normalized size of the core
 
+    int boundsIndex, the index of the bounding rectangle (-1 if top-level)
+
     RETURNS randomized non-overlapping clusters
 
     NOTE: this algorithm will fail for tightly-packed, large areas;
@@ -125,7 +140,8 @@ public class Generation : MonoBehaviour
         int numClusters,
         Vector2 clusterSize,
         Vector2 coreLocation,
-        Vector2 coreSize) {
+        Vector2 coreSize,
+        int boundsIndex = -1) {
 
         // initialize bounding rect
         Rect zeroRect = new Rect(Vector2.zero, boundedSize);
@@ -158,7 +174,7 @@ public class Generation : MonoBehaviour
                 Rect rect = randomizeCluster(zeroRect, clusterSize);
                 // re-randomize if there is overlap
                 int innerIterations = 0;
-                while (checkOverlap(clusters, i, rect, coreBounds) && innerIterations < maxIterations) {
+                while (checkOverlap(clusters, i, rect, coreBounds, boundsIndex, offset) && innerIterations < maxIterations) {
                     rect = randomizeCluster(zeroRect, clusterSize);
                     innerIterations++;
                 }
@@ -194,12 +210,19 @@ public class Generation : MonoBehaviour
     }
 
     // helper for checking the overlap of the random rectangle with others and the core's
-    private bool checkOverlap(Rect[] clusters, int numClusters, Rect rect, Rect coreBounds) {
+    private bool checkOverlap(Rect[] clusters, int numClusters, Rect rect, Rect coreBounds, int boundsIndex, Vector2 smallOffset) {
         if (rect.Overlaps(coreBounds)) {
             return true;
         }
         for (int i = 0; i < numClusters; i++) {
             if (clusters[i].Overlaps(rect)) {
+                return true;
+            }
+        }
+        if (boundsIndex >= 0) {
+            Rect transformedRect = new Rect(rect.position * smallGridSize + smallOffset, rect.size * smallGridSize);
+            if (transformedRect.Overlaps(orderedPrevPathRects[boundsIndex])
+            || transformedRect.Overlaps(orderedNextPathRects[boundsIndex])) {
                 return true;
             }
         }
@@ -209,6 +232,65 @@ public class Generation : MonoBehaviour
     // helper to calculate core position from bounds and location
     private Vector2 calculateCorePosition(Rect bounds, Vector2 coreLocation) {
         return bounds.position + Vector2.right * bounds.width * coreLocation.x + Vector2.up * bounds.height * coreLocation.y;
+    }
+
+    private (Rect, Rect) pathCalculator(int clusterIndex, Cluster[] orderedl1) {
+        Vector2 prevCore;
+        Vector2 currentCore = orderedl1[clusterIndex].getCorePosition();
+        Vector2 nextCore;
+
+        if (clusterIndex == 0) {
+            prevCore = Vector2.zero;
+            nextCore = orderedl1[clusterIndex + 1].getCorePosition();
+        } else if (clusterIndex == numLargeClusters - 1) {
+            prevCore = orderedl1[clusterIndex - 1].getCorePosition();
+            nextCore = Vector2.zero;
+        } else {
+            prevCore = orderedl1[clusterIndex - 1].getCorePosition();
+            nextCore = orderedl1[clusterIndex + 1].getCorePosition();
+        }
+
+        Vector2 currToPrev = prevCore - currentCore;
+        Vector2 currToNext = nextCore - currentCore;
+        
+        currToPrev = currToPrev * 0.5f / Mathf.Max(Mathf.Abs(currToPrev.x), Mathf.Abs(currToPrev.y));
+        currToNext = currToNext * 0.5f / Mathf.Max(Mathf.Abs(currToNext.x), Mathf.Abs(currToNext.y));
+
+        currToPrev = Rect.NormalizedToPoint(orderedl1[clusterIndex].getBounds(), currToPrev + Vector2.one / 2);
+        currToNext = Rect.NormalizedToPoint(orderedl1[clusterIndex].getBounds(), currToNext + Vector2.one / 2);
+        
+        Rect prevRect = Rect.MinMaxRect(
+            Mathf.Min(currentCore.x, currToPrev.x),
+            Mathf.Min(currentCore.y, currToPrev.y),
+            Mathf.Max(currentCore.x, currToPrev.x),
+            Mathf.Max(currentCore.y, currToPrev.y)
+        );
+        Rect nextRect = Rect.MinMaxRect(
+            Mathf.Min(currentCore.x, currToNext.x),
+            Mathf.Min(currentCore.y, currToNext.y),
+            Mathf.Max(currentCore.x, currToNext.x),
+            Mathf.Max(currentCore.y, currToNext.y)
+        );
+
+        // Debug drawline
+        /*Vector3 bottomLeft = (Vector3) (prevRect.position);
+        Vector3 bottomRight = bottomLeft + Vector3.right * prevRect.width;
+        Vector3 topLeft = bottomLeft + Vector3.up * prevRect.height;
+        Vector3 topRight = bottomRight + Vector3.up * prevRect.height;
+        Debug.DrawLine(bottomLeft, bottomRight, Color.red, 15, false);
+        Debug.DrawLine(bottomRight, topRight, Color.red, 15, false);
+        Debug.DrawLine(topRight, topLeft, Color.red, 15, false);
+        Debug.DrawLine(topLeft, bottomLeft, Color.red, 15, false);
+        bottomLeft = (Vector3) (nextRect.position);
+        bottomRight = bottomLeft + Vector3.right * nextRect.width;
+        topLeft = bottomLeft + Vector3.up * nextRect.height;
+        topRight = bottomRight + Vector3.up * nextRect.height;
+        Debug.DrawLine(bottomLeft, bottomRight, Color.red, 15, false);
+        Debug.DrawLine(bottomRight, topRight, Color.red, 15, false);
+        Debug.DrawLine(topRight, topLeft, Color.red, 15, false);
+        Debug.DrawLine(topLeft, bottomLeft, Color.red, 15, false);*/
+
+        return (prevRect, nextRect);
     }
 
     private Cluster[] orderClusters(Cluster[] unorderedClusters, int numClusters, Cluster root) {
@@ -238,14 +320,14 @@ public class Generation : MonoBehaviour
 
     // Debug method for visualizing clusters
     private void visualizeClusters(Cluster[] clusters, Vector2 siz, Vector2 off) {
-        Vector3 totalBottomLeft = (Vector3) off;
+        /*Vector3 totalBottomLeft = (Vector3) off;
         Vector3 totalBottomRight = totalBottomLeft + siz.x * Vector3.right;
         Vector3 totalTopLeft = totalBottomLeft + siz.y * Vector3.up;
         Vector3 totalTopRight = totalTopLeft + siz.x * Vector3.right;
         Debug.DrawLine(totalBottomLeft, totalBottomRight, Color.red, 20f, false);
         Debug.DrawLine(totalBottomRight, totalTopRight, Color.red, 20f, false);
         Debug.DrawLine(totalTopRight, totalTopLeft, Color.red, 20f, false);
-        Debug.DrawLine(totalTopLeft, totalBottomLeft, Color.red, 20f, false);
+        Debug.DrawLine(totalTopLeft, totalBottomLeft, Color.red, 20f, false);*/
 
         for (int i = 0; i < clusters.Length; i++) {
             Color color = Random.ColorHSV(0.3f, 0.6f, 1f, 1f, 1f, 1f, 1f, 1f);

@@ -24,7 +24,12 @@ public class Blade : MonoBehaviour {
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Damageable") {
+        if (other.tag == "Forcefield") {
+            if (!other.isTrigger) {
+                Destroy(gameObject, duration / 5);
+                EventManager.ForcefieldHit();
+            }
+        } else if (other.tag == "Damageable") {
             if (!other.isTrigger) {
                 other.gameObject.GetComponent<Damageable>().Damage(damage);
             }

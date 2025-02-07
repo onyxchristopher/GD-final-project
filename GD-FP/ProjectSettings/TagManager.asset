@@ -26,6 +26,9 @@ TagManager:
   - Sound
   - PlayerRespawn
   - TutorialModule
+  - MinorObjective
+  - Forcefield
+  - WSCanvas
   layers:
   - Default
   - TransparentFX
@@ -42,7 +45,7 @@ TagManager:
   - Projectile
   - Collectible
   - Boundary
-  - 
+  - Forcefield
   - 
   - 
   - 

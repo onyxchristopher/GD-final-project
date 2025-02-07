@@ -65,7 +65,7 @@ public class GameController : MonoBehaviour
     private void InitializeUniverse() {
         EventManager.NewUniverse();
 
-        // Procedurally generate world and then initialize compass
+        // Procedurally generate world and initialize compass
         int seed = 42; // Random.Range(0, 1000000);
         (Cluster level0, Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
         compass.InitializeCompass(level1, level2);
@@ -75,6 +75,8 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < level1.Length; i++) {
             Vector2 boundingSize = level1[i].getBounds().size;
             Vector3 corePos = (Vector3) level1[i].getCorePosition();
+
+            ClusterBoundary.modules = new GameObject[level1.Length];
 
             // instantiate cluster at core, set collider size, set name and id
             GameObject clusterI = Instantiate(cluster, corePos, Quaternion.identity, universe.transform);

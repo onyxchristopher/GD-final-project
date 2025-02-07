@@ -9,6 +9,9 @@ public class ClusterBoundary : MonoBehaviour
 
     // module to spawn
     [SerializeField] private GameObject[] entryTutorialModules;
+
+    // keep track of the modules
+    public static GameObject[] modules;
     
     // player
     private GameObject player;
@@ -21,17 +24,18 @@ public class ClusterBoundary : MonoBehaviour
 
     // distance from the player at which the tutorial should not be despawned
 
-    // tutorial completion status
-    private bool[] completedTutorials;
-
     void Start() {
         player = GameObject.FindWithTag("Player");
         gControl = GameObject.FindWithTag("GameController").GetComponent<GameController>();
-        ResetCompletionStatus();
+        ResetAll();
     }
 
-    public void ResetCompletionStatus() {
-        completedTutorials = new bool[entryTutorialModules.Length];
+    public void ResetAll() {
+        if (modules[id - 1]) {
+            Destroy(modules[id - 1]);
+        }
+        modules[id - 1] = Instantiate(entryTutorialModules[id - 1], Generation.farAway, Quaternion.identity, transform);
+        modules[id - 1].SetActive(false);
     }
     
     public void setId(int newId) {
@@ -44,9 +48,15 @@ public class ClusterBoundary : MonoBehaviour
             int index = id - 1;
 
             // determine if the player has other tutorial modules on screen
-            bool toSpawn = ModuleUpdate();
+            bool toSpawn;
+            if (index <= 1) {
+                toSpawn = !ChildrenInViewport(modules[index]);
+            } else {
+                toSpawn = false;
+            }
+            
 
-            if (!completedTutorials[index] && toSpawn) {
+            if (!modules[index].GetComponent<TutorialModule>().complete && toSpawn) {
                 // the tutorial has not been completed, so it should be spawned
                 Vector2 playerLocation = other.gameObject.GetComponent<Rigidbody2D>().position;
                 Vector2 rootLocation = (Vector2) transform.position;
@@ -59,59 +69,55 @@ public class ClusterBoundary : MonoBehaviour
                 float distToEdge = 0;
 
                 // calculate the distance to the camera edge along the diff line
-                if (diffAngle < aspectAngle || diffAngle > 2 * Mathf.PI - aspectAngle) {
+                if (diffAngle < aspectAngle || diffAngle > Mathf.PI - aspectAngle) {
                     // intersects the left or right edge, so horizontal distance is used
-                    distToEdge = gControl.cam.orthographicSize * gControl.cam.aspect / Mathf.Cos(diffAngle);
+                    distToEdge = gControl.cam.orthographicSize * gControl.cam.aspect / Mathf.Abs(Mathf.Cos(diffAngle));
                 } else {
                     // intersects the top or bottom edge, so vertical distance is used
-                    distToEdge = gControl.cam.orthographicSize / Mathf.Sin(diffAngle);
+                    distToEdge = gControl.cam.orthographicSize / Mathf.Abs(Mathf.Sin(diffAngle));
                 }
 
                 Vector2 tutorialSpawnLocation = playerLocation + diff.normalized * (distToEdge + offsetDist);
-                Instantiate(entryTutorialModules[index], tutorialSpawnLocation, Quaternion.identity, transform);
+                modules[index].SetActive(true);
+                modules[index].transform.position = tutorialSpawnLocation;
             }
         }
     }
 
     void OnTriggerExit2D(Collider2D other) {
         EventManager.ExitCluster(id);
+        if (id <= 2 && !ChildrenInViewport(modules[id - 1])) {
+            modules[id - 1].SetActive(false);
+        }
+
     }
 
-    // Destroys modules not within the viewport and returns 
-    private bool ModuleUpdate() {
-        // Destroy any active tutorial module that is not within the player's viewport
-        GameObject[] activeTutorialModules = GameObject.FindGameObjectsWithTag("TutorialModule");
+    private bool ChildrenInViewport(GameObject module) {
+        int activeChildren = 0;
+        for (int i = 0; i < module.transform.childCount; i++) {
+            Transform child = module.transform.GetChild(i);
+            if (child.gameObject.activeSelf) {
+                activeChildren++;
 
-        // iterate over all active tutorial modules
-        for (int i = 0; i < activeTutorialModules.Length; i++) {
-            // if no enemies left in the module, it is completed
-            int activeChildren = 0;
-            // iterate over each child in that module
-            for (int j = 0; j < activeTutorialModules[i].transform.childCount; j++) {
-                Transform child = activeTutorialModules[i].transform.GetChild(j);
-                if (child.gameObject.activeSelf) {
-                    activeChildren++;
+                // if any active child from this cluster module is in the viewport, do not spawn new
 
-                    Vector3 diffFromPlayer = (child.position - player.transform.position);
-                    bool withinX = Mathf.Abs(diffFromPlayer.x) <= gControl.cam.orthographicSize * gControl.cam.aspect;
-                    bool withinY = Mathf.Abs(diffFromPlayer.y) <= gControl.cam.orthographicSize;
-                    bool withinViewport = withinX && withinY;
+                Vector3 diffFromPlayer = (child.position - player.transform.position);
+                bool withinX = Mathf.Abs(diffFromPlayer.x) <= gControl.cam.orthographicSize * gControl.cam.aspect;
+                bool withinY = Mathf.Abs(diffFromPlayer.y) <= gControl.cam.orthographicSize;
+                bool withinViewport = withinX && withinY;
 
-                    // if any child is in the viewport, do not spawn new
-                    // if not, wait till the other children are checked
-                    
-                    if (withinViewport) {
-                        return false;
-                    }
+                if (withinViewport) {
+                    return true;
                 }
-            }
-            Destroy(activeTutorialModules[i]);
-            if (activeChildren == 0) {
-                completedTutorials[activeTutorialModules[i].GetComponent<TutorialModule>().index] = true;
-                Destroy(activeTutorialModules[i].gameObject);
             }
         }
 
-        return true;
+        // if no enemies left in the module, it is completed
+        if (activeChildren == 0) {
+            module.GetComponent<TutorialModule>().complete = true;
+            module.SetActive(false);
+        }
+
+        return false;
     }
 }

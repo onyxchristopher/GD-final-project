@@ -18,8 +18,6 @@ public class Upgrades : MonoBehaviour
 
     [SerializeField] private int minorFuelUpgrade;
     [SerializeField] private int minorHealthUpgrade;
-    [SerializeField] private int majorFuelUpgrade;
-    [SerializeField] private int majorHealthUpgrade;
 
 
     void Start()
@@ -74,12 +72,6 @@ public class Upgrades : MonoBehaviour
                     break;
                 case 2:
                     playerCollision.IncreaseMaxHealth(minorHealthUpgrade);
-                    break;
-                case 3:
-                    playerMovement.IncreaseMaxFuel(majorFuelUpgrade);
-                    break;
-                case 4:
-                    playerCollision.IncreaseMaxHealth(majorHealthUpgrade);
                     break;
             }
         }

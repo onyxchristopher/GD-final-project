@@ -42,7 +42,7 @@ public class SentryTurretEnemy : Enemy {
 
     private IEnumerator<float> _SentryFire() {
         firedWithinDelay = true;
-        Vector2 dirToPlayer = playerRB.position - spawnpoint;
+        Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
         Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
         yield return Timing.WaitForSeconds(delay);
         firedWithinDelay = false;
@@ -70,6 +70,6 @@ public class SentryTurretEnemy : Enemy {
             droppedFuel.GetComponent<FuelDrop>().fuel = 10;
         }
         EventManager.EnemyDefeat();
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

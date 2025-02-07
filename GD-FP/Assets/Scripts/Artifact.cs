@@ -19,11 +19,18 @@ public class Artifact : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) {
         if ((playerTransform.position - transform.position).magnitude < 10) {
-            gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
-            gameObject.transform.GetChild(1).GetComponent<Animator>().SetTrigger("Pickup");
+            if (gameObject.transform.childCount == 2) {
+                gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(1).GetComponent<Animator>().SetTrigger("Pickup");
+            } else {
+                gameObject.GetComponent<Animator>().SetTrigger("Pickup");
+            }
+            
 
             EventManager.ArtifactPickup(id);
-            EventManager.SetSpawn(transform.position);
+            if (id % 10 == 0) {
+                EventManager.SetSpawn(transform.position);
+            }
             
             Destroy(gameObject.GetComponent<BoxCollider2D>());
             Destroy(gameObject, timeToPickup + 0.5f);

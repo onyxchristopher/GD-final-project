@@ -13,17 +13,20 @@ It moves back to IDLE, returning to its spawnpoint, when its trigger is exited b
 */
 
 public class FireChaserEnemy : Enemy {
+    private Damageable dmg;
     [SerializeField] private GameObject projectile;
     private Rigidbody2D playerRB;
     private Rigidbody2D rb;
     [SerializeField] private float delay;
     [SerializeField] private float speed;
     private bool firedWithinDelay = false;
+    public bool mobile = false;
 
     // Awake encodes the enemy FSM
     void Awake() {
         Action chaserAttack = ChaseLoop;
         chaserAttack += FireLoop;
+        chaserAttack += Moving;
         enterStateLogic.Add(State.ATTACK, chaserAttack);
 
         Action chaserReturn = ReturnLoop;
@@ -33,10 +36,16 @@ public class FireChaserEnemy : Enemy {
     void Start() {
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
         rb = gameObject.GetComponent<Rigidbody2D>();
-        gameObject.GetComponent<Damageable>().enemy = this;
-        ReassignSpawn(transform.position);
+        dmg = gameObject.GetComponent<Damageable>();
+        dmg.enemy = this;
 
         EventManager.onPlayerDeath += ResetToIdle;
+    }
+
+    private void Moving() {
+        mobile = true;
+        spawnpoint = transform.position;
+        dmg.MobilityChange(mobile);
     }
 
     private void ChaseLoop() {
@@ -87,7 +96,7 @@ public class FireChaserEnemy : Enemy {
         }
 
         if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.RunCoroutine(_Return().CancelWith(gameObject));
+            Timing.RunCoroutine(_Return());
         }
     }
     
@@ -98,6 +107,8 @@ public class FireChaserEnemy : Enemy {
         rb.velocity = dirToSpawn.normalized * speed;
         if (dirToSpawn.magnitude < 1) {
             rb.velocity = Vector2.zero;
+            mobile = false;
+            dmg.MobilityChange(mobile);
             yield break;
         }
         yield return Timing.WaitForOneFrame;
@@ -124,6 +135,6 @@ public class FireChaserEnemy : Enemy {
             droppedFuel.GetComponent<HealthDrop>().health = 2;
         }
         EventManager.EnemyDefeat();
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }
