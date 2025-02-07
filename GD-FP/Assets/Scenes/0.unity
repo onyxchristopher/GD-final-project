@@ -917,10 +917,8 @@ MonoBehaviour:
   upgradedBladeDamage: 10
   upgradedTrapDamage: 10
   upgradedShieldDuration: 1
-  minorFuelUpgrade: 5
+  minorFuelUpgrade: 10
   minorHealthUpgrade: 2
-  majorFuelUpgrade: 15
-  majorHealthUpgrade: 5
 --- !u!114 &467730946
 MonoBehaviour:
   m_ObjectHideFlags: 0

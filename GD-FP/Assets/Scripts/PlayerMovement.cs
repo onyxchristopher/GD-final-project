@@ -77,9 +77,10 @@ public class PlayerMovement : MonoBehaviour {
         fuelBarSlider.value = fuel;
     }
 
-    public void IncreaseMaxFuel(int max) {
-        maxFuel += max;
+    public void IncreaseMaxFuel(int fp) {
+        maxFuel += fp;
         fuelBarSlider.maxValue = maxFuel;
+        SetFuel(fp);
     }
 
     public void SetSpawn(Vector3 spawn) {
