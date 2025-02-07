@@ -12,8 +12,10 @@ public class Damageable : MonoBehaviour {
     private bool invuln = false;
     private float invulnDuration = 0.3f;
     public Enemy enemy;
-    private GameObject forcefield;
+    private GameObject linkedForcefield;
     private LineRenderer lr;
+    public GameObject protectiveForcefield;
+    [SerializeField] private int lineSortingOrder;
 
     void Start() {
         gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
@@ -22,7 +24,7 @@ public class Damageable : MonoBehaviour {
     }
     
     public void Damage(int damage) {
-        if (!invuln){
+        if (!invuln || !protectiveForcefield){
             health -= damage;
 
             // a normal enemy should have hit sounds at all times
@@ -36,8 +38,8 @@ public class Damageable : MonoBehaviour {
                 if (!isBoss) {
                     EventManager.EnemyHit();
                 }
-                if (forcefield) {
-                    forcefield.GetComponent<Forcefield>().CheckForcefield();
+                if (linkedForcefield) {
+                    linkedForcefield.GetComponent<Forcefield>().CheckForcefield();
                 }
             } else {
                 EventManager.EnemyHit();
@@ -52,18 +54,23 @@ public class Damageable : MonoBehaviour {
         yield return Timing.WaitForSeconds(invulnDuration);
         invuln = false;
     }
+    
+    // Functions for linkedForcefield linking
 
     public void FieldLink(GameObject field, Color fieldColor) {
-        forcefield = field;
+        linkedForcefield = field;
         lr = gameObject.AddComponent<LineRenderer>();
         lr.useWorldSpace = true;
-        lr.widthCurve = AnimationCurve.Constant(0, 1, 0.15f);
+        lr.widthCurve = AnimationCurve.Constant(0, 1, 0.10f);
         lr.material = field.GetComponent<LineRenderer>().material;
-        lr.startColor = fieldColor;
-        lr.endColor = Color.clear;
+        Color connector = fieldColor;
+        connector.a = 0.5f;
+        lr.startColor = connector;
+        lr.endColor = connector;
+        lr.sortingOrder = lineSortingOrder;
 
         Vector3 pos = transform.position;
-        Vector3 forcefieldPos = forcefield.transform.position;
+        Vector3 forcefieldPos = linkedForcefield.transform.position;
         Vector3[] positions = new Vector3[2] {forcefieldPos, pos};
 
         lr.SetPositions(positions);
@@ -71,8 +78,8 @@ public class Damageable : MonoBehaviour {
     }
 
     public void MobilityChange(bool mobility) {
-        // must have a forcefield
-        if (forcefield) {
+        // must have a linkedForcefield
+        if (linkedForcefield) {
             // update the positions when mobile, stop when not
             if (mobility) {
                 Timing.RunCoroutine(_FieldUplink(), "u");
@@ -85,7 +92,7 @@ public class Damageable : MonoBehaviour {
     private IEnumerator<float> _FieldUplink() {
         // calculate positions
         Vector3 pos = transform.position;
-        Vector3 forcefieldPos = forcefield.transform.position;
+        Vector3 forcefieldPos = linkedForcefield.transform.position;
         Vector3[] positions = new Vector3[2] {forcefieldPos, pos};
 
         // update positions while active

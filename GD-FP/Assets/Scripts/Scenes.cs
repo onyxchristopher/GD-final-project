@@ -56,8 +56,11 @@ public class Scenes : MonoBehaviour
         // Assign positions to objects
         Vector3 rootPosition = level1[clusterIndex].getCorePosition();
         root.transform.position = rootPosition;
-        root.transform.GetChild(1).position = level2[clusterIndex][0].getCorePosition();
-        root.transform.GetChild(2).position = level2[clusterIndex][1].getCorePosition();
+
+        if (id <= 1) {
+            root.transform.GetChild(1).position = level2[clusterIndex][0].getCorePosition();
+            root.transform.GetChild(2).position = level2[clusterIndex][1].getCorePosition();
+        }
 
         // Reassign spawnpoints
         GameObject[] gos = GameObject.FindGameObjectsWithTag("Damageable");

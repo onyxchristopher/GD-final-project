@@ -93,7 +93,7 @@ public class Generation : MonoBehaviour
             // add the subcluster array to the main array
             orderedLevel2Clusters[i] = orderClusters(subclusters, numSmallClusters, parent);
 
-            //visualizeClusters(orderedLevel2Clusters[i], largeClusterSize, smallOffset);
+            visualizeClusters(orderedLevel2Clusters[i], largeClusterSize, smallOffset);
         }
 
         return (root, orderedLevel1Clusters, orderedLevel2Clusters);
@@ -240,14 +240,14 @@ public class Generation : MonoBehaviour
 
     // Debug method for visualizing clusters
     private void visualizeClusters(Cluster[] clusters, Vector2 siz, Vector2 off) {
-        Vector3 totalBottomLeft = (Vector3) off;
+        /*Vector3 totalBottomLeft = (Vector3) off;
         Vector3 totalBottomRight = totalBottomLeft + siz.x * Vector3.right;
         Vector3 totalTopLeft = totalBottomLeft + siz.y * Vector3.up;
         Vector3 totalTopRight = totalTopLeft + siz.x * Vector3.right;
         Debug.DrawLine(totalBottomLeft, totalBottomRight, Color.red, 20f, false);
         Debug.DrawLine(totalBottomRight, totalTopRight, Color.red, 20f, false);
         Debug.DrawLine(totalTopRight, totalTopLeft, Color.red, 20f, false);
-        Debug.DrawLine(totalTopLeft, totalBottomLeft, Color.red, 20f, false);
+        Debug.DrawLine(totalTopLeft, totalBottomLeft, Color.red, 20f, false);*/
 
         for (int i = 0; i < clusters.Length; i++) {
             Color color = Random.ColorHSV(0.3f, 0.6f, 1f, 1f, 1f, 1f, 1f, 1f);

@@ -118,4 +118,10 @@ public class EventManager : MonoBehaviour {
             onSetSpawn(spawn);
         }
     }
+
+    public delegate void NotifyForcefieldHit();
+    public static event NotifyForcefieldHit onForcefieldHit;
+    public static void ForcefieldHit() {
+        onForcefieldHit?.Invoke();
+    }
 }

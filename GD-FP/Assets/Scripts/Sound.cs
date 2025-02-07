@@ -29,6 +29,7 @@ public class Sound : MonoBehaviour
     public AudioClip respawn;
     public AudioClip respawnEnd;
     public AudioClip explosion;
+    public AudioClip forcefieldZap;
 
     void Start() {
         EventManager.onArtifactPickup += PlayGetArtifact;
@@ -40,6 +41,7 @@ public class Sound : MonoBehaviour
         EventManager.onPlayerDeath += PlayRespawn;
         EventManager.onPlayerRespawn += PlayRespawnEnd;
         EventManager.onBossDefeat += PlayExplosion;
+        EventManager.onForcefieldHit += PlayForcefieldZap;
 
         EventManager.onEnterBossArea += EnterCombat;
         EventManager.onExitBossArea += ExitCombat;
@@ -164,6 +166,10 @@ public class Sound : MonoBehaviour
 
     public void PlayExplosion(string _) {
         PlaySFX(explosion, 1);
+    }
+
+    public void PlayForcefieldZap() {
+        PlaySFX(forcefieldZap, 1);
     }
 
     public void PlaySFX(AudioClip clip, float vol = 1) {

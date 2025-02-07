@@ -6,7 +6,14 @@ public class Forcefield : MonoBehaviour
 {
     // the objects connected to the forcefield
     [SerializeField] private GameObject[] linkedObjects;
+
+    // the objects the forcefield is protecting
+    [SerializeField] private GameObject[] protectingObjects;
+
+    // the forcefield's collider
     private EdgeCollider2D ec;
+
+    // the forcefield's color
     [SerializeField] public Color color;
 
     void Start() {
@@ -36,6 +43,16 @@ public class Forcefield : MonoBehaviour
         }
         if (activeLinkedObjCount == 0) {
             gameObject.SetActive(false);
+            for (int i = 0; i < protectingObjects.Length; i++) {
+                protectingObjects[i].GetComponent<Damageable>().protectiveForcefield = null;
+            }
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D coll) {
+        string goTag = coll.gameObject.tag;
+        if (goTag == "Player") {
+            EventManager.ForcefieldHit();
         }
     }
 }
