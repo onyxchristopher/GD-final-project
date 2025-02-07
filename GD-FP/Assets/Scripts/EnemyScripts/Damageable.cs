@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MEC;
 
 public class Damageable : MonoBehaviour {
@@ -16,6 +17,9 @@ public class Damageable : MonoBehaviour {
     private LineRenderer lr;
     public GameObject protectiveForcefield;
     [SerializeField] private int lineSortingOrder;
+    [SerializeField] private GameObject healthbar;
+    [SerializeField] private Vector3 healthBarOffset = new Vector3(0, 3.5f, 0);
+    private Slider healthBarSlider;
 
     void Start() {
         gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
@@ -42,6 +46,9 @@ public class Damageable : MonoBehaviour {
                     linkedForcefield.GetComponent<Forcefield>().CheckForcefield();
                 }
             } else {
+                if (!isBoss) {
+                    DisplayHealthbar(); // display healthbar if non-boss not dead
+                }
                 EventManager.EnemyHit();
             }
 
@@ -53,6 +60,28 @@ public class Damageable : MonoBehaviour {
     private IEnumerator<float> _IFrames() {
         yield return Timing.WaitForSeconds(invulnDuration);
         invuln = false;
+    }
+
+    // Non-boss health bars
+
+    private void DisplayHealthbar() {
+        if (healthbar) {
+            if (!healthBarSlider) {
+                GameObject hp = Instantiate(healthbar, transform.position, Quaternion.identity,
+                                            GameObject.FindWithTag("WSCanvas").transform);
+                healthBarSlider = hp.GetComponent<Slider>();
+                healthBarSlider.maxValue = maxHealth;
+                Timing.RunCoroutine(_MoveHealthbar(hp), "movehp");
+            }
+            healthBarSlider.value = health;
+        }
+    }
+
+    private IEnumerator<float> _MoveHealthbar(GameObject hp) {
+        while (true) {
+            hp.transform.position = transform.position + healthBarOffset;
+            yield return Timing.WaitForOneFrame;
+        }
     }
     
     // Functions for linkedForcefield linking
@@ -100,6 +129,13 @@ public class Damageable : MonoBehaviour {
             positions[0] = transform.position;
             lr.SetPositions(positions);
             yield return Timing.WaitForOneFrame;
+        }
+    }
+
+    void OnDisable() {
+        if (healthBarSlider) {
+            Timing.KillCoroutines("movehp");
+            Destroy(healthBarSlider.gameObject);
         }
     }
 }

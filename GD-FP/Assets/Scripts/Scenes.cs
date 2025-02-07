@@ -62,16 +62,6 @@ public class Scenes : MonoBehaviour
             root.transform.GetChild(2).position = level2[clusterIndex][1].getCorePosition();
         }
 
-        // Reassign spawnpoints
-        GameObject[] gos = GameObject.FindGameObjectsWithTag("Damageable");
-        for (int i = 0; i < gos.Length; i++) {
-            // find the Damageable script
-            Damageable dmg = gos[i].GetComponent<Damageable>();
-            if (dmg.enemy) {
-                dmg.enemy.ReassignSpawn(gos[i].transform.position);
-            }
-        }
-
         if (level1[clusterIndex].getComplete()) {
             if (id <= 1) {
                 root.transform.GetChild(0).gameObject.SetActive(false);

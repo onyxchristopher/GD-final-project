@@ -40,7 +40,7 @@ public class PlayerCollision : MonoBehaviour {
     public void IncreaseMaxHealth(int hp) {
         maxHealth += hp;
         healthBarSlider.maxValue = maxHealth;
-        SetHealth(hp);
+        SetHealth(maxHealth);
     }
 
     void OnCollisionEnter2D(Collision2D collision) {

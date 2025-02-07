@@ -52,6 +52,6 @@ public class Enemy : MonoBehaviour {
     }
 
     public virtual void EnemyDeath() {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

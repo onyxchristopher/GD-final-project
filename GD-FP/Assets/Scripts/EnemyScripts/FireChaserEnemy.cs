@@ -44,6 +44,7 @@ public class FireChaserEnemy : Enemy {
 
     private void Moving() {
         mobile = true;
+        spawnpoint = transform.position;
         dmg.MobilityChange(mobile);
     }
 

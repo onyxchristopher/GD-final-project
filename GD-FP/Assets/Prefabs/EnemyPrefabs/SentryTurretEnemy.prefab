@@ -160,3 +160,6 @@ MonoBehaviour:
   isBoss: 0
   enemy: {fileID: 0}
   protectiveForcefield: {fileID: 0}
+  lineSortingOrder: 0
+  healthbar: {fileID: 2145191980686434580, guid: f3e13775643e04eb28318c0841b9adba,
+    type: 3}

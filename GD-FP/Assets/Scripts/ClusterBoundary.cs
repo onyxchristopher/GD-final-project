@@ -48,7 +48,13 @@ public class ClusterBoundary : MonoBehaviour
             int index = id - 1;
 
             // determine if the player has other tutorial modules on screen
-            bool toSpawn = !ChildrenInViewport(modules[index]);
+            bool toSpawn;
+            if (index <= 1) {
+                toSpawn = !ChildrenInViewport(modules[index]);
+            } else {
+                toSpawn = false;
+            }
+            
 
             if (!modules[index].GetComponent<TutorialModule>().complete && toSpawn) {
                 // the tutorial has not been completed, so it should be spawned
@@ -80,7 +86,7 @@ public class ClusterBoundary : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other) {
         EventManager.ExitCluster(id);
-        if (!ChildrenInViewport(modules[id - 1])) {
+        if (id <= 2 && !ChildrenInViewport(modules[id - 1])) {
             modules[id - 1].SetActive(false);
         }
 

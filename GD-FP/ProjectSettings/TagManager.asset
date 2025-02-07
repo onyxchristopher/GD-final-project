@@ -28,6 +28,7 @@ TagManager:
   - TutorialModule
   - MinorObjective
   - Forcefield
+  - WSCanvas
   layers:
   - Default
   - TransparentFX

@@ -242,7 +242,6 @@ public class Generation : MonoBehaviour
         if (clusterIndex == 0) {
             prevCore = Vector2.zero;
             nextCore = orderedl1[clusterIndex + 1].getCorePosition();
-            Debug.Log($"{prevCore}, {currentCore}, {nextCore}");
         } else if (clusterIndex == numLargeClusters - 1) {
             prevCore = orderedl1[clusterIndex - 1].getCorePosition();
             nextCore = Vector2.zero;
