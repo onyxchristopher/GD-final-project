@@ -140,6 +140,7 @@ public class Compass : MonoBehaviour
         } else { // minor
             minorProg.Add(id);
             UpdateMinor(firstDigit);
+            minorArrowTransforms[secondDigit - 1].gameObject.SetActive(false);
         }
     }
 
@@ -160,6 +161,7 @@ public class Compass : MonoBehaviour
         for (int i = 0; i < numMinor; i++) {
             // if not already done that minor obj, add it to list
             if (!minorProg.Contains(clusterNum * 10 + i + 1)) {
+                minorArrowTransforms[i].gameObject.SetActive(true);
                 minor.Add(level2[clusterIndex][i].getCorePosition());
             }
         }
