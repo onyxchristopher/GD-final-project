@@ -11,7 +11,8 @@ In ATTACK, it shoots a projectile at the player every [delay] seconds.
 It moves back to IDLE when its trigger is exited by the player.
 */
 
-public class SentryTurretEnemy : Enemy {
+public class SentryTurretEnemy : Enemy
+{
     [SerializeField] private GameObject projectile;
     private Rigidbody2D playerRB;
     [SerializeField] private float delay;

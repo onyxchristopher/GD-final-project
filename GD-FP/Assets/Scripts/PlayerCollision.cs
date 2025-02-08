@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using MEC;
 
-public class PlayerCollision : MonoBehaviour {
+public class PlayerCollision : MonoBehaviour
+{
 
     [SerializeField] private int startingMaxHealth;
     private int health;

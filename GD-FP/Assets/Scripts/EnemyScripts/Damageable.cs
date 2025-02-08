@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using MEC;
 
-public class Damageable : MonoBehaviour {
+public class Damageable : MonoBehaviour
+{
 
     private GameController gameController;
     public int maxHealth;

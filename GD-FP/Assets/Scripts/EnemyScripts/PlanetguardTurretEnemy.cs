@@ -9,7 +9,8 @@ The planetguard turret is a child of the boss enemy of the same name. Its
 purpose is to fire at the player. 
 */
 
-public class PlanetguardTurretEnemy : Enemy {
+public class PlanetguardTurretEnemy : Enemy
+{
     [SerializeField] private GameObject projectile;
     private Rigidbody2D playerRB;
     [HideInInspector] public Vector2 location;

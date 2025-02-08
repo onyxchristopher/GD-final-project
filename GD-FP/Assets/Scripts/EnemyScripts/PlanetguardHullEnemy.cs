@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlanetguardHullEnemy : Enemy {
+public class PlanetguardHullEnemy : Enemy
+{
     
     private SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite damagedHull;
