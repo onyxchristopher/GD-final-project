@@ -87,7 +87,10 @@ public class Damageable : MonoBehaviour
     
     // Functions for linkedForcefield linking
 
-    public void FieldLink(GameObject field, Color fieldColor) {
+    public void FieldLink(GameObject field, Color fieldColor, bool drawLineToLinked) {
+        if (!drawLineToLinked) {
+            return;
+        }
         linkedForcefield = field;
         lr = gameObject.AddComponent<LineRenderer>();
         lr.useWorldSpace = true;

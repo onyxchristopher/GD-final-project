@@ -29,6 +29,7 @@ TagManager:
   - MinorObjective
   - Forcefield
   - WSCanvas
+  - Voidcharger
   layers:
   - Default
   - TransparentFX
@@ -46,7 +47,7 @@ TagManager:
   - Collectible
   - Boundary
   - Forcefield
-  - 
+  - Damaging
   - 
   - 
   - 

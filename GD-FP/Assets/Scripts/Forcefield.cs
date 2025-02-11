@@ -16,6 +16,9 @@ public class Forcefield : MonoBehaviour
     // the forcefield's color
     [SerializeField] public Color color;
 
+    // whether to draw a line to the center of the linked forcefield
+    [SerializeField] bool drawLineToLinked = true;
+
     void Start() {
         // copy over visual points to collider
         ec = gameObject.GetComponent<EdgeCollider2D>();
@@ -29,7 +32,7 @@ public class Forcefield : MonoBehaviour
 
         // link objects
         for (int i = 0; i < linkedObjects.Length; i++) {
-            linkedObjects[i].GetComponent<Damageable>().FieldLink(gameObject, color);
+            linkedObjects[i].GetComponent<Damageable>().FieldLink(gameObject, color, drawLineToLinked);
         }
     }
 

@@ -19,6 +19,10 @@ public class Blade : MonoBehaviour {
         transform.RotateAround(player.transform.position, Vector3.forward, angularSpeed * Time.deltaTime);
     }
 
+    public int GetDamage() {
+        return damage;
+    }
+
     public void SetDamage(int d) {
         damage = d;
     }

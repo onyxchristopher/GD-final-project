@@ -12,12 +12,12 @@ public class Enemy : MonoBehaviour {
     [HideInInspector] protected Vector2 spawnpoint;
 
     // the current state
-    protected enum State {
+    public enum State {
         IDLE, TRACK, ATTACK
     }
     
-    [HideInInspector] protected State state;
-    private State prevState;
+    [HideInInspector] public State state;
+    [HideInInspector] public State prevState;
 
     protected Dictionary<State, Action> enterStateLogic = new Dictionary<State, Action>();
     protected Dictionary<State, Action> exitStateLogic = new Dictionary<State, Action>();
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour {
         spawnpoint = (Vector2) newSpawn;
     }
 
-    protected void StateTransition() {
+    public void StateTransition() {
         if (state != prevState) {
             // tries to find any action to be taken on state transition
             Action exitAction = null;
