@@ -67,6 +67,7 @@ MonoBehaviour:
   protectingObjects: []
   color: {r: 0.96862745, g: 1, b: 0, a: 1}
   drawLineToLinked: 0
+  multiplier: -1
 --- !u!120 &2013307539632535341
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -107,10 +108,14 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 5
   m_Positions:
-  - {x: -50, y: -50, z: 0}
-  - {x: -50, y: 50, z: 0}
-  - {x: 50, y: 50, z: 0}
-  - {x: 50, y: -50, z: 0}
+  - {x: -45, y: -50, z: 0}
+  - {x: -50, y: -45, z: 0}
+  - {x: -50, y: 45, z: 0}
+  - {x: -45, y: 50, z: 0}
+  - {x: 45, y: 50, z: 0}
+  - {x: 50, y: 45, z: 0}
+  - {x: 50, y: -45, z: 0}
+  - {x: 45, y: -50, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1

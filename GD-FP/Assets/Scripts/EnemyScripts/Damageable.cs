@@ -28,7 +28,7 @@ public class Damageable : MonoBehaviour
         health = maxHealth;
     }
     
-    public void Damage(int damage) {
+    public void Damage(int damage, bool suppressSound = false) {
         if (!invuln || !protectiveForcefield){
             health -= damage;
 
@@ -40,7 +40,7 @@ public class Damageable : MonoBehaviour
 
             if (health <= 0) {
                 enemy.EnemyDeath();
-                if (!isBoss) {
+                if (!isBoss && !suppressSound) {
                     EventManager.EnemyHit();
                 }
                 if (linkedForcefield) {
@@ -50,7 +50,9 @@ public class Damageable : MonoBehaviour
                 if (!isBoss) {
                     DisplayHealthbar(); // display healthbar if non-boss not dead
                 }
-                EventManager.EnemyHit();
+                if (!suppressSound) {
+                    EventManager.EnemyHit();
+                }
             }
 
             invuln = true;

@@ -57,13 +57,16 @@ public class Scenes : MonoBehaviour
         Vector3 rootPosition = level1[clusterIndex].getCorePosition();
         root.transform.position = rootPosition;
 
-        if (id <= 1) {
-            root.transform.GetChild(1).position = level2[clusterIndex][0].getCorePosition();
-            root.transform.GetChild(2).position = level2[clusterIndex][1].getCorePosition();
+        if (id <= 2) {
+            root.transform.GetChild(0).GetComponent<Enemy>().ReassignSpawn(level1[clusterIndex].getCorePosition());
+            if (id <= 1) {
+                root.transform.GetChild(1).position = level2[clusterIndex][0].getCorePosition();
+                root.transform.GetChild(2).position = level2[clusterIndex][1].getCorePosition();
+            }
         }
 
         if (level1[clusterIndex].getComplete()) {
-            if (id <= 1) {
+            if (id <= 2) {
                 root.transform.GetChild(0).gameObject.SetActive(false);
             }
         }

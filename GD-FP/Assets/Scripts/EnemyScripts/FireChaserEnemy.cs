@@ -21,6 +21,7 @@ public class FireChaserEnemy : Enemy {
     [SerializeField] private float speed;
     private bool firedWithinDelay = false;
     public bool mobile = false;
+    public bool firstMove = true;
 
     // Awake encodes the enemy FSM
     void Awake() {
@@ -44,7 +45,10 @@ public class FireChaserEnemy : Enemy {
 
     private void Moving() {
         mobile = true;
-        spawnpoint = transform.position;
+        if (firstMove) {
+            ReassignSpawn(transform.position);
+            firstMove = false;
+        }
         dmg.MobilityChange(mobile);
     }
 
@@ -113,6 +117,12 @@ public class FireChaserEnemy : Enemy {
         }
         yield return Timing.WaitForOneFrame;
         ReturnLoop();
+    }
+
+    void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.tag == "Player") {
+            collision.gameObject.GetComponent<PlayerCollision>().HullCollision();
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other) {

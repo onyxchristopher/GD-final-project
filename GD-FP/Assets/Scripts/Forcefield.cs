@@ -19,6 +19,9 @@ public class Forcefield : MonoBehaviour
     // whether to draw a line to the center of the linked forcefield
     [SerializeField] bool drawLineToLinked = true;
 
+    // multiplier for velocity on ejection
+    [SerializeField] private float multiplier = -1;
+
     void Start() {
         // copy over visual points to collider
         ec = gameObject.GetComponent<EdgeCollider2D>();
@@ -56,6 +59,8 @@ public class Forcefield : MonoBehaviour
         string goTag = coll.gameObject.tag;
         if (goTag == "Player") {
             EventManager.ForcefieldHit();
+            Rigidbody2D rb = coll.gameObject.GetComponent<Rigidbody2D>();
+            rb.velocity = Mathf.Max(25, rb.velocity.magnitude) * multiplier * coll.GetContact(0).normal;
         }
     }
 }

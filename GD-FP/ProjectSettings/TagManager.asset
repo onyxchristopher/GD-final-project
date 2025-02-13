@@ -30,6 +30,7 @@ TagManager:
   - Forcefield
   - WSCanvas
   - Voidcharger
+  - VoidchargerRespawnField
   layers:
   - Default
   - TransparentFX

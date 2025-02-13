@@ -5,9 +5,8 @@ using UnityEngine;
 public class VoidchargerBackEnemy : MonoBehaviour
 {
     private Damageable bossHealth;
-    // Start is called before the first frame update
-    void Start()
-    {
+    
+    void Start() {
         bossHealth = transform.parent.gameObject.GetComponent<Damageable>();
     }
 

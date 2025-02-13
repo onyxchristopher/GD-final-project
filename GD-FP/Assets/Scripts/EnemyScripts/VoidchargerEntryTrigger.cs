@@ -9,7 +9,6 @@ public class VoidchargerEntryTrigger : MonoBehaviour
 
     void Start() {
         boss = transform.parent.GetChild(0).GetComponent<VoidchargerBossEnemy>();
-        EventManager.onBossDefeat += CheckBossDefeat;
     }
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Player" && !bossDefeated) {
@@ -20,11 +19,4 @@ public class VoidchargerEntryTrigger : MonoBehaviour
             bc.size = bc.size + Vector2.one * 10;
         }
     }
-
-    public void CheckBossDefeat(string bossName) {
-        if (bossName == "Voidcharger") {
-            bossDefeated = true;
-        }
-    }
-    
 }

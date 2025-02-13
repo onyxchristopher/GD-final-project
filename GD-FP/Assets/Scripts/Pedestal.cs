@@ -8,8 +8,13 @@ public class Pedestal : MonoBehaviour
     private float setSpawnDelay = 15;
     private bool withinSetSpawnDelay = false;
     private float fuelPerSecond = 20;
+    private PlayerCollision pColl;
+    private PlayerMovement pMove;
 
     void Start() {
+        GameObject player = GameObject.FindWithTag("Player");
+        pColl = player.GetComponent<PlayerCollision>();
+        pMove = player.GetComponent<PlayerMovement>();
         EventManager.onSetSpawn += CheckSpawnDelay;
     }
 
@@ -29,7 +34,12 @@ public class Pedestal : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D other) {
         if (other.gameObject.tag == "Player") {
-            other.gameObject.GetComponent<PlayerMovement>().SetFuel(Time.deltaTime * fuelPerSecond);
+            if (!pColl.inactive) {
+                pMove.SetFuel(Time.deltaTime * fuelPerSecond);
+                if (pMove.GetFuel() > pMove.maxFuel - 1) {
+                    pColl.SetHealth(pColl.maxHealth);
+                }
+            }
         }
     }
 

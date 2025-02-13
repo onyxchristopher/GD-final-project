@@ -58,6 +58,12 @@ public class PlanetguardBossEnemy : Enemy
         TrackLoop();
     }
 
+    void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.tag == "Player") {
+            collision.gameObject.GetComponent<PlayerCollision>().HullCollision();
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Player") {
             state = State.TRACK;

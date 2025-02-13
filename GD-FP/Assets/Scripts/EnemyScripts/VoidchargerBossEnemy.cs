@@ -29,6 +29,9 @@ public class VoidchargerBossEnemy : Enemy
     [SerializeField] private float rechargeTime;
     private GameObject telegraphArrow;
 
+    private bool forcefieldTrigger = false;
+    private bool hitPlayerTrigger = false;
+
     // Awake encodes the enemy FSM
 
     void Awake() {
@@ -44,24 +47,41 @@ public class VoidchargerBossEnemy : Enemy
         rb = gameObject.GetComponent<Rigidbody2D>();
         dmg = gameObject.GetComponent<Damageable>();
         dmg.enemy = this;
-        telegraphArrow = transform.GetChild(3).gameObject;
+        telegraphArrow = transform.GetChild(2).gameObject;
 
         EventManager.onPlayerDeath += ResetToIdle;
-        EventManager.onPlayerDeath += PlayerDiedDuringFight;
     }
+
+    void OnEnable() {
+        ReassignSpawn(transform.position);
+    }
+
+    // ATTACK state functions
 
     private void AttackLoop() {
         if (state != State.ATTACK) {
             return;
         }
+        Vector2 pDistFromSpawn = playerRB.position - spawnpoint;
+        if (pDistFromSpawn.x < -50 || pDistFromSpawn.x > 50 || pDistFromSpawn.y < -50 || pDistFromSpawn.y > 50) {
+            playerRB.position = spawnpoint;
+        }
         if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.RunCoroutine(_RotateAndCharge(), "atkloop");
+            Timing.RunCoroutine(_RotateAndCharge().CancelWith(gameObject));
         }
     }
 
     private IEnumerator<float> _RotateAndCharge() {
-        // Precharge loop
+        // Recharge loop
         float time = 0;
+        float rotation = rb.rotation;
+        while (time < rechargeTime) {
+            rb.rotation = Mathf.LerpAngle(rotation, CalcPlayerDir(), time / rechargeTime);
+            yield return Timing.WaitForOneFrame;
+            time += Time.deltaTime;
+        }
+        // Precharge loop
+        time = 0;
         telegraphArrow.SetActive(true);
         while (time < preChargeDuration) {
             rb.rotation = CalcPlayerDir();
@@ -71,21 +91,18 @@ public class VoidchargerBossEnemy : Enemy
         telegraphArrow.SetActive(false);
         // Charge loop
         time = 0;
-        Vector2 normVel = new Vector2(Mathf.Cos(rb.rotation), Mathf.Sin(rb.rotation));
+        forcefieldTrigger = false;
+        hitPlayerTrigger = false;
         while (time < chargeDuration) {
-            rb.velocity = -transform.up * chargeSpeed * Mathf.Min(1, (3 - 3 * time / chargeDuration));
+            if (forcefieldTrigger || hitPlayerTrigger) {
+                time = chargeDuration;
+            } else {
+                rb.velocity = -transform.up * chargeSpeed * Mathf.Min(1, (3 - 3 * time / chargeDuration));
+            }
             yield return Timing.WaitForOneFrame;
             time += Time.deltaTime;
         }
         rb.velocity = Vector2.zero;
-        // Recharge loop
-        time = 0;
-        float rotation = rb.rotation;
-        while (time < rechargeTime) {
-            rb.rotation = Mathf.Lerp(rotation, CalcPlayerDir(), time / rechargeTime);
-            yield return Timing.WaitForOneFrame;
-            time += Time.deltaTime;
-        }
         AttackLoop();
     }
 
@@ -97,23 +114,33 @@ public class VoidchargerBossEnemy : Enemy
         field = Instantiate(forcefield, transform.position, Quaternion.identity, transform.parent);
     }
 
-    private void EndLoop() {
-        Timing.KillCoroutines("atkloop");
+    void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.tag == "Player") {
+            collision.gameObject.GetComponent<PlayerCollision>().HullCollision();
+            hitPlayerTrigger = true;
+        } else if (collision.gameObject.tag == "Forcefield") {
+            forcefieldTrigger = true;
+        }
     }
 
-    public void PlayerDiedDuringFight() {
+    // IDLE state functions
+
+    private void EndLoop() {
         rb.velocity = Vector2.zero;
         EventManager.ExitBossArea();
     }
 
-    void OnDisable() {
-        Destroy(field);
-    }
+    // death
 
     public override void EnemyDeath() {
         EventManager.BossDefeat(bossName);
         EventManager.ExitBossArea();
+        if (drop) {
+            GameObject artifact = Instantiate(drop, transform.parent.position + Vector3.right * 57, Quaternion.identity);
+            artifact.GetComponent<Artifact>().setId(20);
+        }
         field.GetComponent<Forcefield>().CheckForcefield();
+        GameObject.FindWithTag("VoidchargerRespawnField").SetActive(false);
         gameObject.SetActive(false);
     }
 }

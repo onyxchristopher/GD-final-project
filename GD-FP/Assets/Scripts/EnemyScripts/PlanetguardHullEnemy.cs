@@ -19,7 +19,7 @@ public class PlanetguardHullEnemy : Enemy
     public override void EnemyDeath() {
         spriteRenderer.sprite = damagedHull;
         if (!damaged) {
-            bossHealth.Damage(5);
+            bossHealth.Damage(5, true);
             damaged = true;
         }
     }

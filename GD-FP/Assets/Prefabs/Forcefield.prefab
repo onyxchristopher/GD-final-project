@@ -124,7 +124,7 @@ EdgeCollider2D:
   m_GameObject: {fileID: 1439395605714229165}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: ccf8f0a0ea21c4832b942eee9bf4023a, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -150,7 +150,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  protectingObjects: []
   color: {r: 0, g: 1, b: 1, a: 1}
+  drawLineToLinked: 1
 --- !u!120 &1439395605714229136
 LineRenderer:
   m_ObjectHideFlags: 0

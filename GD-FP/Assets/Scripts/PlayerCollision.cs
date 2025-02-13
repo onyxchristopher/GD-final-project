@@ -9,9 +9,9 @@ public class PlayerCollision : MonoBehaviour
 
     [SerializeField] private int startingMaxHealth;
     private int health;
-    private int maxHealth;
+    [HideInInspector] public int maxHealth;
 
-    private bool inactive = false;
+    public bool inactive = false;
 
     [SerializeField] private int badCollisionDamage = 1;
     private bool invuln = false;
@@ -44,10 +44,8 @@ public class PlayerCollision : MonoBehaviour
         SetHealth(maxHealth);
     }
 
-    void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy")) {
-            Damage(badCollisionDamage);
-        }
+    public void HullCollision() {
+        Damage(badCollisionDamage);
     }
 
     public void Damage(int damage) {
