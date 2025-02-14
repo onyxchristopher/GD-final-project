@@ -179,7 +179,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: b024a05e7104646c7aab9ecba6765f08, type: 3}
     m_FontSize: 62
     m_FontStyle: 0
     m_BestFit: 0
@@ -524,6 +524,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   startingMaxFuel: 60
+  maxFuel: 0
   fastAccel: 0.5
   softMaxSpeed: 15
   slowAccel: 0.2
@@ -550,6 +551,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingMaxHealth: 10
+  maxHealth: 0
+  inactive: 0
   badCollisionDamage: 1
 --- !u!114 &207719372
 MonoBehaviour:
@@ -1994,6 +1997,7 @@ MonoBehaviour:
   respawnEnd: {fileID: 8300000, guid: b142a87115ee9400c8637c3ba1667b1c, type: 3}
   explosion: {fileID: 8300000, guid: d43afbf5b1b2f4665a040b207cfc6d26, type: 3}
   forcefieldZap: {fileID: 8300000, guid: 08549c39fae984dcb819de08028caf69, type: 3}
+  forcefieldBounce: {fileID: 8300000, guid: 54c76e269844f40fb8acc734eac26265, type: 3}
 --- !u!1 &1001013449
 GameObject:
   m_ObjectHideFlags: 0

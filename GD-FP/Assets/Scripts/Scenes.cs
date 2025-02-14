@@ -59,7 +59,7 @@ public class Scenes : MonoBehaviour
 
         if (id <= 2) {
             root.transform.GetChild(0).GetComponent<Enemy>().ReassignSpawn(level1[clusterIndex].getCorePosition());
-            if (id <= 1) {
+            if (id <= 2) {
                 root.transform.GetChild(1).position = level2[clusterIndex][0].getCorePosition();
                 root.transform.GetChild(2).position = level2[clusterIndex][1].getCorePosition();
             }

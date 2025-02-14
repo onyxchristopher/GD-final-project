@@ -42,7 +42,7 @@ EdgeCollider2D:
   m_GameObject: {fileID: 2013307539632535312}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: e781eafc1082342dcb8c1351f0757ccb, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -68,6 +68,7 @@ MonoBehaviour:
   color: {r: 0.96862745, g: 1, b: 0, a: 1}
   drawLineToLinked: 0
   multiplier: -1
+  offset: {x: 0, y: 0, z: 0}
 --- !u!120 &2013307539632535341
 LineRenderer:
   m_ObjectHideFlags: 0

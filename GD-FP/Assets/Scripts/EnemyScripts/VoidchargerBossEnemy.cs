@@ -23,10 +23,12 @@ public class VoidchargerBossEnemy : Enemy
     private GameObject field;
     private Damageable dmg;
 
-    [SerializeField] private float preChargeDuration;
-    [SerializeField] private float chargeDuration;
-    [SerializeField] private float chargeSpeed;
     [SerializeField] private float rechargeTime;
+    [SerializeField] private float turnTime;
+    [SerializeField] private float prechargeTime;
+    [SerializeField] private float chargeTime;
+    [SerializeField] private float chargeSpeed;
+    
     private GameObject telegraphArrow;
 
     private bool forcefieldTrigger = false;
@@ -73,31 +75,30 @@ public class VoidchargerBossEnemy : Enemy
 
     private IEnumerator<float> _RotateAndCharge() {
         // Recharge loop
+        yield return Timing.WaitForSeconds(rechargeTime);
+        // Turn loop
         float time = 0;
         float rotation = rb.rotation;
-        while (time < rechargeTime) {
-            rb.rotation = Mathf.LerpAngle(rotation, CalcPlayerDir(), time / rechargeTime);
+        while (time < turnTime) {
+            rb.rotation = Mathf.LerpAngle(rotation, CalcPlayerDir(), time / turnTime);
             yield return Timing.WaitForOneFrame;
             time += Time.deltaTime;
         }
-        // Precharge loop
-        time = 0;
         telegraphArrow.SetActive(true);
-        while (time < preChargeDuration) {
-            rb.rotation = CalcPlayerDir();
-            yield return Timing.WaitForOneFrame;
-            time += Time.deltaTime;
-        }
+        
+        // Precharge loop
+        yield return Timing.WaitForSeconds(prechargeTime);
         telegraphArrow.SetActive(false);
+        
         // Charge loop
         time = 0;
         forcefieldTrigger = false;
         hitPlayerTrigger = false;
-        while (time < chargeDuration) {
+        while (time < chargeTime) {
             if (forcefieldTrigger || hitPlayerTrigger) {
-                time = chargeDuration;
+                time = chargeTime;
             } else {
-                rb.velocity = -transform.up * chargeSpeed * Mathf.Min(1, (3 - 3 * time / chargeDuration));
+                rb.velocity = -transform.up * chargeSpeed * Mathf.Min(1, (3 - 3 * time / chargeTime));
             }
             yield return Timing.WaitForOneFrame;
             time += Time.deltaTime;

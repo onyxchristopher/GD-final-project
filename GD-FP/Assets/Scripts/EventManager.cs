@@ -125,4 +125,10 @@ public class EventManager : MonoBehaviour
     public static void ForcefieldHit() {
         onForcefieldHit?.Invoke();
     }
+
+    public delegate void NotifyForcefieldBounce();
+    public static event NotifyForcefieldBounce onForcefieldBounce;
+    public static void ForcefieldBounce() {
+        onForcefieldBounce?.Invoke();
+    }
 }

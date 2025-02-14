@@ -50,7 +50,7 @@ public class ClusterBoundary : MonoBehaviour
             // determine if the player has other tutorial modules on screen
             bool toSpawn;
             if (index <= 1) {
-                toSpawn = !ChildrenInViewport(modules[index]);
+                toSpawn = true; // !ChildrenInViewport(modules[index]);
             } else {
                 toSpawn = false;
             }
@@ -80,18 +80,20 @@ public class ClusterBoundary : MonoBehaviour
                 Vector2 tutorialSpawnLocation = playerLocation + diff.normalized * (distToEdge + offsetDist);
                 modules[index].SetActive(true);
                 modules[index].transform.position = tutorialSpawnLocation;
+                modules[index].GetComponent<TutorialModule>().complete = true;
             }
         }
     }
 
     void OnTriggerExit2D(Collider2D other) {
         EventManager.ExitCluster(id);
-        if (id <= 2 && !ChildrenInViewport(modules[id - 1])) {
+        /*if (id <= 2 && !ChildrenInViewport(modules[id - 1])) {
             modules[id - 1].SetActive(false);
-        }
+        }*/
 
     }
 
+    /*
     private bool ChildrenInViewport(GameObject module) {
         int activeChildren = 0;
         for (int i = 0; i < module.transform.childCount; i++) {
@@ -119,5 +121,5 @@ public class ClusterBoundary : MonoBehaviour
         }
 
         return false;
-    }
+    }*/
 }
