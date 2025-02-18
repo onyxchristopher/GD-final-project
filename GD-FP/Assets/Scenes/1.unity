@@ -333,6 +333,8 @@ MonoBehaviour:
   enemy: {fileID: 0}
   protectiveForcefield: {fileID: 0}
   lineSortingOrder: 0
+  healthbar: {fileID: 0}
+  healthBarOffset: {x: 0, y: 3.5, z: 0}
 --- !u!114 &121745562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -475,6 +477,8 @@ MonoBehaviour:
   enemy: {fileID: 0}
   protectiveForcefield: {fileID: 0}
   lineSortingOrder: 0
+  healthbar: {fileID: 0}
+  healthBarOffset: {x: 0, y: 3.5, z: 0}
 --- !u!114 &141449493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1800,6 +1804,8 @@ MonoBehaviour:
   enemy: {fileID: 0}
   protectiveForcefield: {fileID: 0}
   lineSortingOrder: 0
+  healthbar: {fileID: 0}
+  healthBarOffset: {x: 0, y: 3.5, z: 0}
 --- !u!1001 &1064153012
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2393,6 +2399,8 @@ MonoBehaviour:
   enemy: {fileID: 0}
   protectiveForcefield: {fileID: 0}
   lineSortingOrder: 0
+  healthbar: {fileID: 0}
+  healthBarOffset: {x: 0, y: 3.5, z: 0}
 --- !u!114 &1595327471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3063,6 +3071,8 @@ MonoBehaviour:
   enemy: {fileID: 0}
   protectiveForcefield: {fileID: 0}
   lineSortingOrder: 0
+  healthbar: {fileID: 0}
+  healthBarOffset: {x: 0, y: 3.5, z: 0}
 --- !u!114 &2098948009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3247,6 +3257,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsTrigger
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8462628367195154648, guid: ad1a34cca795844a19092a8c39308151,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8462628367195154648, guid: ad1a34cca795844a19092a8c39308151,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 8462628367195154649, guid: ad1a34cca795844a19092a8c39308151,
         type: 3}

@@ -11,7 +11,8 @@ In ATTACK, it shoots a projectile at the player every [delay] seconds.
 It moves back to IDLE when its trigger is exited by the player.
 */
 
-public class SentryTurretEnemy : Enemy {
+public class SentryTurretEnemy : Enemy
+{
     [SerializeField] private GameObject projectile;
     private Rigidbody2D playerRB;
     [SerializeField] private float delay;
@@ -26,9 +27,12 @@ public class SentryTurretEnemy : Enemy {
     void Start() {
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
         gameObject.GetComponent<Damageable>().enemy = this;
-        ReassignSpawn(transform.position);
 
         EventManager.onPlayerDeath += ResetToIdle;
+    }
+
+    void OnEnable() {
+        ReassignSpawn(transform.position);
     }
 
     private void AttackLoop() {
@@ -47,6 +51,12 @@ public class SentryTurretEnemy : Enemy {
         yield return Timing.WaitForSeconds(delay);
         firedWithinDelay = false;
         AttackLoop();
+    }
+
+    void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.tag == "Player") {
+            collision.gameObject.GetComponent<PlayerCollision>().HullCollision();
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other) {

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMovement : MonoBehaviour {
+public class CameraMovement : MonoBehaviour
+{
     private GameObject player;
     private Vector3 cameraOffset = new Vector3(0, 0, -10);
     private Vector3 velocity = Vector3.zero;

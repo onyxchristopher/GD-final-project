@@ -94,7 +94,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 8339442900829789173}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: e2ba9f1b92f0d423d940139935fc67f9, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -140,6 +140,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drop: {fileID: 5922313539474208338, guid: 3007814f33983497da3e0b174119cd8c, type: 3}
+  state: 0
+  prevState: 0
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
   delay: 2
@@ -163,3 +165,4 @@ MonoBehaviour:
   lineSortingOrder: 0
   healthbar: {fileID: 2145191980686434580, guid: f3e13775643e04eb28318c0841b9adba,
     type: 3}
+  healthBarOffset: {x: 0, y: 3.5, z: 0}

@@ -26,7 +26,6 @@ public class Artifact : MonoBehaviour
                 gameObject.GetComponent<Animator>().SetTrigger("Pickup");
             }
             
-
             EventManager.ArtifactPickup(id);
             if (id % 10 == 0) {
                 EventManager.SetSpawn(transform.position);

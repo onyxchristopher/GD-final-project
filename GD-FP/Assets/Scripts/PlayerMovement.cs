@@ -5,7 +5,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using MEC;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : MonoBehaviour
+{
 
     // Player components
     [HideInInspector] public Rigidbody2D rb;
@@ -15,7 +16,7 @@ public class PlayerMovement : MonoBehaviour {
     // Fuel system
     [SerializeField] private int startingMaxFuel;
     private float fuel; // current fuel level (depleted at 1/s)
-    private int maxFuel; // maximum fuel
+    [HideInInspector] public int maxFuel; // maximum fuel
     private Slider fuelBarSlider; // slider showing fuel level
 
     // Movement system
@@ -77,6 +78,10 @@ public class PlayerMovement : MonoBehaviour {
         fuelBarSlider.value = fuel;
     }
 
+    public float GetFuel() {
+        return fuel;
+    }
+
     public void IncreaseMaxFuel(int fp) {
         maxFuel += fp;
         fuelBarSlider.maxValue = maxFuel;
@@ -112,7 +117,6 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void FixedUpdate() {
-
         Vector2 moveDir = playerMove.ReadValue<Vector2>(); // get player input
         Vector2 normMoveDir = moveDir.normalized; // normalized player input vector
         Vector2 normVel = rb.velocity.normalized; // normalized player velocity
@@ -187,6 +191,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     public void RespawnSequence(GameObject pr) {
+        transform.position = origin;
         Destroy(pr);
         SetFuel(maxFuel);
         gControl.uncrackBar(fuelBarSlider);

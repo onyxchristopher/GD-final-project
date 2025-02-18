@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventManager : MonoBehaviour {
+public class EventManager : MonoBehaviour
+{
     public delegate void NotifyPlayerDamage(int damage);
     public static event NotifyPlayerDamage onPlayerDamage;
     public static void PlayerDamage(int damage) {
@@ -123,5 +124,11 @@ public class EventManager : MonoBehaviour {
     public static event NotifyForcefieldHit onForcefieldHit;
     public static void ForcefieldHit() {
         onForcefieldHit?.Invoke();
+    }
+
+    public delegate void NotifyForcefieldBounce();
+    public static event NotifyForcefieldBounce onForcefieldBounce;
+    public static void ForcefieldBounce() {
+        onForcefieldBounce?.Invoke();
     }
 }

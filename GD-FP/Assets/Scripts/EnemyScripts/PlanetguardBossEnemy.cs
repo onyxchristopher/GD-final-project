@@ -16,7 +16,8 @@ be damaged by the player, and the planetguard takes 1/4 of its health as damage
 when this happens. Any crack becomes invulnerable when damaged.
 */
 
-public class PlanetguardBossEnemy : Enemy {
+public class PlanetguardBossEnemy : Enemy
+{
     [SerializeField] private Vector3 rotationVector;
     private Rigidbody2D playerRB;
     private Damageable damageable;
@@ -55,6 +56,12 @@ public class PlanetguardBossEnemy : Enemy {
 
         yield return Timing.WaitForOneFrame;
         TrackLoop();
+    }
+
+    void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.tag == "Player") {
+            collision.gameObject.GetComponent<PlayerCollision>().HullCollision();
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other) {

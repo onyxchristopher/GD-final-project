@@ -75,7 +75,7 @@ public class Compass : MonoBehaviour
         showCompass = true;
     }
 
-    private void EnteringCluster(int clusterNum) {
+    public void EnteringCluster(int clusterNum) {
         currCluster = clusterNum;
 
         // update the minor arrows to the current cluster
@@ -93,7 +93,7 @@ public class Compass : MonoBehaviour
         
     }
 
-    private void LeavingCluster(int clusterNum) {
+    public void LeavingCluster(int clusterNum) {
         currCluster = 0;
         
         for (int i = 0; i < minor.Count; i++) {
@@ -101,7 +101,7 @@ public class Compass : MonoBehaviour
         }
     }
 
-    private void HideCompass(string bossName) {
+    public void HideCompass(string bossName) {
         showCompass = false;
         if (currCluster == 0) {
             return;
@@ -112,7 +112,7 @@ public class Compass : MonoBehaviour
         majorArrowTransform.gameObject.GetComponent<Animator>().SetTrigger("HideCompass");
     }
 
-    private void ShowCompass() {
+    public void ShowCompass() {
         showCompass = true;
         if (currCluster == 0) {
             return;

@@ -21,12 +21,11 @@ public class FireChaserEnemy : Enemy {
     [SerializeField] private float speed;
     private bool firedWithinDelay = false;
     public bool mobile = false;
+    public bool firstMove = true;
 
     // Awake encodes the enemy FSM
     void Awake() {
-        Action chaserAttack = ChaseLoop;
-        chaserAttack += FireLoop;
-        chaserAttack += Moving;
+        Action chaserAttack = Moving;
         enterStateLogic.Add(State.ATTACK, chaserAttack);
 
         Action chaserReturn = ReturnLoop;
@@ -44,8 +43,13 @@ public class FireChaserEnemy : Enemy {
 
     private void Moving() {
         mobile = true;
-        spawnpoint = transform.position;
+        if (firstMove) {
+            ReassignSpawn(transform.position);
+            firstMove = false;
+        }
         dmg.MobilityChange(mobile);
+        ChaseLoop();
+        FireLoop();
     }
 
     private void ChaseLoop() {
@@ -75,6 +79,12 @@ public class FireChaserEnemy : Enemy {
             return;
         }
 
+        if ((playerRB.position - spawnpoint).magnitude > 50) {
+            state = State.IDLE;
+            StateTransition();
+            return;
+        }
+
         if (gameObject != null && gameObject.activeInHierarchy) {
             Timing.RunCoroutine(_Fire());
         }
@@ -92,6 +102,12 @@ public class FireChaserEnemy : Enemy {
 
     private void ReturnLoop() {
         if (state != State.IDLE) {
+            return;
+        }
+
+        if ((playerRB.position - spawnpoint).magnitude < 40) {
+            state = State.ATTACK;
+            StateTransition();
             return;
         }
 
@@ -115,6 +131,12 @@ public class FireChaserEnemy : Enemy {
         ReturnLoop();
     }
 
+    void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.tag == "Player") {
+            collision.gameObject.GetComponent<PlayerCollision>().HullCollision();
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == "Player") {
             state = State.ATTACK;
@@ -132,7 +154,7 @@ public class FireChaserEnemy : Enemy {
     public override void EnemyDeath() {
         if (drop) {
             GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
-            droppedFuel.GetComponent<HealthDrop>().health = 2;
+            droppedFuel.GetComponent<FuelDrop>().fuel = 10;
         }
         EventManager.EnemyDefeat();
         gameObject.SetActive(false);
