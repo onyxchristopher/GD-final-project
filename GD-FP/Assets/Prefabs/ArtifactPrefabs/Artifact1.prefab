@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7143783762605971848}
   - component: {fileID: 4821458655910925352}
   m_Layer: 13
-  m_Name: Hexagon1
+  m_Name: Sprite1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -186,7 +186,7 @@ GameObject:
   - component: {fileID: 5788860567021097495}
   - component: {fileID: 2083502918859712172}
   m_Layer: 13
-  m_Name: Hexagon2
+  m_Name: Sprite2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

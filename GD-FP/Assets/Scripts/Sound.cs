@@ -31,6 +31,8 @@ public class Sound : MonoBehaviour
     public AudioClip explosion;
     public AudioClip forcefieldZap;
     public AudioClip forcefieldBounce;
+    public AudioClip caseSlideDown;
+    public AudioClip book;
 
     void Start() {
         EventManager.onArtifactPickup += PlayGetArtifact;
@@ -44,6 +46,7 @@ public class Sound : MonoBehaviour
         EventManager.onBossDefeat += PlayExplosion;
         EventManager.onForcefieldHit += PlayForcefieldZap;
         EventManager.onForcefieldBounce += PlayForcefieldBounce;
+        EventManager.onArtifactObtain += PlayCaseSlideDown;
 
         EventManager.onEnterBossArea += EnterCombat;
         EventManager.onExitBossArea += ExitCombat;
@@ -176,6 +179,16 @@ public class Sound : MonoBehaviour
 
     public void PlayForcefieldBounce() {
         PlaySFX(forcefieldBounce, 1);
+    }
+
+    public void PlayCaseSlideDown(int _) {
+        PlaySFX(caseSlideDown, 1);
+        Timing.RunCoroutine(_PlayBook());
+    }
+
+    public IEnumerator<float> _PlayBook() {
+        yield return Timing.WaitForSeconds(1.7f);
+        PlaySFX(book, 1);
     }
 
     public void PlaySFX(AudioClip clip, float vol = 1) {

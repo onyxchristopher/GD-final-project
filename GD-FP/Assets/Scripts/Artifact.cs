@@ -6,7 +6,7 @@ using MEC;
 public class Artifact : MonoBehaviour
 {
     [SerializeField] private int id;
-    private float timeToPickup = 2.5f;
+    [SerializeField] private float timeToPickup = 2.5f;
     private Transform playerTransform;
 
     void Start() {
@@ -18,22 +18,36 @@ public class Artifact : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if ((playerTransform.position - transform.position).magnitude < 10) {
+        if ((playerTransform.position - transform.position).magnitude < 10 && other.tag == "Player") {
             if (gameObject.transform.childCount == 2) {
                 gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
                 gameObject.transform.GetChild(1).GetComponent<Animator>().SetTrigger("Pickup");
-            } else {
-                gameObject.GetComponent<Animator>().SetTrigger("Pickup");
+            } else if (gameObject.transform.childCount == 3) {
+                gameObject.transform.GetChild(0).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(1).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(2).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+            } else if (gameObject.transform.childCount == 4) {
+                gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(1).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(2).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(3).GetComponent<Animator>().SetTrigger("Pickup");
+            } else if (gameObject.transform.childCount == 5) {
+                gameObject.transform.GetChild(0).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(1).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(2).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(3).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(4).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
             }
             
             EventManager.ArtifactPickup(id);
             if (id % 10 == 0) {
                 EventManager.SetSpawn(transform.position);
+                Timing.RunCoroutine(_MoveArtifactToPlayer());
+                Destroy(gameObject.GetComponent<BoxCollider2D>());
+                Destroy(gameObject, timeToPickup + 0.5f);
+            } else {
+                Destroy(gameObject);
             }
-            
-            Destroy(gameObject.GetComponent<BoxCollider2D>());
-            Destroy(gameObject, timeToPickup + 0.5f);
-            Timing.RunCoroutine(_MoveArtifactToPlayer());
         }
     }
 
@@ -45,5 +59,6 @@ public class Artifact : MonoBehaviour
             yield return Timing.WaitForOneFrame;
             time += Time.deltaTime;
         }
+        EventManager.ArtifactObtain(id / 10);
     }
 }

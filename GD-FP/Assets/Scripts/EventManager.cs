@@ -32,6 +32,14 @@ public class EventManager : MonoBehaviour
         }
     }
 
+    public delegate void NotifyArtifactObtain(int id);
+    public static event NotifyArtifactObtain onArtifactObtain;
+    public static void ArtifactObtain(int id) {
+        if (onArtifactObtain != null) {
+            onArtifactObtain(id);
+        }
+    }
+
     public delegate void NotifyNewUniverse();
     public static event NotifyNewUniverse onNewUniverse;
     public static void NewUniverse() {
