@@ -20,7 +20,8 @@ public class MessageDashboard : MonoBehaviour
         EventManager.onEnterBossArea += ApproachingBossMsg;
         EventManager.onPlayerDeath += PlayerDeathMsg;
         EventManager.onBossDefeat += BossDefeatMsg;
-        EventManager.onArtifactPickup += ArtifactPickupMsg;
+        EventManager.onArtifactPickup += CorePickupMsg;
+        EventManager.onArtifactObtain += ArtifactObtainMsg;
 
         sound = GameObject.FindWithTag("Sound").GetComponent<Sound>();
     }
@@ -82,18 +83,21 @@ public class MessageDashboard : MonoBehaviour
 
     }
 
-    public void ArtifactPickupMsg(int id) {
-        if (id % 10 == 0) {
-            ChangeTextTo("Knowledge has been added to the library.");
-            Timing.RunCoroutine(_ArtifactRouter(id / 10));
-        } else if (id % 10 == 1) {
-            ChangeTextTo("Max fuel has been increased.");
+    public void CorePickupMsg(int id) {
+        if (id % 10 == 1) {
+            ChangeTextTo("Max fuel has been increased!");
         } else if (id % 10 == 2) {
-            ChangeTextTo("Max health has been increased.");
+            ChangeTextTo("Max health has been increased!");
         }
     }
 
+    public void ArtifactObtainMsg(int id) {
+        Timing.RunCoroutine(_ArtifactRouter(id));
+    }
+
     private IEnumerator<float> _ArtifactRouter(int firstDigit) {
+        yield return Timing.WaitForSeconds(1.8f);
+        ChangeTextTo("Knowledge has been added to the library.");
         yield return Timing.WaitForSeconds(4);
         switch (firstDigit) {
             case 1:

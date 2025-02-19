@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8611696618687398819}
   - component: {fileID: 8611696618687398818}
-  - component: {fileID: 8611696618687398817}
   - component: {fileID: 212706964168019445}
+  - component: {fileID: 8611696618687398817}
   m_Layer: 13
   m_Name: FuelCore
   m_TagString: Artifact
@@ -83,6 +83,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &212706964168019445
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611696618687398820}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!114 &8611696618687398817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,19 +113,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 21
   timeToPickup: 0
---- !u!58 &212706964168019445
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8611696618687398820}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5

@@ -876,6 +876,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 489180636}
     m_Modifications:
+    - target: {fileID: 1439395604717564896, guid: ef5afcbcb8e2d424db05d772e2a21890,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 1439395604717564897, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -885,6 +890,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.y
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1439395605714229136, guid: ef5afcbcb8e2d424db05d772e2a21890,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1439395605714229136, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
@@ -929,12 +939,12 @@ PrefabInstance:
     - target: {fileID: 1439395605714229139, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
       propertyPath: color.g
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1439395605714229139, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
       propertyPath: color.r
-      value: 0.5019608
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1439395605714229139, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}

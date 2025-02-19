@@ -29,7 +29,7 @@ public class Damageable : MonoBehaviour
     }
     
     public void Damage(int damage, bool suppressSound = false) {
-        if (!invuln || !protectiveForcefield){
+        if (!invuln && !protectiveForcefield){
             health -= damage;
 
             // a normal enemy should have hit sounds at all times
@@ -132,7 +132,7 @@ public class Damageable : MonoBehaviour
 
         // update positions while active
         while (gameObject.activeSelf) {
-            positions[0] = transform.position;
+            positions[1] = transform.position;
             lr.SetPositions(positions);
             yield return Timing.WaitForOneFrame;
         }

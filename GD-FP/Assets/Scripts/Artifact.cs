@@ -18,7 +18,7 @@ public class Artifact : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if ((playerTransform.position - transform.position).magnitude < 10) {
+        if ((playerTransform.position - transform.position).magnitude < 10 && other.tag == "Player") {
             if (gameObject.transform.childCount == 2) {
                 gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
                 gameObject.transform.GetChild(1).GetComponent<Animator>().SetTrigger("Pickup");
@@ -59,5 +59,6 @@ public class Artifact : MonoBehaviour
             yield return Timing.WaitForOneFrame;
             time += Time.deltaTime;
         }
+        EventManager.ArtifactObtain(id / 10);
     }
 }

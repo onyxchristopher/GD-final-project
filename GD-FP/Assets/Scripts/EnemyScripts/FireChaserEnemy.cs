@@ -56,10 +56,7 @@ public class FireChaserEnemy : Enemy {
         if (state == State.IDLE) {
             return;
         }
-
-        if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.RunCoroutine(_Chase());
-        }
+        Timing.RunCoroutine(_Chase().CancelWith(gameObject));
     }
 
     private IEnumerator<float> _Chase() {
@@ -84,10 +81,8 @@ public class FireChaserEnemy : Enemy {
             StateTransition();
             return;
         }
-
-        if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.RunCoroutine(_Fire());
-        }
+        
+        Timing.RunCoroutine(_Fire().CancelWith(gameObject));
     }
 
     private IEnumerator<float> _Fire() {
@@ -110,10 +105,8 @@ public class FireChaserEnemy : Enemy {
             StateTransition();
             return;
         }
-
-        if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.RunCoroutine(_Return());
-        }
+        
+        Timing.RunCoroutine(_Return().CancelWith(gameObject));
     }
     
     private IEnumerator<float> _Return() {

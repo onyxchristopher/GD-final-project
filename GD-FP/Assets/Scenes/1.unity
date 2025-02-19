@@ -1317,47 +1317,47 @@ PrefabInstance:
     - target: {fileID: 1439395605714229136, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
       propertyPath: m_Parameters.colorGradient.key0.b
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1439395605714229136, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
       propertyPath: m_Parameters.colorGradient.key0.g
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1439395605714229136, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
       propertyPath: m_Parameters.colorGradient.key0.r
-      value: 0.5
+      value: 0.96862745
       objectReference: {fileID: 0}
     - target: {fileID: 1439395605714229136, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
       propertyPath: m_Parameters.colorGradient.key1.b
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1439395605714229136, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
       propertyPath: m_Parameters.colorGradient.key1.g
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1439395605714229136, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
       propertyPath: m_Parameters.colorGradient.key1.r
-      value: 0.5
+      value: 0.96862745
       objectReference: {fileID: 0}
     - target: {fileID: 1439395605714229139, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
       propertyPath: color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1439395605714229139, guid: ef5afcbcb8e2d424db05d772e2a21890,
-        type: 3}
-      propertyPath: color.g
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1439395605714229139, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
+      propertyPath: color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1439395605714229139, guid: ef5afcbcb8e2d424db05d772e2a21890,
+        type: 3}
       propertyPath: color.r
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1439395605714229139, guid: ef5afcbcb8e2d424db05d772e2a21890,
         type: 3}
