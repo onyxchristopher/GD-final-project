@@ -23,7 +23,14 @@ public class Artifact : MonoBehaviour
                 gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
                 gameObject.transform.GetChild(1).GetComponent<Animator>().SetTrigger("Pickup");
             } else if (gameObject.transform.childCount == 3) {
-                gameObject.GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(0).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(1).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(2).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+            } else if (gameObject.transform.childCount == 4) {
+                gameObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(1).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(2).GetComponent<Animator>().SetTrigger("Pickup");
+                gameObject.transform.GetChild(3).GetComponent<Animator>().SetTrigger("Pickup");
             } else if (gameObject.transform.childCount == 5) {
                 gameObject.transform.GetChild(0).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
                 gameObject.transform.GetChild(1).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");

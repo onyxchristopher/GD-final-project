@@ -7,8 +7,8 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ArtifactXSpinOffset
-  m_Speed: 0.4
+  m_Name: ArtifactOctagonSpinY
+  m_Speed: 0.2
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -20,7 +20,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: bf6a3c9b5864d4d49877b9638ba339fe, type: 2}
+  m_Motion: {fileID: 7400000, guid: f5657be517ef14553850bdb75e353b92, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -132,7 +132,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Artifact5-2
+  m_Name: Artifact8-3
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Pickup
@@ -185,7 +185,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ArtifactColorChangeDarkRed
+  m_Name: ArtifactColorChangeCyan
   m_Speed: 0.3
   m_CycleOffset: 0
   m_Transitions: []
@@ -198,7 +198,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 8a47c1d4b97134e70981e6666109ca9e, type: 2}
+  m_Motion: {fileID: 7400000, guid: 4401182cc124744c0bd9e896fc92562b, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

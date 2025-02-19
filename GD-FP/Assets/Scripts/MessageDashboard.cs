@@ -7,6 +7,7 @@ using MEC;
 public class MessageDashboard : MonoBehaviour
 {
     private Text textComponent;
+    private Sound sound;
 
     void Start() {
         textComponent = gameObject.GetComponent<Text>();
@@ -20,10 +21,21 @@ public class MessageDashboard : MonoBehaviour
         EventManager.onPlayerDeath += PlayerDeathMsg;
         EventManager.onBossDefeat += BossDefeatMsg;
         EventManager.onArtifactPickup += ArtifactPickupMsg;
+
+        sound = GameObject.FindWithTag("Sound").GetComponent<Sound>();
     }
 
-    public void Loaded() {
-        
+    public void LoadedMsg() {
+        ChangeTextTo("Welcome, Commander. You've arrived just in time."); // unconnected
+    }
+
+    public void ThreatMsg() {
+        ChangeTextTo("Enemy forces have occupied our planets and captured our cultural artifacts."); // unconnected
+    }
+
+    public void MissionMsg() {
+        ChangeTextTo("Your mission is to guide your drone through the galaxy and" + 
+        " reclaim the artifacts to restore the knowledge in our planet's library."); // unconnected
     }
 
     public void Launch() {
