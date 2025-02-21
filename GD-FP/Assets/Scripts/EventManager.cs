@@ -40,6 +40,14 @@ public class EventManager : MonoBehaviour
         }
     }
 
+    public delegate void NotifyMinorObjectiveComplete(int sectorId, int objectiveId);
+    public static event NotifyMinorObjectiveComplete onMinorObjectiveComplete;
+    public static void MinorObjectiveComplete(int sectorId, int objectiveId) {
+        if (onMinorObjectiveComplete != null) {
+            onMinorObjectiveComplete(sectorId, objectiveId);
+        }
+    }
+
     public delegate void NotifyNewUniverse();
     public static event NotifyNewUniverse onNewUniverse;
     public static void NewUniverse() {
@@ -82,12 +90,6 @@ public class EventManager : MonoBehaviour
         if (onBossDefeat != null) {
             onBossDefeat(bossName);
         }
-    }
-
-    public delegate void NotifyEnterEnemyArea();
-    public static event NotifyEnterEnemyArea onEnterEnemyArea;
-    public static void EnterEnemyArea() {
-        onEnterEnemyArea?.Invoke();
     }
 
     public delegate void NotifyEnemyDefeat();

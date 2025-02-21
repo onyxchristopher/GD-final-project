@@ -40,17 +40,18 @@ public class SentryTurretEnemy : Enemy
             return;
         }
         if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.RunCoroutine(_SentryFire());
+            Timing.RunCoroutine(_SentryFire().CancelWith(gameObject));
         }
     }
 
     private IEnumerator<float> _SentryFire() {
-        firedWithinDelay = true;
-        Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
-        Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
-        yield return Timing.WaitForSeconds(delay);
-        firedWithinDelay = false;
-        AttackLoop();
+        while (state != State.IDLE && !firedWithinDelay) {
+            firedWithinDelay = true;
+            Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
+            Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
+            yield return Timing.WaitForSeconds(delay);
+            firedWithinDelay = false;
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
@@ -63,7 +64,6 @@ public class SentryTurretEnemy : Enemy
         if (other.tag == "Player") {
             state = State.ATTACK;
             StateTransition();
-            EventManager.EnterEnemyArea();
         }
     }
 
@@ -75,6 +75,7 @@ public class SentryTurretEnemy : Enemy
     }
 
     public override void EnemyDeath() {
+        EventManager.onPlayerDeath -= ResetToIdle;
         if (drop) {
             GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
             droppedFuel.GetComponent<FuelDrop>().fuel = 10;

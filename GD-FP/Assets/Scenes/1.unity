@@ -625,7 +625,7 @@ MonoBehaviour:
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
   location: {x: 0, y: 0}
-  delay: 0.75
+  delay: 1
 --- !u!60 &194304746
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -905,7 +905,7 @@ MonoBehaviour:
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
   location: {x: 0, y: 0}
-  delay: 0.75
+  delay: 1
 --- !u!1 &422839542 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8339442900829789173, guid: e6bf5ea6e0ecf4d6e9af8ff60d91d0b5,
@@ -1938,6 +1938,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8462628367195154651, guid: ad1a34cca795844a19092a8c39308151,
+        type: 3}
+      propertyPath: id
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 8462628367195154654, guid: ad1a34cca795844a19092a8c39308151,
         type: 3}
       propertyPath: m_Name
@@ -2180,6 +2185,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1905297822}
     m_Modifications:
+    - target: {fileID: 8611696618687398817, guid: 42923c74d8dc241a5aea2a54fbba9ae9,
+        type: 3}
+      propertyPath: id
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 8611696618687398819, guid: 42923c74d8dc241a5aea2a54fbba9ae9,
         type: 3}
       propertyPath: m_RootOrder
@@ -2300,7 +2310,7 @@ MonoBehaviour:
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
   location: {x: 0, y: 0}
-  delay: 0.75
+  delay: 1
 --- !u!60 &1259808992
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2607,7 +2617,7 @@ MonoBehaviour:
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
   location: {x: 0, y: 0}
-  delay: 0.75
+  delay: 1
 --- !u!60 &1625685258
 PolygonCollider2D:
   m_ObjectHideFlags: 0

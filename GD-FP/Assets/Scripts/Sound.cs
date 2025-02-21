@@ -15,10 +15,13 @@ public class Sound : MonoBehaviour
     private bool combat = false;
     private float fadeTime = 1.5f;
     private float fadeTimeDelay = 0f;
-    private float oocVolumeCap = 0.25f;
-    private float icVolumeCap = 0.25f;
-    
+    private float oocVolumeCap = 0.20f;
+    private float icVolumeCap = 0.20f;
 
+    // whether to override the combat/out of combat fade for player death
+    private bool fadeOverride = false;
+
+    // Sound effects
     public AudioClip getArtifact;
     public AudioClip pop;
     public AudioClip blade;
@@ -33,6 +36,35 @@ public class Sound : MonoBehaviour
     public AudioClip forcefieldBounce;
     public AudioClip caseSlideDown;
     public AudioClip book;
+
+    // Voice
+    public AudioClip missionStart;
+    public AudioClip launchTutorial;
+    public AudioClip enemyDefeatTutorial;
+    public AudioClip approachBossTutorial;
+    public AudioClip playerDeath;
+    public AudioClip bossDefeatTutorial;
+    public AudioClip fuelCorePickup;
+    public AudioClip healthCorePickup;
+    public AudioClip knowledgeAdded;
+    public AudioClip artifact1;
+    public AudioClip artifact2;
+    public AudioClip artifact3;
+    public AudioClip artifact4;
+    public AudioClip artifact5;
+    public AudioClip artifact6;
+    public AudioClip artifact7;
+    public AudioClip artifact8;
+    public AudioClip checkpointTutorial;
+    public AudioClip enterSector1;
+    public AudioClip enterSector2;
+    public AudioClip enterSector3;
+    public AudioClip enterSector4;
+    public AudioClip enterSector5;
+    public AudioClip enterSector6;
+    public AudioClip enterSector7;
+    public AudioClip enterSector8;
+
 
     void Start() {
         EventManager.onArtifactPickup += PlayGetArtifact;
@@ -53,7 +85,6 @@ public class Sound : MonoBehaviour
         
 
         BGMSourceOOC.clip = outOfCombatBGM;
-        BGMSourceOOC.volume = oocVolumeCap;
         BGMSourceIC.clip = inCombatBGM;
         BGMSourceIC.volume = 0;
 
@@ -83,6 +114,9 @@ public class Sound : MonoBehaviour
     }
 
     private IEnumerator<float> _Fade() {
+        if (fadeOverride) {
+            yield break;
+        }
         float time = 0;
         if (combat) {
             BGMSourceIC.Play();
@@ -131,9 +165,11 @@ public class Sound : MonoBehaviour
         }
     }
 
-    public void PlayGetArtifact(int _) {
+    public void PlayGetArtifact(int id) {
         PlaySFX(getArtifact, 0.85f);
-        Timing.RunCoroutine(_PlayArtifactPop());
+        if (id % 10 == 0) {
+            Timing.RunCoroutine(_PlayArtifactPop());
+        }
     }
 
     private IEnumerator<float> _PlayArtifactPop() {
@@ -159,6 +195,39 @@ public class Sound : MonoBehaviour
 
     public void PlayDeath() {
         PlaySFX(death, 1);
+        Timing.RunCoroutine(_DeathFade());
+        fadeOverride = true;
+    }
+
+    private IEnumerator<float> _DeathFade() {
+        float time = 0;
+        if (combat) {
+            while (time < 1) {
+                BGMSourceIC.volume = icVolumeCap - time * icVolumeCap;
+                yield return Timing.WaitForOneFrame;
+                time += Time.deltaTime;
+            }
+            BGMSourceIC.volume = 0;
+            BGMSourceOOC.Play();
+        } else {
+            while (time < 1) {
+                BGMSourceOOC.volume = oocVolumeCap - time * oocVolumeCap;
+                yield return Timing.WaitForOneFrame;
+                time += Time.deltaTime;
+            }
+            BGMSourceOOC.volume = 0;
+        }
+        yield return Timing.WaitForSeconds(4);
+        
+        
+        time = 0;
+        while (time < 1) {
+            BGMSourceOOC.volume = time * oocVolumeCap;
+            yield return Timing.WaitForOneFrame;
+            time += Time.deltaTime;
+        }
+        BGMSourceOOC.volume = oocVolumeCap;
+
     }
 
     public void PlayRespawn() {
@@ -186,9 +255,128 @@ public class Sound : MonoBehaviour
         Timing.RunCoroutine(_PlayBook());
     }
 
-    public IEnumerator<float> _PlayBook() {
+    private IEnumerator<float> _PlayBook() {
         yield return Timing.WaitForSeconds(1.7f);
         PlaySFX(book, 1);
+    }
+
+    // Voice functions
+
+    public void PlayMissionStart() {
+        PlaySFX(missionStart, 1);
+        Timing.RunCoroutine(_BGMVolumeRise());
+    }
+
+    private IEnumerator<float> _BGMVolumeRise() {
+        BGMSourceOOC.volume = oocVolumeCap / 2;
+        yield return Timing.WaitForSeconds(10.6f);
+        float time = 0;
+        while (time < 1) {
+            BGMSourceOOC.volume = oocVolumeCap / 2 + time * oocVolumeCap / 2;
+            yield return Timing.WaitForOneFrame;
+            time += Time.deltaTime;
+        }
+        BGMSourceOOC.volume = oocVolumeCap;
+    }
+
+    public void PlayLaunchTutorial() {
+        PlaySFX(launchTutorial, 1);
+    }
+
+    public void PlayEnemyDefeatTutorial() {
+        PlaySFX(enemyDefeatTutorial, 1);
+    }
+
+    public void PlayApproachBossTutorial() {
+        PlaySFX(approachBossTutorial, 1);
+    }
+
+    public void PlayPlayerDeath() {
+        PlaySFX(playerDeath, 1);
+    }
+
+    public void PlayBossDefeatTutorial() {
+        PlaySFX(bossDefeatTutorial, 1);
+    }
+
+    public void PlayFuelCorePickup() {
+        PlaySFX(fuelCorePickup, 1);
+    }
+
+    public void PlayHealthCorePickup() {
+        PlaySFX(healthCorePickup, 1);
+    }
+
+    public void PlayKnowledgeAdded() {
+        PlaySFX(knowledgeAdded, 1);
+    }
+
+    public void PlayArtifact1() {
+        PlaySFX(artifact1, 1);
+    }
+
+    public void PlayArtifact2() {
+        PlaySFX(artifact2, 1);
+    }
+
+    public void PlayArtifact3() {
+        PlaySFX(artifact3, 1);
+    }
+
+    public void PlayArtifact4() {
+        PlaySFX(artifact4, 1);
+    }
+
+    public void PlayArtifact5() {
+        PlaySFX(artifact5, 1);
+    }
+
+    public void PlayArtifact6() {
+        PlaySFX(artifact6, 1);
+    }
+
+    public void PlayArtifact7() {
+        PlaySFX(artifact7, 1);
+    }
+
+    public void PlayArtifact8() {
+        PlaySFX(artifact8, 1);
+    }
+
+    public void PlayCheckpointTutorial() {
+        PlaySFX(checkpointTutorial, 1);
+    }
+
+    public void PlayEnterSector1() {
+        PlaySFX(enterSector1, 1);
+    }
+
+    public void PlayEnterSector2() {
+        PlaySFX(enterSector2, 1);
+    }
+
+    public void PlayEnterSector3() {
+        PlaySFX(enterSector3, 1);
+    }
+
+    public void PlayEnterSector4() {
+        PlaySFX(enterSector4, 1);
+    }
+
+    public void PlayEnterSector5() {
+        PlaySFX(enterSector5, 1);
+    }
+
+    public void PlayEnterSector6() {
+        PlaySFX(enterSector6, 1);
+    }
+
+    public void PlayEnterSector7() {
+        PlaySFX(enterSector7, 1);
+    }
+
+    public void PlayEnterSector8() {
+        PlaySFX(enterSector8, 1);
     }
 
     public void PlaySFX(AudioClip clip, float vol = 1) {

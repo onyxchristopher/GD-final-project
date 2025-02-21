@@ -38,12 +38,13 @@ public class PlanetguardTurretEnemy : Enemy
     }
 
     private IEnumerator<float> _TurretFire() {
-        firedWithinDelay = true;
-        Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
-        Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
-        yield return Timing.WaitForSeconds(delay);
-        firedWithinDelay = false;
-        AttackLoop();
+        while (state == State.ATTACK) {
+            firedWithinDelay = true;
+            Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
+            Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
+            yield return Timing.WaitForSeconds(delay);
+            firedWithinDelay = false;
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other) {

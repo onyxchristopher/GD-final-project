@@ -74,7 +74,7 @@ public class Damageable : MonoBehaviour
                                             GameObject.FindWithTag("WSCanvas").transform);
                 healthBarSlider = hp.GetComponent<Slider>();
                 healthBarSlider.maxValue = maxHealth;
-                Timing.RunCoroutine(_MoveHealthbar(hp), "movehp");
+                Timing.RunCoroutine(_MoveHealthbar(hp).CancelWith(gameObject));
             }
             healthBarSlider.value = health;
         }
@@ -83,6 +83,7 @@ public class Damageable : MonoBehaviour
     private IEnumerator<float> _MoveHealthbar(GameObject hp) {
         while (true) {
             hp.transform.position = transform.position + healthBarOffset;
+            yield return Timing.WaitForOneFrame;
             yield return Timing.WaitForOneFrame;
         }
     }
@@ -117,8 +118,9 @@ public class Damageable : MonoBehaviour
         if (linkedForcefield) {
             // update the positions when mobile, stop when not
             if (mobility) {
-                Timing.RunCoroutine(_FieldUplink(), "u");
+                Timing.RunCoroutine(_FieldUplink().CancelWith(gameObject), "u");
             } else {
+                lr.SetPositions(new Vector3[2] {linkedForcefield.transform.position, transform.position});
                 Timing.KillCoroutines("u");
             }
         }
@@ -140,7 +142,6 @@ public class Damageable : MonoBehaviour
 
     void OnDisable() {
         if (healthBarSlider) {
-            Timing.KillCoroutines("movehp");
             Destroy(healthBarSlider.gameObject);
         }
     }

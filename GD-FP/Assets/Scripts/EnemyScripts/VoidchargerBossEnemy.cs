@@ -64,47 +64,49 @@ public class VoidchargerBossEnemy : Enemy
         if (state != State.ATTACK) {
             return;
         }
-        Vector2 pDistFromSpawn = playerRB.position - spawnpoint;
-        if (pDistFromSpawn.x < -50 || pDistFromSpawn.x > 50 || pDistFromSpawn.y < -50 || pDistFromSpawn.y > 50) {
-            playerRB.position = spawnpoint;
-        }
         if (gameObject != null && gameObject.activeInHierarchy) {
             Timing.RunCoroutine(_RotateAndCharge().CancelWith(gameObject));
         }
     }
 
     private IEnumerator<float> _RotateAndCharge() {
-        // Recharge loop
-        yield return Timing.WaitForSeconds(rechargeTime);
-        // Turn loop
-        float time = 0;
-        float rotation = rb.rotation;
-        while (time < turnTime) {
-            rb.rotation = Mathf.LerpAngle(rotation, CalcPlayerDir(), time / turnTime);
-            yield return Timing.WaitForOneFrame;
-            time += Time.deltaTime;
-        }
-        telegraphArrow.SetActive(true);
-        
-        // Precharge loop
-        yield return Timing.WaitForSeconds(prechargeTime);
-        telegraphArrow.SetActive(false);
-        
-        // Charge loop
-        time = 0;
-        forcefieldTrigger = false;
-        hitPlayerTrigger = false;
-        while (time < chargeTime) {
-            if (forcefieldTrigger || hitPlayerTrigger) {
-                time = chargeTime;
-            } else {
-                rb.velocity = -transform.up * chargeSpeed * Mathf.Min(1, (3 - 3 * time / chargeTime));
+        while (state == State.ATTACK) {
+            // Recharge loop
+            yield return Timing.WaitForSeconds(rechargeTime);
+            // Turn loop
+            float time = 0;
+            float rotation = rb.rotation;
+            while (time < turnTime) {
+                rb.rotation = Mathf.LerpAngle(rotation, CalcPlayerDir(), time / turnTime);
+                yield return Timing.WaitForOneFrame;
+                time += Time.deltaTime;
             }
-            yield return Timing.WaitForOneFrame;
-            time += Time.deltaTime;
+            telegraphArrow.SetActive(true);
+            
+            // Precharge loop
+            yield return Timing.WaitForSeconds(prechargeTime);
+            telegraphArrow.SetActive(false);
+            
+            // Charge loop
+            time = 0;
+            forcefieldTrigger = false;
+            hitPlayerTrigger = false;
+            while (time < chargeTime) {
+                if (forcefieldTrigger || hitPlayerTrigger) {
+                    time = chargeTime;
+                } else {
+                    rb.velocity = -transform.up * chargeSpeed * Mathf.Min(1, (3 - 3 * time / chargeTime));
+                }
+                yield return Timing.WaitForOneFrame;
+                time += Time.deltaTime;
+            }
+            rb.velocity = Vector2.zero;
+
+            Vector2 pDistFromSpawn = playerRB.position - spawnpoint;
+            if (pDistFromSpawn.x < -50 || pDistFromSpawn.x > 50 || pDistFromSpawn.y < -50 || pDistFromSpawn.y > 50) {
+                playerRB.position = spawnpoint;
+            }
         }
-        rb.velocity = Vector2.zero;
-        AttackLoop();
     }
 
     private float CalcPlayerDir() {
@@ -134,11 +136,11 @@ public class VoidchargerBossEnemy : Enemy
     // death
 
     public override void EnemyDeath() {
+        EventManager.onPlayerDeath -= ResetToIdle;
         EventManager.BossDefeat(bossName);
         EventManager.ExitBossArea();
         if (drop) {
             GameObject artifact = Instantiate(drop, transform.parent.position + Vector3.right * 57, Quaternion.identity);
-            artifact.GetComponent<Artifact>().setId(20);
         }
         field.GetComponent<Forcefield>().CheckForcefield();
         GameObject.FindWithTag("VoidchargerRespawnField").SetActive(false);

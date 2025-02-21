@@ -46,16 +46,17 @@ public class PlanetguardBossEnemy : Enemy
     }
 
     private IEnumerator<float> _RotatePlanetguard() {
-        Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
-        float angle = Vector2.SignedAngle(dirToPlayer, playerRB.velocity);
-        if (angle > 0) {
-            transform.Rotate(rotationVector);
-        } else {
-            transform.Rotate(-rotationVector);
-        }
+        while (state != State.IDLE) {
+            Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
+            float angle = Vector2.SignedAngle(dirToPlayer, playerRB.velocity);
+            if (angle > 0) {
+                transform.Rotate(rotationVector);
+            } else {
+                transform.Rotate(-rotationVector);
+            }
 
-        yield return Timing.WaitForOneFrame;
-        TrackLoop();
+            yield return Timing.WaitForOneFrame;
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
@@ -83,6 +84,7 @@ public class PlanetguardBossEnemy : Enemy
     }
 
     public override void EnemyDeath() {
+        EventManager.onPlayerDeath -= ResetToIdle;
         EventManager.BossDefeat(bossName);
         if (drop) {
             GameObject artifact = Instantiate(drop, transform.position + Vector3.up * 18, Quaternion.identity);

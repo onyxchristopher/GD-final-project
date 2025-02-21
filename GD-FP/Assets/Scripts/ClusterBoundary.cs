@@ -56,7 +56,7 @@ public class ClusterBoundary : MonoBehaviour
             }
             
 
-            if (!modules[index].GetComponent<TutorialModule>().complete && toSpawn) {
+            if (index <= 1 && !modules[index].GetComponent<TutorialModule>().complete && toSpawn) {
                 // the tutorial has not been completed, so it should be spawned
                 Vector2 playerLocation = other.gameObject.GetComponent<Rigidbody2D>().position;
                 Vector2 rootLocation = (Vector2) transform.position;

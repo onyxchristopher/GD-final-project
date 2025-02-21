@@ -13,10 +13,9 @@ public class Scenes : MonoBehaviour
     private Cluster[] level1;
     private Cluster[][] level2;
 
-    [SerializeField] private GameObject[][] pathModules;
-
     void Start() {
-        EventManager.onBossDefeat += CompleteCluster;
+        EventManager.onBossDefeat += CompleteSector;
+        EventManager.onMinorObjectiveComplete += CompleteMinorObjective;
     }
 
     public void InitializeScenes(int num, Cluster lvl0, Cluster[] lvl1, Cluster[][] lvl2) {
@@ -50,24 +49,31 @@ public class Scenes : MonoBehaviour
         // Get scene's root object
         GameObject root = loadedScene.GetRootGameObjects()[0];
 
-        // Get cluster index
-        int clusterIndex = id - 1;
+        // Get sector index
+        int sectorIndex = id - 1;
 
         // Assign positions to objects
-        Vector3 rootPosition = level1[clusterIndex].getCorePosition();
+        Vector3 rootPosition = level1[sectorIndex].getCorePosition();
         root.transform.position = rootPosition;
 
         if (id <= 2) {
-            root.transform.GetChild(0).GetComponent<Enemy>().ReassignSpawn(level1[clusterIndex].getCorePosition());
+            root.transform.GetChild(0).GetComponent<Enemy>().ReassignSpawn(level1[sectorIndex].getCorePosition());
             if (id <= 2) {
-                root.transform.GetChild(1).position = level2[clusterIndex][0].getCorePosition();
-                root.transform.GetChild(2).position = level2[clusterIndex][1].getCorePosition();
+                root.transform.GetChild(1).position = level2[sectorIndex][0].getCorePosition();
+                root.transform.GetChild(2).position = level2[sectorIndex][1].getCorePosition();
             }
         }
 
-        if (level1[clusterIndex].getComplete()) {
+        if (level1[sectorIndex].getComplete()) {
             if (id <= 2) {
                 root.transform.GetChild(0).gameObject.SetActive(false);
+            }
+        }
+        for (int i = 0; i < level2[sectorIndex].Length; i++) {
+            if (level2[sectorIndex][i].getComplete()) {
+                if (id <= 2) {
+                    root.transform.GetChild(i + 1).gameObject.SetActive(false);
+                }
             }
         }
     }
@@ -83,15 +89,12 @@ public class Scenes : MonoBehaviour
     }
 
     // set the cluster as complete, avoiding boss respawn
-    public void CompleteCluster(string bossName) {
+    public void CompleteSector(string bossName) {
         level1[GameObject.FindWithTag("Compass").GetComponent<Compass>().currCluster - 1].setComplete(true);
-    } 
+    }
 
-    /*
-    // Generate the path modules starting from cluster pathStartClusterID
-    public void GeneratePathModules(int pathStartClusterID) {
-        for (int i = 0; i < pathModules[pathStartClusterID].Length; i++) {
-
-        }
-    }*/
+    // set the minor objective as complete, avoiding respawn
+    public void CompleteMinorObjective(int sectorId, int objectiveId) {
+        level2[sectorId - 1][objectiveId - 1].setComplete(true);
+    }
 }

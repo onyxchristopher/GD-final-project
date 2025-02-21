@@ -51,17 +51,13 @@ public class Forcefield : MonoBehaviour
             linkedObjects[i].GetComponent<Damageable>().FieldLink(gameObject, color, drawLineToLinked);
         }
 
-        EventManager.onArtifactPickup += ArtifactIdCheck;
+        EventManager.onMinorObjectiveComplete += MinorForcefieldCheck;
     }
 
-    public void ArtifactIdCheck(int id) {
-        if (id % 10 != 0) {
-            GameObject[] artifacts = GameObject.FindGameObjectsWithTag("Artifact");
-            for (int i = 0; i < artifacts.Length; i++) {
-                if ((artifacts[i].transform.position - transform.position).magnitude < 32) {
-                    CheckForcefield();
-                }
-            }
+    public void MinorForcefieldCheck(int sectorId, int objectiveId) {
+        int id = sectorId * 10 + objectiveId;
+        if (id == 21 && (transform.position - GameObject.FindWithTag("Player").transform.position).magnitude < 20) {
+            CheckForcefield();
         }
     }
 
@@ -96,6 +92,6 @@ public class Forcefield : MonoBehaviour
     }
 
     void OnDestroy() {
-        EventManager.onArtifactPickup -= ArtifactIdCheck;
+        EventManager.onMinorObjectiveComplete -= MinorForcefieldCheck;
     }
 }
