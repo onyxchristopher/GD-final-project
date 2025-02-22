@@ -60,6 +60,8 @@ public class GameController : MonoBehaviour
 
         EventManager.onEnterBossArea += DisplayBossUI;
         EventManager.onExitBossArea += HideBossUI;
+
+        Timing.RunCoroutine(_CompassArrowDelay());
     }
 
     private void InitializeUniverse() {
@@ -92,6 +94,11 @@ public class GameController : MonoBehaviour
         }
 
         scenes.InitializeScenes(level1.Length, level0, level1, level2);
+    }
+
+    private IEnumerator<float> _CompassArrowDelay() {
+        yield return Timing.WaitForSeconds(12.5f);
+        compass.CalculateAnchorRadius(cam.pixelRect);
     }
 
     public void Pause() {
