@@ -104,6 +104,12 @@ public class EventManager : MonoBehaviour
         onBladeUse?.Invoke();
     }
 
+    public delegate void NotifyTrapUse();
+    public static event NotifyTrapUse onTrapUse;
+    public static void TrapUse() {
+        onTrapUse?.Invoke();
+    }
+
     public delegate void NotifyPlayerHit();
     public static event NotifyPlayerHit onPlayerHit;
     public static void PlayerHit() {

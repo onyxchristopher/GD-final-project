@@ -1467,7 +1467,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1917701314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 100, y: 2000, z: 0}
+  m_LocalPosition: {x: 400, y: 2000, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2132775937}
@@ -1799,9 +1799,9 @@ MonoBehaviour:
   bossName: Voidcharger
   forcefield: {fileID: 2013307539632535312, guid: 2a852d1c5ab4140d69547f0f36917616,
     type: 3}
-  rechargeTime: 0.7
+  rechargeTime: 0.3
   turnTime: 0.5
-  prechargeTime: 0.5
+  prechargeTime: 0.3
   chargeTime: 1.5
   chargeSpeed: 35
 --- !u!114 &2132775943

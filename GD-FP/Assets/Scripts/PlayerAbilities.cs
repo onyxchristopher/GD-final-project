@@ -55,6 +55,11 @@ public class PlayerAbilities : MonoBehaviour
     private Slider trapCdSlider;
     private Slider shieldCdSlider;
 
+    // CD icon sprite refs
+    [SerializeField] private Sprite trapSprite;
+    [SerializeField] private Sprite shieldSprite;
+    [SerializeField] private Sprite lockSprite;
+
     void Start() {
         EventManager.onNewUniverse += InitializeAbilities;
 
@@ -114,6 +119,8 @@ public class PlayerAbilities : MonoBehaviour
             GameObject trapInstance = Instantiate(trap, transform.position, Quaternion.identity);
             trapInstance.GetComponent<Trap>().SetDamage(trapDamage);
 
+            EventManager.TrapUse();
+
             // Start the cooldown
             trapCd = trapCooldownTime;
             Timing.RunCoroutine(_TrapCooldown());
@@ -160,11 +167,19 @@ public class PlayerAbilities : MonoBehaviour
     public void UnlockTrap() {
         trapUnlocked = true;
         trapCd = 0;
+        trapCdSlider.value = 0;
+        Transform trapImage = GameObject.FindWithTag("CooldownIcons").transform.GetChild(1).GetChild(0);
+        trapImage.GetComponent<Image>().sprite = trapSprite;
+        trapImage.localScale = new Vector3(0.75f, 0.75f, 1);
     }
 
     public void UnlockShield() {
         shieldUnlocked = true;
         shieldCd = 0;
+        shieldCdSlider.value = 0;
+        Transform shieldImage = GameObject.FindWithTag("CooldownIcons").transform.GetChild(2).GetChild(0);
+        shieldImage.GetComponent<Image>().sprite = shieldSprite;
+        shieldImage.localScale = new Vector3(0.75f, 0.75f, 1);
     }
 
     public void SetBladeCooldown(float cd) {
@@ -198,5 +213,4 @@ public class PlayerAbilities : MonoBehaviour
     public void SetShieldDuration(float duration) {
         shieldDuration = duration;
     }
-    
 }

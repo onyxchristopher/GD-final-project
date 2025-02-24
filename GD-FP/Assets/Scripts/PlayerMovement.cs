@@ -59,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
 
         EventManager.onNewUniverse += InitializeMovement;
         EventManager.onSetSpawn += SetSpawn;
-        Timing.RunCoroutine(_EnableActions());
+        //Timing.RunCoroutine(_EnableActions());
     }
 
     private IEnumerator<float> _EnableActions() {
