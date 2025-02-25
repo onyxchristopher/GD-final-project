@@ -28,6 +28,7 @@ public class DusklingEnemy : Enemy
     [SerializeField] private GameObject laser;
     [SerializeField] private GameObject laserZap;
     private ContactFilter2D cf;
+    private Sound sound;
     
     // Awake encodes the enemy FSM
     void Awake() {
@@ -48,6 +49,7 @@ public class DusklingEnemy : Enemy
         asteroid = transform.position - 6.3f * Vector3.up;
         cf.SetLayerMask(LayerMask.GetMask("Planet", "Player"));
         cf.useTriggers = false;
+        sound = GameObject.FindWithTag("Sound").GetComponent<Sound>();
 
         IdleLoop();
 
@@ -55,7 +57,7 @@ public class DusklingEnemy : Enemy
     }
 
     private void IdleLoop() {
-        if (state != State.IDLE) {
+        if (state == State.ATTACK) {
             return;
         }
         if (gameObject != null && gameObject.activeInHierarchy) {
@@ -112,6 +114,7 @@ public class DusklingEnemy : Enemy
         while (state == State.ATTACK) {
             Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
             float angle = Vector2.SignedAngle(transform.up, dirToPlayer);
+            Debug.Log(angle);
             if (angle > 5) {
                 transform.RotateAround(asteroid, Vector3.forward, attackRotationSpeed);
             } else if (angle < -5) {
@@ -123,6 +126,7 @@ public class DusklingEnemy : Enemy
 
     private IEnumerator<float> _Fire() {
         while (state == State.ATTACK) {
+            EventManager.LaserCharge();
             yield return Timing.WaitForSeconds(timeToFire);
             Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
             Physics2D.Raycast((Vector2) transform.position, dirToPlayer, cf, raycastResults, 40);
@@ -131,6 +135,7 @@ public class DusklingEnemy : Enemy
                 playerRB.AddForce(dirToPlayer.normalized * 30, ForceMode2D.Impulse);
             }
             Instantiate(laserZap, raycastResults[0].point, Quaternion.identity);
+            EventManager.LaserZap();
 
             yield return Timing.WaitForSeconds(timeToRecharge);
             firedWithinDelay = false;
@@ -155,5 +160,9 @@ public class DusklingEnemy : Enemy
             state = State.IDLE;
             StateTransition();
         }
+    }
+
+    void Update() {
+        Debug.Log(state);
     }
 }

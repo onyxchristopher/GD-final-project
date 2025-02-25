@@ -36,6 +36,9 @@ public class Sound : MonoBehaviour
     public AudioClip forcefieldBounce;
     public AudioClip caseSlideDown;
     public AudioClip book;
+    public AudioClip trap;
+    public AudioClip laserCharge;
+    public AudioClip laserZap;
 
     // Voice
     public AudioClip missionStart;
@@ -79,6 +82,9 @@ public class Sound : MonoBehaviour
         EventManager.onForcefieldHit += PlayForcefieldZap;
         EventManager.onForcefieldBounce += PlayForcefieldBounce;
         EventManager.onArtifactObtain += PlayCaseSlideDown;
+        EventManager.onTrapUse += PlayTrap;
+        EventManager.onLaserCharge += PlayLaserCharge;
+        EventManager.onLaserZap += PlayLaserZap;
 
         EventManager.onEnterBossArea += EnterCombat;
         EventManager.onExitBossArea += ExitCombat;
@@ -258,6 +264,18 @@ public class Sound : MonoBehaviour
     private IEnumerator<float> _PlayBook() {
         yield return Timing.WaitForSeconds(1.7f);
         PlaySFX(book, 1);
+    }
+
+    public void PlayTrap() {
+        PlaySFX(trap, 1);
+    }
+
+    public void PlayLaserCharge() {
+        PlaySFX(laserCharge, 0.8f);
+    }
+
+    public void PlayLaserZap() {
+        PlaySFX(laserZap, 1);
     }
 
     // Voice functions

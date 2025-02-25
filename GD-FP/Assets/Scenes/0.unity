@@ -2797,6 +2797,9 @@ MonoBehaviour:
   forcefieldBounce: {fileID: 8300000, guid: 54c76e269844f40fb8acc734eac26265, type: 3}
   caseSlideDown: {fileID: 8300000, guid: ff5b05952ba064cdab0a5f41fcb1b99c, type: 3}
   book: {fileID: 8300000, guid: 1fd67874e09004037b7da1f329165304, type: 3}
+  trap: {fileID: 8300000, guid: 07f53fec60f684240a4b0dfbf7783c92, type: 3}
+  laserCharge: {fileID: 8300000, guid: c672f571f8a334a5a9a95c5b1e2d4c59, type: 3}
+  laserZap: {fileID: 8300000, guid: 09382542b75be42e692b03f2089adec6, type: 3}
   missionStart: {fileID: 8300000, guid: 0dc18d03cdd1a49a6b63873513963c4f, type: 3}
   launchTutorial: {fileID: 8300000, guid: 907a9a748f11d42e1ab81b2d53d638f7, type: 3}
   enemyDefeatTutorial: {fileID: 8300000, guid: 5190265edce674eaeb864da7df016bf1, type: 3}
