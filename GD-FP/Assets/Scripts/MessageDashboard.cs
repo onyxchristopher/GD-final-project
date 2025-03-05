@@ -109,10 +109,10 @@ public class MessageDashboard : MonoBehaviour
     }
 
     public void CorePickupMsg(int id) {
-        if (id % 10 == 1) {
+        if (id == 21 || id == 41 || id == 61 || id == 81) {
             ChangeTextTo("Max fuel has been increased!");
             sound.PlayFuelCorePickup();
-        } else if (id % 10 == 2) {
+        } else {
             ChangeTextTo("Max health has been increased!");
             sound.PlayHealthCorePickup();
         }

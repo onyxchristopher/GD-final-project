@@ -16,9 +16,6 @@ public class Forcefield : MonoBehaviour
     // the forcefield's color
     [SerializeField] public Color color;
 
-    // whether to draw a line to the center of the linked forcefield
-    [SerializeField] bool drawLineToLinked = true;
-
     // multiplier for velocity on ejection
     [SerializeField] private float multiplier = -1;
 
@@ -48,7 +45,7 @@ public class Forcefield : MonoBehaviour
 
         // link objects
         for (int i = 0; i < linkedObjects.Length; i++) {
-            linkedObjects[i].GetComponent<Damageable>().FieldLink(gameObject, color, drawLineToLinked);
+            linkedObjects[i].GetComponent<Damageable>().linkedForcefield = gameObject;
         }
 
         EventManager.onMinorObjectiveComplete += MinorForcefieldCheck;
@@ -56,7 +53,10 @@ public class Forcefield : MonoBehaviour
 
     public void MinorForcefieldCheck(int sectorId, int objectiveId) {
         int id = sectorId * 10 + objectiveId;
-        if (id == 21 && (transform.position - GameObject.FindWithTag("Player").transform.position).magnitude < 20) {
+        if (id != 21 && id != 32) {
+            return;
+        }
+        if ((transform.position - GameObject.FindWithTag("Player").transform.position).magnitude < 20) {
             CheckForcefield();
         }
     }
@@ -86,6 +86,7 @@ public class Forcefield : MonoBehaviour
                 EventManager.ForcefieldBounce();
             } else {
                 rb.position = transform.position + offset;
+                rb.velocity = Vector2.zero;
                 EventManager.ForcefieldHit();
             }
         }

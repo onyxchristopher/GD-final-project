@@ -23,10 +23,13 @@ public class Planet : MonoBehaviour
     // It specifies the Law of Gravity: F = G * m1 * m2 / r^2, where G = gravitationalConstant,
     // m1 = player mass (which is 1), m2 = gravityScale, r = distance to planet center
     void OnTriggerStay2D(Collider2D other) {
-        if (suspendGravity) {
+        if (!other.CompareTag("Player") || suspendGravity) {
             return;
         }
         dist = transform.position - player.transform.position; // distance to planet center
+        if (dist.magnitude > 80) {
+            return;
+        }
         Rigidbody2D playerRB = player.GetComponent<Rigidbody2D>();
         // the law of gravity, in code
         playerRB.AddForce(dist * (gravitationalConstant * gravityScale / dist.sqrMagnitude));

@@ -6,13 +6,12 @@ using MEC;
 public class Laser : MonoBehaviour
 {
     [HideInInspector] public Transform player;
-    private Vector3[] positions = new Vector3[2];
-    private LineRenderer lr;
+    public Vector3[] positions = new Vector3[2];
+    public LineRenderer lr;
 
-    void Start() {
+    void Awake() {
         player = GameObject.FindWithTag("Player").transform;
         lr = gameObject.GetComponent<LineRenderer>();
-        Timing.RunCoroutine(_LaserUplink().CancelWith(gameObject));
     }
 
     public void SelfDestructInSeconds(float time) {
@@ -32,5 +31,11 @@ public class Laser : MonoBehaviour
             lr.SetPositions(positions);
             yield return Timing.WaitForOneFrame;
         }
+    }
+
+    public void UpdateAndSetPositions(Vector3 start, Vector3 end) {
+        positions[0] = start;
+        positions[1] = end;
+        lr.SetPositions(positions);
     }
 }

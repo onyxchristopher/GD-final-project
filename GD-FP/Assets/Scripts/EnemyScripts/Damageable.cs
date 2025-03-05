@@ -14,10 +14,9 @@ public class Damageable : MonoBehaviour
     private bool invuln = false;
     private float invulnDuration = 0.3f;
     public Enemy enemy;
-    private GameObject linkedForcefield;
+    public GameObject linkedForcefield;
     private LineRenderer lr;
     public GameObject protectiveForcefield;
-    [SerializeField] private int lineSortingOrder;
     [SerializeField] private GameObject healthbar;
     [SerializeField] private Vector3 healthBarOffset = new Vector3(0, 3.5f, 0);
     private Slider healthBarSlider;
@@ -84,58 +83,6 @@ public class Damageable : MonoBehaviour
         while (true) {
             hp.transform.position = transform.position + healthBarOffset;
             yield return Timing.WaitForOneFrame;
-            yield return Timing.WaitForOneFrame;
-        }
-    }
-    
-    // Functions for linkedForcefield linking
-
-    public void FieldLink(GameObject field, Color fieldColor, bool drawLineToLinked) {
-        if (!drawLineToLinked) {
-            return;
-        }
-        linkedForcefield = field;
-        lr = gameObject.AddComponent<LineRenderer>();
-        lr.useWorldSpace = true;
-        lr.widthCurve = AnimationCurve.Constant(0, 1, 0.10f);
-        lr.material = field.GetComponent<LineRenderer>().material;
-        Color connector = fieldColor;
-        connector.a = 0.5f;
-        lr.startColor = connector;
-        lr.endColor = connector;
-        lr.sortingOrder = lineSortingOrder;
-
-        Vector3 pos = transform.position;
-        Vector3 forcefieldPos = linkedForcefield.transform.position;
-        Vector3[] positions = new Vector3[2] {forcefieldPos, pos};
-
-        lr.SetPositions(positions);
-
-    }
-
-    public void MobilityChange(bool mobility) {
-        // must have a linkedForcefield
-        if (linkedForcefield) {
-            // update the positions when mobile, stop when not
-            if (mobility) {
-                Timing.RunCoroutine(_FieldUplink().CancelWith(gameObject), "u");
-            } else {
-                lr.SetPositions(new Vector3[2] {linkedForcefield.transform.position, transform.position});
-                Timing.KillCoroutines("u");
-            }
-        }
-    }
-
-    private IEnumerator<float> _FieldUplink() {
-        // calculate positions
-        Vector3 pos = transform.position;
-        Vector3 forcefieldPos = linkedForcefield.transform.position;
-        Vector3[] positions = new Vector3[2] {forcefieldPos, pos};
-
-        // update positions while active
-        while (gameObject.activeSelf) {
-            positions[1] = transform.position;
-            lr.SetPositions(positions);
             yield return Timing.WaitForOneFrame;
         }
     }

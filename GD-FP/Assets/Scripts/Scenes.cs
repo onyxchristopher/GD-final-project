@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using MEC;
 
 public class Scenes : MonoBehaviour
 {
@@ -56,9 +57,13 @@ public class Scenes : MonoBehaviour
         Vector3 rootPosition = level1[sectorIndex].getCorePosition();
         root.transform.position = rootPosition;
 
-        if (id <= 2) {
+        if (id <= 3) {
             root.transform.GetChild(0).GetComponent<Enemy>().ReassignSpawn(level1[sectorIndex].getCorePosition());
-            if (id <= 2) {
+            if (id <= 3) {
+                if (id == 3) {
+                    // remove any asteroids in the area where the minor objs are being transported
+                    Timing.RunCoroutine(_RmPlanetsDelay(level2[sectorIndex], Vector2.one * 100));
+                }
                 root.transform.GetChild(1).position = level2[sectorIndex][0].getCorePosition();
                 root.transform.GetChild(2).position = level2[sectorIndex][1].getCorePosition();
             }
@@ -96,5 +101,37 @@ public class Scenes : MonoBehaviour
     // set the minor objective as complete, avoiding respawn
     public void CompleteMinorObjective(int sectorId, int objectiveId) {
         level2[sectorId - 1][objectiveId - 1].setComplete(true);
+    }
+
+    // check if a tutorial can be spawned in or if a minor objective is in the way
+    public bool TSpawnCheck(Vector2 loc, Vector2 size, int index) {
+        Rect mObjBounds = new Rect(level2[index][0].getCorePosition() - 50 * Vector2.one, 100 * Vector2.one);
+        Rect tutBounds = new Rect(loc - size / 2, size);
+        if (mObjBounds.Overlaps(tutBounds)) {
+            return false;
+        }
+        mObjBounds = new Rect(level2[index][1].getCorePosition() - 50 * Vector2.one, 100 * Vector2.one);
+        if (mObjBounds.Overlaps(tutBounds)) {
+            return false;
+        }
+        return true;
+    }
+
+    private IEnumerator<float> _RmPlanetsDelay(Cluster[] cLocs, Vector2 size) {
+        yield return Timing.WaitForSeconds(0.5f);
+        RmPlanets(cLocs[0].getCorePosition(), size);
+        RmPlanets(cLocs[1].getCorePosition(), size);
+    }
+
+    public void RmPlanets(Vector2 loc, Vector2 size) {
+        List<Collider2D> results = new List<Collider2D>();
+        ContactFilter2D cf = new ContactFilter2D();
+        cf.SetLayerMask(LayerMask.GetMask("Planet"));
+        cf.useTriggers = false;
+        // get all planets (asteroids) within a certain area
+        int numToSetInactive = Physics2D.OverlapBox(loc, size, 0, cf, results);
+        for (int i = 0; i < numToSetInactive; i++) {
+            results[i].gameObject.SetActive(false);
+        }
     }
 }

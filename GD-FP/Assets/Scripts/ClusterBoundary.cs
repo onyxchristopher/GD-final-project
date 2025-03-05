@@ -49,14 +49,14 @@ public class ClusterBoundary : MonoBehaviour
 
             // determine if the player has other tutorial modules on screen
             bool toSpawn;
-            if (index <= 1) {
-                toSpawn = true; // !ChildrenInViewport(modules[index]);
+            if (index <= 2) {
+                toSpawn = true;
             } else {
                 toSpawn = false;
             }
             
 
-            if (index <= 1 && !modules[index].GetComponent<TutorialModule>().complete && toSpawn) {
+            if (index <= 2 && !modules[index].GetComponent<TutorialModule>().complete && toSpawn) {
                 // the tutorial has not been completed, so it should be spawned
                 Vector2 playerLocation = other.gameObject.GetComponent<Rigidbody2D>().position;
                 Vector2 rootLocation = (Vector2) transform.position;
@@ -77,9 +77,17 @@ public class ClusterBoundary : MonoBehaviour
                     distToEdge = gControl.cam.orthographicSize / Mathf.Abs(Mathf.Sin(diffAngle));
                 }
 
-                Vector2 tutorialSpawnLocation = playerLocation + diff.normalized * (distToEdge + offsetDist);
+                Vector2 tutSpawnLoc = playerLocation + diff.normalized * (distToEdge + offsetDist);
+                if (index == 2) {
+                    Scenes scenes = GameObject.FindWithTag("GameController").GetComponent<Scenes>();
+                    bool spawn = scenes.TSpawnCheck(tutSpawnLoc, Vector2.one * 15, index);
+                    if (!spawn) {
+                        return;
+                    }
+                }
+                
                 modules[index].SetActive(true);
-                modules[index].transform.position = tutorialSpawnLocation;
+                modules[index].transform.position = tutSpawnLoc;
                 modules[index].GetComponent<TutorialModule>().complete = true;
             }
         }

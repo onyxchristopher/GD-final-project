@@ -93,10 +93,6 @@ public class Compass : MonoBehaviour
     public void HideCompass(string _) {
         HideMajor();
         HideMinor();
-        Debug.Log(".");
-        for (int i = 0; i < indices.Count; i++) {
-            Debug.Log($"{indices[i]}");
-        }
     }
 
     public void ShowCompass() {

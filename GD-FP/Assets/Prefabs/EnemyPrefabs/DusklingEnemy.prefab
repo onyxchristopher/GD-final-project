@@ -188,7 +188,7 @@ MonoBehaviour:
   timeToFire: 1.5
   timeToRecharge: 1.5
   idleRotationSpeed: 0.7
-  attackRotationSpeed: 1
+  attackRotationSpeed: 1.5
   damage: 7
   laser: {fileID: 9016803378205917037, guid: c17ea700a2bb043eeb8e9aa78a713913, type: 3}
   laserZap: {fileID: 4433177078515545004, guid: 2ae5fd7754c8040deb8278d4333bb2c1,

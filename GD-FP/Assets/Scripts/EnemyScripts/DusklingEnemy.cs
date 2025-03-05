@@ -27,6 +27,7 @@ public class DusklingEnemy : Enemy
     private RaycastHit2D[] raycastResults = new RaycastHit2D[1];
     [SerializeField] private GameObject laser;
     [SerializeField] private GameObject laserZap;
+    private Laser laserInstance;
     private ContactFilter2D cf;
     private Sound sound;
     
@@ -47,7 +48,7 @@ public class DusklingEnemy : Enemy
         dmg = GetComponent<Damageable>();
         dmg.enemy = this;
         asteroid = transform.position - 6.3f * Vector3.up;
-        cf.SetLayerMask(LayerMask.GetMask("Planet", "Player"));
+        cf.SetLayerMask(LayerMask.GetMask("Planet", "Player", "Planetoid"));
         cf.useTriggers = false;
         sound = GameObject.FindWithTag("Sound").GetComponent<Sound>();
 
@@ -57,9 +58,6 @@ public class DusklingEnemy : Enemy
     }
 
     private void IdleLoop() {
-        if (state == State.ATTACK) {
-            return;
-        }
         if (gameObject != null && gameObject.activeInHierarchy) {
             Timing.RunCoroutine(_IdleRotate().CancelWith(gameObject));
         }
@@ -82,21 +80,28 @@ public class DusklingEnemy : Enemy
     }
 
     private IEnumerator<float> _CheckLOS() {
-        while (state != State.IDLE) {
+        // check LOS while not in idle state or if a laser is active
+        while (state != State.IDLE || laserInstance) {
             Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
-            Physics2D.Raycast((Vector2) transform.position, dirToPlayer, cf, raycastResults, 40);
+            Physics2D.Raycast((Vector2) transform.position, dirToPlayer, cf, raycastResults, 50);
             
+            // if duskling has not fired lately and raycast gets a hit, move to ATTACK
             if (!firedWithinDelay && raycastResults[0] && raycastResults[0].collider.gameObject.CompareTag("Player")) {
                 firedWithinDelay = true;
-                GameObject laserInstance = Instantiate(laser, transform.position, Quaternion.identity, transform);
-                laserInstance.GetComponent<Laser>().SelfDestructInSeconds(timeToFire);
+                GameObject laserobj = Instantiate(laser, transform.position, Quaternion.identity, transform);
+                laserInstance = laserobj.GetComponent<Laser>();
+                laserInstance.SelfDestructInSeconds(timeToFire);
                 state = State.ATTACK;
                 StateTransition();
-            } else if (state == State.ATTACK && raycastResults[0] && raycastResults[0].collider.gameObject.CompareTag("Planet")) {
-                state = State.TRACK;
-                StateTransition();
             }
-            yield return Timing.WaitForSeconds(0.1f);
+            if (laserInstance && raycastResults[0]) {
+                if (raycastResults[0].collider.gameObject.CompareTag("Player")) {
+                    laserInstance.UpdateAndSetPositions(transform.position, (Vector3) playerRB.position);
+                } else {
+                    laserInstance.UpdateAndSetPositions(transform.position, raycastResults[0].point);
+                }
+            }
+            yield return Timing.WaitForOneFrame;
         }
     }
 
@@ -114,7 +119,6 @@ public class DusklingEnemy : Enemy
         while (state == State.ATTACK) {
             Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
             float angle = Vector2.SignedAngle(transform.up, dirToPlayer);
-            Debug.Log(angle);
             if (angle > 5) {
                 transform.RotateAround(asteroid, Vector3.forward, attackRotationSpeed);
             } else if (angle < -5) {
@@ -127,6 +131,7 @@ public class DusklingEnemy : Enemy
     private IEnumerator<float> _Fire() {
         while (state == State.ATTACK) {
             EventManager.LaserCharge();
+            
             yield return Timing.WaitForSeconds(timeToFire);
             Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
             Physics2D.Raycast((Vector2) transform.position, dirToPlayer, cf, raycastResults, 40);
@@ -134,17 +139,15 @@ public class DusklingEnemy : Enemy
                 raycastResults[0].collider.gameObject.GetComponent<PlayerCollision>().Damage(damage);
                 playerRB.AddForce(dirToPlayer.normalized * 30, ForceMode2D.Impulse);
             }
+            laserInstance = null;
             Instantiate(laserZap, raycastResults[0].point, Quaternion.identity);
             EventManager.LaserZap();
-
+            if (state == State.ATTACK) {
+                state = State.TRACK;
+                StateTransition();
+            }
             yield return Timing.WaitForSeconds(timeToRecharge);
             firedWithinDelay = false;
-        }
-    }
-
-    void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.gameObject.CompareTag("Player")) {
-            collision.gameObject.GetComponent<PlayerCollision>().HullCollision();
         }
     }
 
@@ -162,7 +165,13 @@ public class DusklingEnemy : Enemy
         }
     }
 
-    void Update() {
-        Debug.Log(state);
+    public override void EnemyDeath() {
+        EventManager.onPlayerDeath -= ResetToIdle;
+        if (drop) {
+            GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
+            droppedFuel.GetComponent<FuelDrop>().fuel = 10;
+        }
+        EventManager.EnemyDefeat();
+        gameObject.SetActive(false);
     }
 }

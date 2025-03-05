@@ -21,7 +21,6 @@ public class FireChaserEnemy : Enemy
     [SerializeField] private float delay;
     [SerializeField] private float speed;
     private bool firedWithinDelay = false;
-    public bool mobile = false;
     public bool firstMove = true;
 
     // Awake encodes the enemy FSM
@@ -43,12 +42,10 @@ public class FireChaserEnemy : Enemy
     }
 
     private void Moving() {
-        mobile = true;
         if (firstMove) {
             ReassignSpawn(transform.position);
             firstMove = false;
         }
-        dmg.MobilityChange(mobile);
         ChaseLoop();
         FireLoop();
     }
@@ -122,8 +119,6 @@ public class FireChaserEnemy : Enemy
             // if at spawn, stop
             if (dirToSpawn.magnitude < 1) {
                 rb.velocity = Vector2.zero;
-                mobile = false;
-                dmg.MobilityChange(mobile);
                 yield break;
             }
 
