@@ -95,7 +95,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 3714360409407761886}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: e2ba9f1b92f0d423d940139935fc67f9, type: 2}
+  m_Material: {fileID: 6200000, guid: 526914b6c83ab4726a42543c1e96c820, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -149,7 +149,6 @@ MonoBehaviour:
     type: 3}
   delay: 1.5
   speed: 15
-  mobile: 0
   firstMove: 1
 --- !u!114 &2142204082333992230
 MonoBehaviour:
@@ -167,8 +166,8 @@ MonoBehaviour:
   health: 0
   isBoss: 0
   enemy: {fileID: 0}
+  linkedForcefield: {fileID: 0}
   protectiveForcefield: {fileID: 0}
-  lineSortingOrder: 0
   healthbar: {fileID: 2145191980686434580, guid: f3e13775643e04eb28318c0841b9adba,
     type: 3}
   healthBarOffset: {x: 0, y: 3, z: 0}

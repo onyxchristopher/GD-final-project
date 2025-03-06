@@ -70,11 +70,11 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    public delegate void NotifyEnterBossArea(string bossName);
+    public delegate void NotifyEnterBossArea(int sectorId);
     public static event NotifyEnterBossArea onEnterBossArea;
-    public static void EnterBossArea(string bossName) {
+    public static void EnterBossArea(int sectorId) {
         if (onEnterBossArea != null) {
-            onEnterBossArea(bossName);
+            onEnterBossArea(sectorId);
         }
     }
 
@@ -84,11 +84,11 @@ public class EventManager : MonoBehaviour
         onExitBossArea?.Invoke();
     }
 
-    public delegate void NotifyBossDefeat(string bossName);
+    public delegate void NotifyBossDefeat(int sectorId);
     public static event NotifyBossDefeat onBossDefeat;
-    public static void BossDefeat(string bossName) {
+    public static void BossDefeat(int sectorId) {
         if (onBossDefeat != null) {
-            onBossDefeat(bossName);
+            onBossDefeat(sectorId);
         }
     }
 

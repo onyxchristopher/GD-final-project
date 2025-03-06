@@ -90,7 +90,7 @@ public class Compass : MonoBehaviour
         HideMinor();
     }
 
-    public void HideCompass(string _) {
+    public void HideCompass(int _) {
         HideMajor();
         HideMinor();
     }

@@ -94,7 +94,7 @@ public class Scenes : MonoBehaviour
     }
 
     // set the cluster as complete, avoiding boss respawn
-    public void CompleteSector(string bossName) {
+    public void CompleteSector(int _) {
         level1[GameObject.FindWithTag("Compass").GetComponent<Compass>().currCluster - 1].setComplete(true);
     }
 
@@ -105,18 +105,20 @@ public class Scenes : MonoBehaviour
 
     // check if a tutorial can be spawned in or if a minor objective is in the way
     public bool TSpawnCheck(Vector2 loc, Vector2 size, int index) {
-        Rect mObjBounds = new Rect(level2[index][0].getCorePosition() - 50 * Vector2.one, 100 * Vector2.one);
+        Vector2 mObjSize = Vector2.one * 100;
+        Rect mObjBounds = new Rect(level2[index][0].getCorePosition() - mObjSize / 2, mObjSize);
         Rect tutBounds = new Rect(loc - size / 2, size);
         if (mObjBounds.Overlaps(tutBounds)) {
             return false;
         }
-        mObjBounds = new Rect(level2[index][1].getCorePosition() - 50 * Vector2.one, 100 * Vector2.one);
+        mObjBounds = new Rect(level2[index][1].getCorePosition() - mObjSize / 2, mObjSize);
         if (mObjBounds.Overlaps(tutBounds)) {
             return false;
         }
         return true;
     }
-
+    
+    // Remove any planets in the area to avoid overlaps
     private IEnumerator<float> _RmPlanetsDelay(Cluster[] cLocs, Vector2 size) {
         yield return Timing.WaitForSeconds(0.5f);
         RmPlanets(cLocs[0].getCorePosition(), size);

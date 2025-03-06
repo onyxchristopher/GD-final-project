@@ -29,7 +29,6 @@ public class DusklingEnemy : Enemy
     [SerializeField] private GameObject laserZap;
     private Laser laserInstance;
     private ContactFilter2D cf;
-    private Sound sound;
     
     // Awake encodes the enemy FSM
     void Awake() {
@@ -50,7 +49,6 @@ public class DusklingEnemy : Enemy
         asteroid = transform.position - 6.3f * Vector3.up;
         cf.SetLayerMask(LayerMask.GetMask("Planet", "Player", "Planetoid"));
         cf.useTriggers = false;
-        sound = GameObject.FindWithTag("Sound").GetComponent<Sound>();
 
         IdleLoop();
 

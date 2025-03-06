@@ -137,7 +137,7 @@ public class VoidchargerBossEnemy : Enemy
 
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
-        EventManager.BossDefeat(bossName);
+        EventManager.BossDefeat(2);
         EventManager.ExitBossArea();
         if (drop) {
             GameObject artifact = Instantiate(drop, transform.parent.position + Vector3.right * 57, Quaternion.identity);

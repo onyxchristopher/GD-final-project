@@ -83,7 +83,7 @@ public class MessageDashboard : MonoBehaviour
         recentSectorNum = 0;
     }
 
-    public void ApproachingBossMsg(string bossName) {
+    public void ApproachingBossMsg(int _) {
         ChangeTextTo("Powerful enemy ahead!\n\nLook for its weakness.");
         sound.PlayApproachBossTutorial();
         EventManager.onEnterBossArea -= ApproachingBossMsg;
@@ -103,12 +103,15 @@ public class MessageDashboard : MonoBehaviour
         }
     }
 
-    public void BossDefeatMsg(string bossName) {
+    public void BossDefeatMsg(int _) {
         ChangeTextTo($"You found an artifact!\n\nFly over it to pick it up.");
         sound.PlayBossDefeatTutorial();
     }
 
     public void CorePickupMsg(int id) {
+        if (id % 10 == 0) {
+            return;
+        }
         if (id == 21 || id == 41 || id == 61 || id == 81) {
             ChangeTextTo("Max fuel has been increased!");
             sound.PlayFuelCorePickup();

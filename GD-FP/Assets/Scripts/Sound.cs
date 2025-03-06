@@ -97,7 +97,7 @@ public class Sound : MonoBehaviour
         BGMSourceOOC.Play();
     }
 
-    public void EnterCombat(string _) {
+    public void EnterCombat(int _) {
         combat = true;
         Timing.RunCoroutine(_Fade());
     }
@@ -244,7 +244,7 @@ public class Sound : MonoBehaviour
         //PlaySFX(respawnEnd, 1);
     }
 
-    public void PlayExplosion(string _) {
+    public void PlayExplosion(int _) {
         PlaySFX(explosion, 1);
     }
 

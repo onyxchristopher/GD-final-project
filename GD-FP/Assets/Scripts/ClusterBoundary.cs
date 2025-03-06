@@ -20,7 +20,7 @@ public class ClusterBoundary : MonoBehaviour
     private GameController gControl;
 
     // distance from the camera edge to spawn the tutorial
-    private float offsetDist = 5;
+    private float offsetDist = 10;
 
     // distance from the player at which the tutorial should not be despawned
 
@@ -77,12 +77,16 @@ public class ClusterBoundary : MonoBehaviour
                     distToEdge = gControl.cam.orthographicSize / Mathf.Abs(Mathf.Sin(diffAngle));
                 }
 
+                // spawn tutorial in a certain place, unless other things are in the way
                 Vector2 tutSpawnLoc = playerLocation + diff.normalized * (distToEdge + offsetDist);
-                if (index == 2) {
+                if (index >= 1) {
                     Scenes scenes = GameObject.FindWithTag("GameController").GetComponent<Scenes>();
-                    bool spawn = scenes.TSpawnCheck(tutSpawnLoc, Vector2.one * 15, index);
+                    bool spawn = scenes.TSpawnCheck(tutSpawnLoc, Vector2.one * 17, index);
+                    Debug.Log(spawn);
                     if (!spawn) {
                         return;
+                    } else {
+                        scenes.RmPlanets(tutSpawnLoc, Vector2.one * 17);
                     }
                 }
                 

@@ -69,7 +69,7 @@ public class PlanetguardBossEnemy : Enemy
         if (other.CompareTag("Player")) {
             state = State.TRACK;
             StateTransition();
-            EventManager.EnterBossArea(bossName);
+            EventManager.EnterBossArea(1);
             gameObject.GetComponent<CircleCollider2D>().radius += 20;
         }
     }
@@ -85,7 +85,7 @@ public class PlanetguardBossEnemy : Enemy
 
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
-        EventManager.BossDefeat(bossName);
+        EventManager.BossDefeat(1);
         if (drop) {
             GameObject artifact = Instantiate(drop, transform.position + Vector3.up * 18, Quaternion.identity);
             artifact.GetComponent<Artifact>().setId(10);

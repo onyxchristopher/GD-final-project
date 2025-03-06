@@ -115,6 +115,9 @@ public class PlayerAbilities : MonoBehaviour
             // Queue the dash
             pMove.QueueDash();
 
+            // Remove the last trap
+            Destroy(GameObject.FindWithTag("Trap"));
+
             // Spawn trap and set its damage
             GameObject trapInstance = Instantiate(trap, transform.position, Quaternion.identity);
             trapInstance.GetComponent<Trap>().SetDamage(trapDamage);

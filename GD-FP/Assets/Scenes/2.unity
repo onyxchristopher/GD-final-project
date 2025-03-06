@@ -1373,11 +1373,11 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2132775936}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
-  m_Mass: 50
+  m_Mass: 1000
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0
@@ -1425,8 +1425,8 @@ MonoBehaviour:
   health: 0
   isBoss: 1
   enemy: {fileID: 0}
+  linkedForcefield: {fileID: 0}
   protectiveForcefield: {fileID: 0}
-  lineSortingOrder: 0
   healthbar: {fileID: 0}
   healthBarOffset: {x: 0, y: 3.5, z: 0}
 --- !u!1001 &212706962788784703
@@ -1620,7 +1620,6 @@ MonoBehaviour:
   linkedObjects: []
   protectingObjects: []
   color: {r: 1, g: 0, b: 0, a: 1}
-  drawLineToLinked: 1
   multiplier: -1
   offset: {x: 33, y: -24, z: 0}
 --- !u!68 &1439395605493616259
@@ -1690,7 +1689,6 @@ MonoBehaviour:
   - {fileID: 2132775936}
   protectingObjects: []
   color: {r: 0.96862745, g: 1, b: 0, a: 1}
-  drawLineToLinked: 0
   multiplier: -1
   offset: {x: 0, y: 0, z: 0}
 --- !u!68 &4747957056117829893

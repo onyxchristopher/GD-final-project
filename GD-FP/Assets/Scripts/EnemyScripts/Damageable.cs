@@ -26,6 +26,10 @@ public class Damageable : MonoBehaviour
 
         health = maxHealth;
     }
+
+    void OnEnable() {
+        health = maxHealth;
+    }
     
     public void Damage(int damage, bool suppressSound = false) {
         if (!invuln && !protectiveForcefield){

@@ -897,6 +897,7 @@ MonoBehaviour:
   brakeConstant: 3
   decelConstant: 0.2
   decelThreshold: 13.5
+  throttle: 40
   dashSpeed: 15
   dashAccel: 1.5
   dashDuration: 0.6
