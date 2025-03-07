@@ -131,7 +131,7 @@ PrefabInstance:
     - target: {fileID: 652723905759159056, guid: a6b2e72cdeb3148579a9df3453a5e8e4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 652723905759159056, guid: a6b2e72cdeb3148579a9df3453a5e8e4,
         type: 3}
@@ -833,7 +833,7 @@ PrefabInstance:
     - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8878907731781219609, guid: f44c438698b3c44e88b725b36a3c74bc,
         type: 3}
@@ -1078,9 +1078,9 @@ Transform:
   - {fileID: 2132775937}
   - {fileID: 140501047}
   - {fileID: 489180636}
+  - {fileID: 2088884432}
   - {fileID: 138019747}
   - {fileID: 1110808383}
-  - {fileID: 2088884432}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1096,12 +1096,12 @@ GameObject:
   - component: {fileID: 2088884433}
   - component: {fileID: 2088884434}
   m_Layer: 14
-  m_Name: BossTrigger
+  m_Name: VoidchargerTrigger
   m_TagString: VoidchargerRespawnField
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2088884432
 Transform:
   m_ObjectHideFlags: 0
@@ -1109,13 +1109,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2088884431}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4747957056117829947}
   m_Father: {fileID: 1917701315}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &2088884433
 BoxCollider2D:
@@ -1409,6 +1409,8 @@ MonoBehaviour:
   prechargeTime: 0.3
   chargeTime: 1.5
   chargeSpeed: 35
+  deathParticles: {fileID: 717039239164678295, guid: 63989d88a422941d3ba45ce1568a2122,
+    type: 3}
 --- !u!114 &2132775943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1685,8 +1687,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c80e984c012f491ba8e47a0e10b3c55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linkedObjects:
-  - {fileID: 2132775936}
+  linkedObjects: []
   protectingObjects: []
   color: {r: 0.96862745, g: 1, b: 0, a: 1}
   multiplier: -1

@@ -82,7 +82,6 @@ public class ClusterBoundary : MonoBehaviour
                 if (index >= 1) {
                     Scenes scenes = GameObject.FindWithTag("GameController").GetComponent<Scenes>();
                     bool spawn = scenes.TSpawnCheck(tutSpawnLoc, Vector2.one * 17, index);
-                    Debug.Log(spawn);
                     if (!spawn) {
                         return;
                     } else {

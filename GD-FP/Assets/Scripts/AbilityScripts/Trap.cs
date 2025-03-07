@@ -6,7 +6,7 @@ using UnityEngine;
 public class Trap : MonoBehaviour
 {
     private int damage;
-    private float duration = 20;
+    private float duration = 60;
     private float explosionRadius = 12;
 
     void Start() {

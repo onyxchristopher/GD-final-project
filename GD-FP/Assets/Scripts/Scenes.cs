@@ -70,8 +70,12 @@ public class Scenes : MonoBehaviour
         }
 
         if (level1[sectorIndex].getComplete()) {
-            if (id <= 2) {
+            if (id <= 3) {
                 root.transform.GetChild(0).gameObject.SetActive(false);
+            }
+        } else {
+            if (id == 2 || id == 3) {
+                root.transform.GetChild(3).gameObject.SetActive(true);
             }
         }
         for (int i = 0; i < level2[sectorIndex].Length; i++) {

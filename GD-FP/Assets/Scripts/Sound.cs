@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MEC;
@@ -8,6 +9,7 @@ public class Sound : MonoBehaviour
     [SerializeField] private AudioSource BGMSourceOOC;
     [SerializeField] private AudioSource BGMSourceIC;
     [SerializeField] private AudioSource SFXSource;
+    [SerializeField] private AudioSource voiceSource;
 
     public AudioClip outOfCombatBGM;
     public AudioClip inCombatBGM;
@@ -37,10 +39,13 @@ public class Sound : MonoBehaviour
     public AudioClip caseSlideDown;
     public AudioClip book;
     public AudioClip trap;
+    public AudioClip projectile;
     public AudioClip laserCharge;
     public AudioClip laserZap;
 
     // Voice
+    private Queue<AudioClip> voiceQueue = new Queue<AudioClip>();
+    private bool voicePlaying = false;
     public AudioClip missionStart;
     public AudioClip launchTutorial;
     public AudioClip enemyDefeatTutorial;
@@ -77,12 +82,12 @@ public class Sound : MonoBehaviour
         EventManager.onPickup += PlayPickup;
         EventManager.onPlayerDeath += PlayDeath;
         EventManager.onPlayerDeath += PlayRespawn;
-        EventManager.onPlayerRespawn += PlayRespawnEnd;
         EventManager.onBossDefeat += PlayExplosion;
         EventManager.onForcefieldHit += PlayForcefieldZap;
         EventManager.onForcefieldBounce += PlayForcefieldBounce;
         EventManager.onArtifactObtain += PlayCaseSlideDown;
         EventManager.onTrapUse += PlayTrap;
+        EventManager.onProjectileFire += PlayProjectileFire;
         EventManager.onLaserCharge += PlayLaserCharge;
         EventManager.onLaserZap += PlayLaserZap;
 
@@ -105,18 +110,6 @@ public class Sound : MonoBehaviour
     public void ExitCombat() {
         combat = false;
         Timing.RunCoroutine(_Fade());
-    }
-
-    public void PlayBGM() {
-
-    }
-
-    public void PauseBGM() {
-
-    }
-
-    public void StopBGM() {
-
     }
 
     private IEnumerator<float> _Fade() {
@@ -224,7 +217,7 @@ public class Sound : MonoBehaviour
             BGMSourceOOC.volume = 0;
         }
         yield return Timing.WaitForSeconds(4);
-        
+        fadeOverride = false;
         
         time = 0;
         while (time < 1) {
@@ -240,12 +233,8 @@ public class Sound : MonoBehaviour
         PlaySFX(respawn, 0.8f);
     }
 
-    public void PlayRespawnEnd() {
-        //PlaySFX(respawnEnd, 1);
-    }
-
     public void PlayExplosion(int _) {
-        PlaySFX(explosion, 1);
+        PlaySFX(explosion, 0.9f);
     }
 
     public void PlayForcefieldZap() {
@@ -268,6 +257,10 @@ public class Sound : MonoBehaviour
 
     public void PlayTrap() {
         PlaySFX(trap, 1);
+    }
+
+    public void PlayProjectileFire() {
+        PlaySFX(projectile, 0.75f);
     }
 
     public void PlayLaserCharge() {
@@ -298,106 +291,123 @@ public class Sound : MonoBehaviour
     }
 
     public void PlayLaunchTutorial() {
-        PlaySFX(launchTutorial, 1);
+        AddToVoiceQueue(launchTutorial, 1);
     }
 
     public void PlayEnemyDefeatTutorial() {
-        PlaySFX(enemyDefeatTutorial, 1);
+        AddToVoiceQueue(enemyDefeatTutorial, 1);
     }
 
     public void PlayApproachBossTutorial() {
-        PlaySFX(approachBossTutorial, 1);
+        AddToVoiceQueue(approachBossTutorial, 1);
     }
 
     public void PlayPlayerDeath() {
-        PlaySFX(playerDeath, 1);
+        AddToVoiceQueue(playerDeath, 1);
     }
 
     public void PlayBossDefeatTutorial() {
-        PlaySFX(bossDefeatTutorial, 1);
+        AddToVoiceQueue(bossDefeatTutorial, 1);
     }
 
     public void PlayFuelCorePickup() {
-        PlaySFX(fuelCorePickup, 1);
+        AddToVoiceQueue(fuelCorePickup, 1);
     }
 
     public void PlayHealthCorePickup() {
-        PlaySFX(healthCorePickup, 1);
+        AddToVoiceQueue(healthCorePickup, 1);
     }
 
     public void PlayKnowledgeAdded() {
-        PlaySFX(knowledgeAdded, 1);
+        AddToVoiceQueue(knowledgeAdded, 1);
     }
 
     public void PlayArtifact1() {
-        PlaySFX(artifact1, 1);
+        AddToVoiceQueue(artifact1, 1);
     }
 
     public void PlayArtifact2() {
-        PlaySFX(artifact2, 1);
+        AddToVoiceQueue(artifact2, 1);
     }
 
     public void PlayArtifact3() {
-        PlaySFX(artifact3, 1);
+        AddToVoiceQueue(artifact3, 1);
     }
 
     public void PlayArtifact4() {
-        PlaySFX(artifact4, 1);
+        AddToVoiceQueue(artifact4, 1);
     }
 
     public void PlayArtifact5() {
-        PlaySFX(artifact5, 1);
+        AddToVoiceQueue(artifact5, 1);
     }
 
     public void PlayArtifact6() {
-        PlaySFX(artifact6, 1);
+        AddToVoiceQueue(artifact6, 1);
     }
 
     public void PlayArtifact7() {
-        PlaySFX(artifact7, 1);
+        AddToVoiceQueue(artifact7, 1);
     }
 
     public void PlayArtifact8() {
-        PlaySFX(artifact8, 1);
+        AddToVoiceQueue(artifact8, 1);
     }
 
     public void PlayCheckpointTutorial() {
-        PlaySFX(checkpointTutorial, 1);
+        AddToVoiceQueue(checkpointTutorial, 1);
     }
 
     public void PlayEnterSector1() {
-        PlaySFX(enterSector1, 1);
+        AddToVoiceQueue(enterSector1, 1);
     }
 
     public void PlayEnterSector2() {
-        PlaySFX(enterSector2, 1);
+        AddToVoiceQueue(enterSector2, 1);
     }
 
     public void PlayEnterSector3() {
-        PlaySFX(enterSector3, 1);
+        AddToVoiceQueue(enterSector3, 1);
     }
 
     public void PlayEnterSector4() {
-        PlaySFX(enterSector4, 1);
+        AddToVoiceQueue(enterSector4, 1);
     }
 
     public void PlayEnterSector5() {
-        PlaySFX(enterSector5, 1);
+        AddToVoiceQueue(enterSector5, 1);
     }
 
     public void PlayEnterSector6() {
-        PlaySFX(enterSector6, 1);
+        AddToVoiceQueue(enterSector6, 1);
     }
 
     public void PlayEnterSector7() {
-        PlaySFX(enterSector7, 1);
+        AddToVoiceQueue(enterSector7, 1);
     }
 
     public void PlayEnterSector8() {
-        PlaySFX(enterSector8, 1);
+        AddToVoiceQueue(enterSector8, 1);
     }
 
     public void PlaySFX(AudioClip clip, float vol = 1) {
         SFXSource.PlayOneShot(clip, vol);
+    }
+
+    private void AddToVoiceQueue(AudioClip clip, float vol = 1) {
+        voiceQueue.Enqueue(clip);
+        if (!voicePlaying) {
+            Timing.RunCoroutine(_VoiceQueue());
+        }
+    }
+
+    private IEnumerator<float> _VoiceQueue() {
+        voicePlaying = true;
+        while (voiceQueue.Count > 0) {
+            AudioClip clip = voiceQueue.Dequeue();
+            voiceSource.PlayOneShot(clip, 1);
+            yield return Timing.WaitForSeconds(clip.length + 0.5f);
+        }
+        voicePlaying = false;
     }
 }

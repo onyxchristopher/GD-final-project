@@ -145,6 +145,8 @@ MonoBehaviour:
   projectile: {fileID: 6604178542700321903, guid: 96e42ef7bcca54abb87370128590c5d9,
     type: 3}
   delay: 2
+  deathParticles: {fileID: 4203094964254870271, guid: ce3f2dcaa6c964944a87da12547175eb,
+    type: 3}
 --- !u!114 &4187135916521462681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,8 +163,8 @@ MonoBehaviour:
   health: 0
   isBoss: 0
   enemy: {fileID: 0}
+  linkedForcefield: {fileID: 0}
   protectiveForcefield: {fileID: 0}
-  lineSortingOrder: 0
   healthbar: {fileID: 2145191980686434580, guid: f3e13775643e04eb28318c0841b9adba,
     type: 3}
   healthBarOffset: {x: 0, y: 3.5, z: 0}

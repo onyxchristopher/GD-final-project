@@ -904,6 +904,8 @@ MonoBehaviour:
   deathSequenceTime: 3
   playerRespawn: {fileID: 1940737534848662661, guid: 50d30498c6380428ea9b009bd09b225a,
     type: 3}
+  playerDeath: {fileID: 6728520527900382309, guid: 94662b0275e654f1d85d9b214632e41c,
+    type: 3}
 --- !u!114 &207719371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1527,8 +1529,8 @@ MonoBehaviour:
   upgradedBladeDamage: 10
   upgradedTrapDamage: 10
   upgradedShieldDuration: 1
-  minorFuelUpgrade: 10
-  minorHealthUpgrade: 2
+  minorFuelUpgrade: 30
+  minorHealthUpgrade: 3
 --- !u!114 &467730946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1901,6 +1903,133 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &539790173
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 539790174}
+  - component: {fileID: 539790175}
+  m_Layer: 0
+  m_Name: Voice
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &539790174
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539790173}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 987529169}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &539790175
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539790173}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &569865261
 GameObject:
   m_ObjectHideFlags: 0
@@ -2764,6 +2893,7 @@ Transform:
   - {fileID: 1632085675}
   - {fileID: 668066254}
   - {fileID: 128932326}
+  - {fileID: 539790174}
   m_Father: {fileID: 467730944}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2782,6 +2912,7 @@ MonoBehaviour:
   BGMSourceOOC: {fileID: 1632085676}
   BGMSourceIC: {fileID: 668066255}
   SFXSource: {fileID: 128932327}
+  voiceSource: {fileID: 539790175}
   outOfCombatBGM: {fileID: 8300000, guid: 84f43bc544d2e40dc942eedf7c2ef37b, type: 3}
   inCombatBGM: {fileID: 8300000, guid: 7430e57f011b541578a622a934b6e57f, type: 3}
   getArtifact: {fileID: 8300000, guid: 093b037bc7890463a9c83ad7d2626f75, type: 3}
@@ -2793,12 +2924,13 @@ MonoBehaviour:
   death: {fileID: 8300000, guid: 43d80eed652fa4bbca0fa31b6bdd58ad, type: 3}
   respawn: {fileID: 8300000, guid: 3359c225b0b36498caf2cad315cb5cbc, type: 3}
   respawnEnd: {fileID: 8300000, guid: b142a87115ee9400c8637c3ba1667b1c, type: 3}
-  explosion: {fileID: 8300000, guid: d43afbf5b1b2f4665a040b207cfc6d26, type: 3}
+  explosion: {fileID: 8300000, guid: c6214971ddec74aa3b5e11e628fcbf88, type: 3}
   forcefieldZap: {fileID: 8300000, guid: 08549c39fae984dcb819de08028caf69, type: 3}
   forcefieldBounce: {fileID: 8300000, guid: 54c76e269844f40fb8acc734eac26265, type: 3}
   caseSlideDown: {fileID: 8300000, guid: ff5b05952ba064cdab0a5f41fcb1b99c, type: 3}
   book: {fileID: 8300000, guid: 1fd67874e09004037b7da1f329165304, type: 3}
   trap: {fileID: 8300000, guid: 07f53fec60f684240a4b0dfbf7783c92, type: 3}
+  projectile: {fileID: 8300000, guid: f376a434020854b2797063fb36feaceb, type: 3}
   laserCharge: {fileID: 8300000, guid: c672f571f8a334a5a9a95c5b1e2d4c59, type: 3}
   laserZap: {fileID: 8300000, guid: 09382542b75be42e692b03f2089adec6, type: 3}
   missionStart: {fileID: 8300000, guid: 0dc18d03cdd1a49a6b63873513963c4f, type: 3}
@@ -2813,12 +2945,12 @@ MonoBehaviour:
   knowledgeAdded: {fileID: 8300000, guid: 2c82ec072896c4ce4bd5ce9d2888a5ed, type: 3}
   artifact1: {fileID: 8300000, guid: c28eb36f47e0c48dd9c179330c092cf3, type: 3}
   artifact2: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
-  artifact3: {fileID: 0}
-  artifact4: {fileID: 0}
-  artifact5: {fileID: 0}
-  artifact6: {fileID: 0}
-  artifact7: {fileID: 0}
-  artifact8: {fileID: 0}
+  artifact3: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
+  artifact4: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
+  artifact5: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
+  artifact6: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
+  artifact7: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
+  artifact8: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
   checkpointTutorial: {fileID: 8300000, guid: 4206dcd1c87be495c93fea0e3897fc7f, type: 3}
   enterSector1: {fileID: 8300000, guid: fe2f85fa10b254a02966f095db9be4c4, type: 3}
   enterSector2: {fileID: 8300000, guid: 70165fd2bddba4877bb6763dbe9f2efa, type: 3}

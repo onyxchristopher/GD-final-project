@@ -22,6 +22,7 @@ public class PlanetguardBossEnemy : Enemy
     private Rigidbody2D playerRB;
     private Damageable damageable;
     [SerializeField] private string bossName;
+    [SerializeField] private GameObject deathParticles;
 
     // Awake encodes the enemy FSM
     void Awake() {
@@ -85,6 +86,7 @@ public class PlanetguardBossEnemy : Enemy
 
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
+        Instantiate(deathParticles, transform.position, Quaternion.identity);
         EventManager.BossDefeat(1);
         if (drop) {
             GameObject artifact = Instantiate(drop, transform.position + Vector3.up * 18, Quaternion.identity);

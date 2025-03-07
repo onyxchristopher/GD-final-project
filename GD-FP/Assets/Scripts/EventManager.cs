@@ -148,6 +148,12 @@ public class EventManager : MonoBehaviour
         onForcefieldBounce?.Invoke();
     }
 
+    public delegate void NotifyProjectileFire();
+    public static event NotifyProjectileFire onProjectileFire;
+    public static void ProjectileFire() {
+        onProjectileFire?.Invoke();
+    }
+
     public delegate void NotifyLaserCharge();
     public static event NotifyLaserCharge onLaserCharge;
     public static void LaserCharge() {

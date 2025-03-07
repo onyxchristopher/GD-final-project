@@ -34,8 +34,9 @@ public class VoidchargerBossEnemy : Enemy
     private bool forcefieldTrigger = false;
     private bool hitPlayerTrigger = false;
 
-    // Awake encodes the enemy FSM
+    [SerializeField] private GameObject deathParticles;
 
+    // Awake encodes the enemy FSM
     void Awake() {
         Action chargerAttack = AttackLoop;
         chargerAttack += SpawnForcefield;
@@ -137,6 +138,7 @@ public class VoidchargerBossEnemy : Enemy
 
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
+        Instantiate(deathParticles, transform.position, Quaternion.identity);
         EventManager.BossDefeat(2);
         EventManager.ExitBossArea();
         if (drop) {

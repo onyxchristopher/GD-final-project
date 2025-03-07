@@ -25,13 +25,10 @@ public class DuskwardenBossEnemy : Enemy
     public string bossName;
     [SerializeField] private GameObject forcefield;
     private GameObject field;
+    [SerializeField] private GameObject deathParticles;
 
     // Awake encodes the enemy FSM
     void Awake() {
-        Action duskwardenTrack = TrackLoop;
-        duskwardenTrack += SpawnForcefield;
-        enterStateLogic.Add(State.TRACK, duskwardenTrack);
-
         Action duskwardenAttack = AttackLoop;
         enterStateLogic.Add(State.ATTACK, duskwardenAttack);
 
@@ -52,7 +49,6 @@ public class DuskwardenBossEnemy : Enemy
     public override void ResetToIdle() {
         state = State.IDLE;
         StateTransition();
-        gameObject.SetActive(false);
     }
 
     public void Spawn() {
@@ -62,24 +58,18 @@ public class DuskwardenBossEnemy : Enemy
         gameObject.SetActive(true);
         state = State.TRACK;
         StateTransition();
-    }
-
-    private void TrackLoop() {
-        if (state != State.TRACK) {
-            return;
-        }
-        if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.RunCoroutine(_CheckLOS().CancelWith(gameObject));
-        }
+        SpawnForcefield();
+        GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(60, 0, 1);
+        Timing.RunCoroutine(_CheckLOS().CancelWith(gameObject));
     }
 
     private IEnumerator<float> _CheckLOS() {
-        // check LOS while not in idle state or if a laser is active
-        while (state == State.TRACK || laserInstance) {
+        // check LOS while not in idle state
+        while (state != State.IDLE) {
             Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
             Physics2D.Raycast((Vector2) transform.position, dirToPlayer, cf, raycastResults, 200);
             
-            // if duskling has not fired lately and raycast gets a hit, move to ATTACK
+            // if duskling has not fired lately and raycast gets a hit on player, move to ATTACK
             if (!firedWithinDelay && raycastResults[0] && raycastResults[0].collider.gameObject.CompareTag("Player")) {
                 firedWithinDelay = true;
                 GameObject laserobj = Instantiate(laser, transform.position, Quaternion.identity, transform);
@@ -95,7 +85,9 @@ public class DuskwardenBossEnemy : Enemy
                     laserInstance.UpdateAndSetPositions(transform.position, raycastResults[0].point);
                 }
             }
-            transform.RotateAround(transform.parent.position, Vector3.forward, idleRotationSpeed);
+            if (state == State.TRACK) {
+                transform.RotateAround(transform.parent.position, Vector3.forward, idleRotationSpeed);
+            }
             yield return Timing.WaitForOneFrame;
         }
     }
@@ -142,6 +134,8 @@ public class DuskwardenBossEnemy : Enemy
 
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
+        Instantiate(deathParticles, transform.position, Quaternion.identity);
+        GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(30, 1, 1);
         EventManager.BossDefeat(3);
         EventManager.ExitBossArea();
         if (drop) {

@@ -331,8 +331,8 @@ MonoBehaviour:
   health: 5
   isBoss: 0
   enemy: {fileID: 0}
+  linkedForcefield: {fileID: 0}
   protectiveForcefield: {fileID: 0}
-  lineSortingOrder: 0
   healthbar: {fileID: 0}
   healthBarOffset: {x: 0, y: 3.5, z: 0}
 --- !u!114 &121745562
@@ -477,8 +477,8 @@ MonoBehaviour:
   health: 5
   isBoss: 0
   enemy: {fileID: 0}
+  linkedForcefield: {fileID: 0}
   protectiveForcefield: {fileID: 0}
-  lineSortingOrder: 0
   healthbar: {fileID: 0}
   healthBarOffset: {x: 0, y: 3.5, z: 0}
 --- !u!114 &141449493
@@ -1760,6 +1760,8 @@ MonoBehaviour:
   prevState: 0
   rotationVector: {x: 0, y: 0, z: 0.3}
   bossName: Planetguard
+  deathParticles: {fileID: 1954951661687263982, guid: e2841cc6fc4ab4d9d9a157643f05df39,
+    type: 3}
 --- !u!58 &1036854089
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1792,8 +1794,8 @@ MonoBehaviour:
   health: 20
   isBoss: 1
   enemy: {fileID: 0}
+  linkedForcefield: {fileID: 0}
   protectiveForcefield: {fileID: 0}
-  lineSortingOrder: 0
   healthbar: {fileID: 0}
   healthBarOffset: {x: 0, y: 3.5, z: 0}
 --- !u!1001 &1064153012
@@ -2463,8 +2465,8 @@ MonoBehaviour:
   health: 5
   isBoss: 0
   enemy: {fileID: 0}
+  linkedForcefield: {fileID: 0}
   protectiveForcefield: {fileID: 0}
-  lineSortingOrder: 0
   healthbar: {fileID: 0}
   healthBarOffset: {x: 0, y: 3.5, z: 0}
 --- !u!114 &1595327471
@@ -3139,8 +3141,8 @@ MonoBehaviour:
   health: 5
   isBoss: 0
   enemy: {fileID: 0}
+  linkedForcefield: {fileID: 0}
   protectiveForcefield: {fileID: 0}
-  lineSortingOrder: 0
   healthbar: {fileID: 0}
   healthBarOffset: {x: 0, y: 3.5, z: 0}
 --- !u!114 &2098948009

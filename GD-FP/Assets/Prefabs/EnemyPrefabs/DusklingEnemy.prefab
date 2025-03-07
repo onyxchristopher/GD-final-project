@@ -165,8 +165,8 @@ MonoBehaviour:
   health: 0
   isBoss: 0
   enemy: {fileID: 0}
+  linkedForcefield: {fileID: 0}
   protectiveForcefield: {fileID: 0}
-  lineSortingOrder: 0
   healthbar: {fileID: 2145191980686434580, guid: f3e13775643e04eb28318c0841b9adba,
     type: 3}
   healthBarOffset: {x: 0, y: 3.5, z: 0}
@@ -192,4 +192,6 @@ MonoBehaviour:
   damage: 7
   laser: {fileID: 9016803378205917037, guid: c17ea700a2bb043eeb8e9aa78a713913, type: 3}
   laserZap: {fileID: 4433177078515545004, guid: 2ae5fd7754c8040deb8278d4333bb2c1,
+    type: 3}
+  deathParticles: {fileID: 8951047509885905343, guid: 28a0076fee57f4dc288b218e29950464,
     type: 3}

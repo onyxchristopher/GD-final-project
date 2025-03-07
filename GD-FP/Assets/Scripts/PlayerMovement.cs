@@ -46,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
     private GameController gControl;
 
     [SerializeField] private GameObject playerRespawn;
+    [SerializeField] private GameObject playerDeath;
 
     void Start() {
         fuelBarSlider = GameObject.FindWithTag("FuelBar").GetComponent<Slider>();
@@ -185,11 +186,14 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private IEnumerator<float> _DeathTransport() {
+        GameObject pd = Instantiate(playerDeath, transform.position, Quaternion.identity, transform);
         yield return Timing.WaitForSeconds(gControl.timeToMove);
+        Destroy(pd);
         gameObject.GetComponent<Animator>().SetTrigger("Respawn");
         transform.position = origin;
         rb.velocity = Vector2.zero;
         GameObject pr = Instantiate(playerRespawn, transform.position, Quaternion.identity);
+        GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ResetCameraSize();
         yield return Timing.WaitForSeconds(gControl.timeToRespawn);
         EventManager.PlayerRespawn();
         RespawnSequence(pr);
