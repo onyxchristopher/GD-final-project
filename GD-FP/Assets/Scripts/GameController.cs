@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using MEC;
 
 public class GameController : MonoBehaviour
@@ -13,6 +14,15 @@ public class GameController : MonoBehaviour
     private GameObject bossText;
     private Slider bossHealthBar;
     private Text bossNameText;
+    private string[] bossNames = new string[] {
+    "Planetguard",
+    "Voidcharger",
+    "Duskwarden",
+    "",
+    "",
+    "",
+    "",
+    ""};
 
     // Script refs
     private Generation gen;
@@ -60,6 +70,8 @@ public class GameController : MonoBehaviour
 
         EventManager.onEnterBossArea += DisplayBossUI;
         EventManager.onExitBossArea += HideBossUI;
+
+        Timing.RunCoroutine(_CompassArrowDelay());
     }
 
     private void InitializeUniverse() {
@@ -94,6 +106,11 @@ public class GameController : MonoBehaviour
         scenes.InitializeScenes(level1.Length, level0, level1, level2);
     }
 
+    private IEnumerator<float> _CompassArrowDelay() {
+        yield return Timing.WaitForSeconds(12.5f);
+        compass.CalculateAnchorRadius(cam.pixelRect);
+    }
+
     public void Pause() {
 
     }
@@ -110,12 +127,12 @@ public class GameController : MonoBehaviour
 
     // Boss UI
 
-    public void DisplayBossUI(string name) {
-        activeBoss = GameObject.FindWithTag(name);
+    public void DisplayBossUI(int sectorId) {
+        activeBoss = SceneManager.GetSceneByBuildIndex(sectorId).GetRootGameObjects()[0].transform.GetChild(0).gameObject;
         Damageable damageable = activeBoss.GetComponent<Damageable>();
         bossHealthBar.maxValue = damageable.maxHealth;
         SetBossHealthBar(damageable.health);
-        bossNameText.text = name;
+        bossNameText.text = bossNames[sectorId - 1];
         bossBar.SetActive(true);
         bossText.SetActive(true);
     }

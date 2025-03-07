@@ -20,6 +20,7 @@ public class Projectile : MonoBehaviour
     }
 
     void Start() {
+        EventManager.ProjectileFire();
         rb.velocity = speed * transform.right;
         Destroy(gameObject, 5);
     }

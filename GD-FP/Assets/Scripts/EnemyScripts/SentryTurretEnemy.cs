@@ -17,6 +17,7 @@ public class SentryTurretEnemy : Enemy
     private Rigidbody2D playerRB;
     [SerializeField] private float delay;
     private bool firedWithinDelay = false;
+    [SerializeField] private GameObject deathParticles;
 
     // Awake encodes the enemy FSM
     void Awake() {
@@ -40,41 +41,43 @@ public class SentryTurretEnemy : Enemy
             return;
         }
         if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.RunCoroutine(_SentryFire());
+            Timing.RunCoroutine(_SentryFire().CancelWith(gameObject));
         }
     }
 
     private IEnumerator<float> _SentryFire() {
-        firedWithinDelay = true;
-        Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
-        Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
-        yield return Timing.WaitForSeconds(delay);
-        firedWithinDelay = false;
-        AttackLoop();
+        while (state != State.IDLE && !firedWithinDelay) {
+            firedWithinDelay = true;
+            Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
+            Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
+            yield return Timing.WaitForSeconds(delay);
+            firedWithinDelay = false;
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.gameObject.tag == "Player") {
+        if (collision.gameObject.CompareTag("Player")) {
             collision.gameObject.GetComponent<PlayerCollision>().HullCollision();
         }
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             state = State.ATTACK;
             StateTransition();
-            EventManager.EnterEnemyArea();
         }
     }
 
     void OnTriggerExit2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             state = State.IDLE;
             StateTransition();
         }
     }
 
     public override void EnemyDeath() {
+        EventManager.onPlayerDeath -= ResetToIdle;
+        Instantiate(deathParticles, transform.position, Quaternion.identity);
         if (drop) {
             GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
             droppedFuel.GetComponent<FuelDrop>().fuel = 10;

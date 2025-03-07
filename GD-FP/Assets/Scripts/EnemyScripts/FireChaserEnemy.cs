@@ -12,7 +12,8 @@ It also fires at the player every [delay] seconds.
 It moves back to IDLE, returning to its spawnpoint, when its trigger is exited by the player.
 */
 
-public class FireChaserEnemy : Enemy {
+public class FireChaserEnemy : Enemy
+{
     private Damageable dmg;
     [SerializeField] private GameObject projectile;
     private Rigidbody2D playerRB;
@@ -20,8 +21,8 @@ public class FireChaserEnemy : Enemy {
     [SerializeField] private float delay;
     [SerializeField] private float speed;
     private bool firedWithinDelay = false;
-    public bool mobile = false;
     public bool firstMove = true;
+    [SerializeField] private GameObject deathParticles;
 
     // Awake encodes the enemy FSM
     void Awake() {
@@ -42,12 +43,10 @@ public class FireChaserEnemy : Enemy {
     }
 
     private void Moving() {
-        mobile = true;
         if (firstMove) {
             ReassignSpawn(transform.position);
             firstMove = false;
         }
-        dmg.MobilityChange(mobile);
         ChaseLoop();
         FireLoop();
     }
@@ -56,95 +55,108 @@ public class FireChaserEnemy : Enemy {
         if (state == State.IDLE) {
             return;
         }
-        Timing.RunCoroutine(_Chase().CancelWith(gameObject));
+        if (gameObject != null && gameObject.activeInHierarchy) {
+            Timing.RunCoroutine(_Chase().CancelWith(gameObject));
+        }
     }
 
     private IEnumerator<float> _Chase() {
-        // set velocity and rotation to chase the player
-        Vector2 dirToPlayer = playerRB.position - rb.position;
-        rb.velocity = dirToPlayer.normalized * speed;
+        while (state == State.ATTACK) {
+            // set velocity and rotation to chase the player
+            Vector2 dirToPlayer = playerRB.position - rb.position;
+            rb.velocity = dirToPlayer.normalized * speed;
 
-        float angle = Vector2.SignedAngle(Vector2.right, dirToPlayer);
-        rb.rotation = angle;
-        
-        yield return Timing.WaitForOneFrame;
-        ChaseLoop();
+            float angle = Vector2.SignedAngle(Vector2.right, dirToPlayer);
+            rb.rotation = angle;
+            
+            yield return Timing.WaitForOneFrame;
+        }
     }
 
     private void FireLoop() {
         if (state == State.IDLE || firedWithinDelay) {
             return;
         }
-
-        if ((playerRB.position - spawnpoint).magnitude > 50) {
-            state = State.IDLE;
-            StateTransition();
-            return;
+        if (gameObject != null && gameObject.activeInHierarchy) {
+            Timing.RunCoroutine(_Fire().CancelWith(gameObject));
         }
-        
-        Timing.RunCoroutine(_Fire().CancelWith(gameObject));
     }
 
     private IEnumerator<float> _Fire() {
-        // fire every delay in the direction of the player
-        firedWithinDelay = true;
-        Vector2 dirToPlayer = playerRB.position - rb.position;
-        Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
-        yield return Timing.WaitForSeconds(delay);
-        firedWithinDelay = false;
-        FireLoop();
+        while (state == State.ATTACK && !firedWithinDelay) {
+            // fire every delay in the direction of the player
+            firedWithinDelay = true;
+            Vector2 dirToPlayer = playerRB.position - rb.position;
+            Instantiate(projectile, transform.position, Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
+            yield return Timing.WaitForSeconds(delay);
+            firedWithinDelay = false;
+            
+            // if the player is too far away, just go back to spawn
+            if ((playerRB.position - spawnpoint).magnitude > 50) {
+                state = State.IDLE;
+                StateTransition();
+            }
+        }
     }
 
     private void ReturnLoop() {
         if (state != State.IDLE) {
             return;
         }
-
-        if ((playerRB.position - spawnpoint).magnitude < 40) {
-            state = State.ATTACK;
-            StateTransition();
-            return;
+        if (gameObject != null && gameObject.activeInHierarchy) {
+            Timing.RunCoroutine(_Return().CancelWith(gameObject));
         }
-        
-        Timing.RunCoroutine(_Return().CancelWith(gameObject));
     }
     
     private IEnumerator<float> _Return() {
-        // move at a constant speed back to spawnpoint
         Vector2 dirToSpawn = spawnpoint - rb.position;
-        rb.rotation = Vector2.SignedAngle(Vector2.right, dirToSpawn);
-        rb.velocity = dirToSpawn.normalized * speed;
-        if (dirToSpawn.magnitude < 1) {
-            rb.velocity = Vector2.zero;
-            mobile = false;
-            dmg.MobilityChange(mobile);
-            yield break;
+        while (state == State.IDLE) {
+            dirToSpawn = spawnpoint - rb.position;
+
+            // move at a constant speed back to spawnpoint
+            rb.rotation = Vector2.SignedAngle(Vector2.right, dirToSpawn);
+            rb.velocity = dirToSpawn.normalized * speed;
+
+            // if at spawn, stop
+            if (dirToSpawn.magnitude < 1) {
+                rb.velocity = Vector2.zero;
+                yield break;
+            }
+
+            yield return Timing.WaitForOneFrame;
+
+            // if player reenters area while returning
+            if ((playerRB.position - spawnpoint).magnitude < 40) {
+                state = State.ATTACK;
+                StateTransition();
+                yield break;
+            }
         }
-        yield return Timing.WaitForOneFrame;
-        ReturnLoop();
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.gameObject.tag == "Player") {
+        if (collision.gameObject.CompareTag("Player")) {
             collision.gameObject.GetComponent<PlayerCollision>().HullCollision();
         }
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             state = State.ATTACK;
             StateTransition();
         }
     }
 
     void OnTriggerExit2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             state = State.IDLE;
             StateTransition();
         }
     }
 
     public override void EnemyDeath() {
+        EventManager.onPlayerDeath -= ResetToIdle;
+        Instantiate(deathParticles, transform.position, Quaternion.identity);
         if (drop) {
             GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
             droppedFuel.GetComponent<FuelDrop>().fuel = 10;

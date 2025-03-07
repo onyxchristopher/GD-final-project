@@ -16,9 +16,6 @@ public class Forcefield : MonoBehaviour
     // the forcefield's color
     [SerializeField] public Color color;
 
-    // whether to draw a line to the center of the linked forcefield
-    [SerializeField] bool drawLineToLinked = true;
-
     // multiplier for velocity on ejection
     [SerializeField] private float multiplier = -1;
 
@@ -48,20 +45,19 @@ public class Forcefield : MonoBehaviour
 
         // link objects
         for (int i = 0; i < linkedObjects.Length; i++) {
-            linkedObjects[i].GetComponent<Damageable>().FieldLink(gameObject, color, drawLineToLinked);
+            linkedObjects[i].GetComponent<Damageable>().linkedForcefield = gameObject;
         }
 
-        EventManager.onArtifactPickup += ArtifactIdCheck;
+        EventManager.onMinorObjectiveComplete += MinorForcefieldCheck;
     }
 
-    public void ArtifactIdCheck(int id) {
-        if (id % 10 != 0) {
-            GameObject[] artifacts = GameObject.FindGameObjectsWithTag("Artifact");
-            for (int i = 0; i < artifacts.Length; i++) {
-                if ((artifacts[i].transform.position - transform.position).magnitude < 32) {
-                    CheckForcefield();
-                }
-            }
+    public void MinorForcefieldCheck(int sectorId, int objectiveId) {
+        int id = sectorId * 10 + objectiveId;
+        if (id != 21 && id != 32) {
+            return;
+        }
+        if ((transform.position - GameObject.FindWithTag("Player").transform.position).magnitude < 20) {
+            CheckForcefield();
         }
     }
 
@@ -90,12 +86,13 @@ public class Forcefield : MonoBehaviour
                 EventManager.ForcefieldBounce();
             } else {
                 rb.position = transform.position + offset;
+                rb.velocity = Vector2.zero;
                 EventManager.ForcefieldHit();
             }
         }
     }
 
     void OnDestroy() {
-        EventManager.onArtifactPickup -= ArtifactIdCheck;
+        EventManager.onMinorObjectiveComplete -= MinorForcefieldCheck;
     }
 }

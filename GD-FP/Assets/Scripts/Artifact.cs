@@ -46,6 +46,7 @@ public class Artifact : MonoBehaviour
                 Destroy(gameObject.GetComponent<BoxCollider2D>());
                 Destroy(gameObject, timeToPickup + 0.5f);
             } else {
+                EventManager.MinorObjectiveComplete(id / 10, id % 10);
                 Destroy(gameObject);
             }
         }

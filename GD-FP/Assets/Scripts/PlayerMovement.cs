@@ -20,13 +20,14 @@ public class PlayerMovement : MonoBehaviour
     private Slider fuelBarSlider; // slider showing fuel level
 
     // Movement system
-    [SerializeField] private float fastAccel; // acceleration at speed 0 to f (b)
-    [SerializeField] private float softMaxSpeed; // the speed at which fast-accel stops (f)
-    [SerializeField] private float slowAccel; // acceleration at speed f to m (d)
-    [SerializeField] private float maxSpeed; // speed cap (m)
+    [SerializeField] private float fastAccel; // acceleration at speed 0 to f
+    [SerializeField] private float softMaxSpeed; // the speed at which fast-accel stops
+    [SerializeField] private float slowAccel; // acceleration at speed f to m
+    [SerializeField] private float maxSpeed; // natural speed cap
     [SerializeField] private float brakeConstant; // the multiplier for braking
     [SerializeField] private float decelConstant; // the multiplier for deceleration
     [SerializeField] private float decelThreshold; // above what velocity the deceleration can occur
+    [SerializeField] private float throttle; // absolute max speed
 
     private bool dashQueued = false;
     private bool dashEnding = false;
@@ -45,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
     private GameController gControl;
 
     [SerializeField] private GameObject playerRespawn;
+    [SerializeField] private GameObject playerDeath;
 
     void Start() {
         fuelBarSlider = GameObject.FindWithTag("FuelBar").GetComponent<Slider>();
@@ -59,6 +61,13 @@ public class PlayerMovement : MonoBehaviour
 
         EventManager.onNewUniverse += InitializeMovement;
         EventManager.onSetSpawn += SetSpawn;
+        //Timing.RunCoroutine(_EnableActions());
+    }
+
+    private IEnumerator<float> _EnableActions() {
+        playerInput.actions.FindActionMap("Player").Disable();
+        yield return Timing.WaitForSeconds(12.5f);
+        playerInput.actions.FindActionMap("Player").Enable();
     }
 
     public void InitializeMovement() {
@@ -103,10 +112,12 @@ public class PlayerMovement : MonoBehaviour
         // if pressing anything, dash in direction of press
         if (normMoveDir.magnitude > 0.5) {
             dashQueued = true; // lets FixedUpdate know to dash
-            if (speed > dashSpeed) {
+            if (speed < dashSpeed) {
+                rb.velocity = dashSpeed * normMoveDir;
+            } else if (speed < throttle) {
                 rb.velocity = speed * normMoveDir;
             } else {
-                rb.velocity = dashSpeed * normMoveDir;
+                rb.velocity = throttle * normMoveDir;
             }
             yield return Timing.WaitForSeconds(dashDuration / 2);
             dashEnding = true;
@@ -121,11 +132,6 @@ public class PlayerMovement : MonoBehaviour
         Vector2 normMoveDir = moveDir.normalized; // normalized player input vector
         Vector2 normVel = rb.velocity.normalized; // normalized player velocity
 
-        // check if player is over the speed limit, and limit them if so
-        /*float speedDifference = rb.velocity.magnitude - maxSpeed;
-        if (speedDifference > 0 && !dashQueued) {
-            rb.AddForce(-normVel * slowAccel * 2, ForceMode2D.Impulse);
-        }*/
         if (normMoveDir == Vector2.zero && rb.velocity.magnitude > decelThreshold) {
             rb.AddForce(-normVel * decelConstant, ForceMode2D.Impulse);
         } else if (!dashQueued && !dashEnding) {
@@ -180,11 +186,14 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private IEnumerator<float> _DeathTransport() {
+        GameObject pd = Instantiate(playerDeath, transform.position, Quaternion.identity, transform);
         yield return Timing.WaitForSeconds(gControl.timeToMove);
+        Destroy(pd);
         gameObject.GetComponent<Animator>().SetTrigger("Respawn");
         transform.position = origin;
         rb.velocity = Vector2.zero;
         GameObject pr = Instantiate(playerRespawn, transform.position, Quaternion.identity);
+        GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ResetCameraSize();
         yield return Timing.WaitForSeconds(gControl.timeToRespawn);
         EventManager.PlayerRespawn();
         RespawnSequence(pr);

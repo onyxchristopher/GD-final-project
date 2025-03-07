@@ -20,7 +20,7 @@ public class ClusterBoundary : MonoBehaviour
     private GameController gControl;
 
     // distance from the camera edge to spawn the tutorial
-    private float offsetDist = 5;
+    private float offsetDist = 10;
 
     // distance from the player at which the tutorial should not be despawned
 
@@ -49,14 +49,14 @@ public class ClusterBoundary : MonoBehaviour
 
             // determine if the player has other tutorial modules on screen
             bool toSpawn;
-            if (index <= 1) {
-                toSpawn = true; // !ChildrenInViewport(modules[index]);
+            if (index <= 2) {
+                toSpawn = true;
             } else {
                 toSpawn = false;
             }
             
 
-            if (!modules[index].GetComponent<TutorialModule>().complete && toSpawn) {
+            if (index <= 2 && !modules[index].GetComponent<TutorialModule>().complete && toSpawn) {
                 // the tutorial has not been completed, so it should be spawned
                 Vector2 playerLocation = other.gameObject.GetComponent<Rigidbody2D>().position;
                 Vector2 rootLocation = (Vector2) transform.position;
@@ -77,9 +77,20 @@ public class ClusterBoundary : MonoBehaviour
                     distToEdge = gControl.cam.orthographicSize / Mathf.Abs(Mathf.Sin(diffAngle));
                 }
 
-                Vector2 tutorialSpawnLocation = playerLocation + diff.normalized * (distToEdge + offsetDist);
+                // spawn tutorial in a certain place, unless other things are in the way
+                Vector2 tutSpawnLoc = playerLocation + diff.normalized * (distToEdge + offsetDist);
+                if (index >= 1) {
+                    Scenes scenes = GameObject.FindWithTag("GameController").GetComponent<Scenes>();
+                    bool spawn = scenes.TSpawnCheck(tutSpawnLoc, Vector2.one * 17, index);
+                    if (!spawn) {
+                        return;
+                    } else {
+                        scenes.RmPlanets(tutSpawnLoc, Vector2.one * 17);
+                    }
+                }
+                
                 modules[index].SetActive(true);
-                modules[index].transform.position = tutorialSpawnLocation;
+                modules[index].transform.position = tutSpawnLoc;
                 modules[index].GetComponent<TutorialModule>().complete = true;
             }
         }

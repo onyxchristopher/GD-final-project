@@ -66,11 +66,11 @@ public class Upgrades : MonoBehaviour
                     break;
             }
         } else { // minor upgrades
-            switch (secondDigit) {
-                case 1:
+            switch (id) {
+                case 21:
                     playerMovement.IncreaseMaxFuel(minorFuelUpgrade);
                     break;
-                case 2:
+                default:
                     playerCollision.IncreaseMaxHealth(minorHealthUpgrade);
                     break;
             }

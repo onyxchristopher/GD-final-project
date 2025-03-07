@@ -22,6 +22,7 @@ public class PlanetguardBossEnemy : Enemy
     private Rigidbody2D playerRB;
     private Damageable damageable;
     [SerializeField] private string bossName;
+    [SerializeField] private GameObject deathParticles;
 
     // Awake encodes the enemy FSM
     void Awake() {
@@ -46,35 +47,36 @@ public class PlanetguardBossEnemy : Enemy
     }
 
     private IEnumerator<float> _RotatePlanetguard() {
-        Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
-        float angle = Vector2.SignedAngle(dirToPlayer, playerRB.velocity);
-        if (angle > 0) {
-            transform.Rotate(rotationVector);
-        } else {
-            transform.Rotate(-rotationVector);
-        }
+        while (state != State.IDLE) {
+            Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
+            float angle = Vector2.SignedAngle(dirToPlayer, playerRB.velocity);
+            if (angle > 0) {
+                transform.Rotate(rotationVector);
+            } else {
+                transform.Rotate(-rotationVector);
+            }
 
-        yield return Timing.WaitForOneFrame;
-        TrackLoop();
+            yield return Timing.WaitForOneFrame;
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.gameObject.tag == "Player") {
+        if (collision.gameObject.CompareTag("Player")) {
             collision.gameObject.GetComponent<PlayerCollision>().HullCollision();
         }
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             state = State.TRACK;
             StateTransition();
-            EventManager.EnterBossArea(bossName);
+            EventManager.EnterBossArea(1);
             gameObject.GetComponent<CircleCollider2D>().radius += 20;
         }
     }
 
     void OnTriggerExit2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             state = State.IDLE;
             StateTransition();
             EventManager.ExitBossArea();
@@ -83,7 +85,9 @@ public class PlanetguardBossEnemy : Enemy
     }
 
     public override void EnemyDeath() {
-        EventManager.BossDefeat(bossName);
+        EventManager.onPlayerDeath -= ResetToIdle;
+        Instantiate(deathParticles, transform.position, Quaternion.identity);
+        EventManager.BossDefeat(1);
         if (drop) {
             GameObject artifact = Instantiate(drop, transform.position + Vector3.up * 18, Quaternion.identity);
             artifact.GetComponent<Artifact>().setId(10);

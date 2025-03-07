@@ -40,6 +40,14 @@ public class EventManager : MonoBehaviour
         }
     }
 
+    public delegate void NotifyMinorObjectiveComplete(int sectorId, int objectiveId);
+    public static event NotifyMinorObjectiveComplete onMinorObjectiveComplete;
+    public static void MinorObjectiveComplete(int sectorId, int objectiveId) {
+        if (onMinorObjectiveComplete != null) {
+            onMinorObjectiveComplete(sectorId, objectiveId);
+        }
+    }
+
     public delegate void NotifyNewUniverse();
     public static event NotifyNewUniverse onNewUniverse;
     public static void NewUniverse() {
@@ -62,11 +70,11 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    public delegate void NotifyEnterBossArea(string bossName);
+    public delegate void NotifyEnterBossArea(int sectorId);
     public static event NotifyEnterBossArea onEnterBossArea;
-    public static void EnterBossArea(string bossName) {
+    public static void EnterBossArea(int sectorId) {
         if (onEnterBossArea != null) {
-            onEnterBossArea(bossName);
+            onEnterBossArea(sectorId);
         }
     }
 
@@ -76,18 +84,12 @@ public class EventManager : MonoBehaviour
         onExitBossArea?.Invoke();
     }
 
-    public delegate void NotifyBossDefeat(string bossName);
+    public delegate void NotifyBossDefeat(int sectorId);
     public static event NotifyBossDefeat onBossDefeat;
-    public static void BossDefeat(string bossName) {
+    public static void BossDefeat(int sectorId) {
         if (onBossDefeat != null) {
-            onBossDefeat(bossName);
+            onBossDefeat(sectorId);
         }
-    }
-
-    public delegate void NotifyEnterEnemyArea();
-    public static event NotifyEnterEnemyArea onEnterEnemyArea;
-    public static void EnterEnemyArea() {
-        onEnterEnemyArea?.Invoke();
     }
 
     public delegate void NotifyEnemyDefeat();
@@ -100,6 +102,12 @@ public class EventManager : MonoBehaviour
     public static event NotifyBladeUse onBladeUse;
     public static void BladeUse() {
         onBladeUse?.Invoke();
+    }
+
+    public delegate void NotifyTrapUse();
+    public static event NotifyTrapUse onTrapUse;
+    public static void TrapUse() {
+        onTrapUse?.Invoke();
     }
 
     public delegate void NotifyPlayerHit();
@@ -138,5 +146,23 @@ public class EventManager : MonoBehaviour
     public static event NotifyForcefieldBounce onForcefieldBounce;
     public static void ForcefieldBounce() {
         onForcefieldBounce?.Invoke();
+    }
+
+    public delegate void NotifyProjectileFire();
+    public static event NotifyProjectileFire onProjectileFire;
+    public static void ProjectileFire() {
+        onProjectileFire?.Invoke();
+    }
+
+    public delegate void NotifyLaserCharge();
+    public static event NotifyLaserCharge onLaserCharge;
+    public static void LaserCharge() {
+        onLaserCharge?.Invoke();
+    }
+
+    public delegate void NotifyLaserZap();
+    public static event NotifyLaserZap onLaserZap;
+    public static void LaserZap() {
+        onLaserZap?.Invoke();
     }
 }

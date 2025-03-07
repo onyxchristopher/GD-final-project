@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 3714360409407761885}
   - component: {fileID: 3714360409407761884}
   - component: {fileID: 7830176513865589865}
+  - component: {fileID: 4454917784426166795}
   - component: {fileID: 5622774631757428981}
   - component: {fileID: 2142204082333992230}
-  - component: {fileID: 4454917784426166795}
   m_Layer: 11
   m_Name: FireChaserEnemy
   m_TagString: Damageable
@@ -95,7 +95,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 3714360409407761886}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: e2ba9f1b92f0d423d940139935fc67f9, type: 2}
+  m_Material: {fileID: 6200000, guid: e57e3681eebcf4c03a15b12d18fd37ce, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -130,48 +130,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 30
---- !u!114 &5622774631757428981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3714360409407761886}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86141ff5e1d4e4dfb82da0606aa0f9ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drop: {fileID: 5922313539474208338, guid: 3007814f33983497da3e0b174119cd8c, type: 3}
-  state: 0
-  prevState: 0
-  projectile: {fileID: 4031042227954472179, guid: 04b77801698a94003bf975406a2255e4,
-    type: 3}
-  delay: 1.5
-  speed: 15
-  mobile: 0
-  firstMove: 1
---- !u!114 &2142204082333992230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3714360409407761886}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 747cb28c910544d55bb55904fa8ef295, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 10
-  health: 0
-  isBoss: 0
-  enemy: {fileID: 0}
-  protectiveForcefield: {fileID: 0}
-  lineSortingOrder: 0
-  healthbar: {fileID: 2145191980686434580, guid: f3e13775643e04eb28318c0841b9adba,
-    type: 3}
-  healthBarOffset: {x: 0, y: 3, z: 0}
 --- !u!50 &4454917784426166795
 Rigidbody2D:
   serializedVersion: 4
@@ -193,3 +151,46 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &5622774631757428981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3714360409407761886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86141ff5e1d4e4dfb82da0606aa0f9ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drop: {fileID: 5922313539474208338, guid: 3007814f33983497da3e0b174119cd8c, type: 3}
+  state: 0
+  prevState: 0
+  projectile: {fileID: 4031042227954472179, guid: 04b77801698a94003bf975406a2255e4,
+    type: 3}
+  delay: 1.5
+  speed: 15
+  firstMove: 1
+  deathParticles: {fileID: 829230999311832922, guid: 5ca574c0a3272496abea911d840f8b4c,
+    type: 3}
+--- !u!114 &2142204082333992230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3714360409407761886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 747cb28c910544d55bb55904fa8ef295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  health: 0
+  isBoss: 0
+  enemy: {fileID: 0}
+  linkedForcefield: {fileID: 0}
+  protectiveForcefield: {fileID: 0}
+  healthbar: {fileID: 2145191980686434580, guid: f3e13775643e04eb28318c0841b9adba,
+    type: 3}
+  healthBarOffset: {x: 0, y: 3, z: 0}

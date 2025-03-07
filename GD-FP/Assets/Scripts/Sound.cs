@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MEC;
@@ -8,6 +9,7 @@ public class Sound : MonoBehaviour
     [SerializeField] private AudioSource BGMSourceOOC;
     [SerializeField] private AudioSource BGMSourceIC;
     [SerializeField] private AudioSource SFXSource;
+    [SerializeField] private AudioSource voiceSource;
 
     public AudioClip outOfCombatBGM;
     public AudioClip inCombatBGM;
@@ -15,10 +17,13 @@ public class Sound : MonoBehaviour
     private bool combat = false;
     private float fadeTime = 1.5f;
     private float fadeTimeDelay = 0f;
-    private float oocVolumeCap = 0.25f;
-    private float icVolumeCap = 0.25f;
-    
+    private float oocVolumeCap = 0.20f;
+    private float icVolumeCap = 0.20f;
 
+    // whether to override the combat/out of combat fade for player death
+    private bool fadeOverride = false;
+
+    // Sound effects
     public AudioClip getArtifact;
     public AudioClip pop;
     public AudioClip blade;
@@ -33,6 +38,41 @@ public class Sound : MonoBehaviour
     public AudioClip forcefieldBounce;
     public AudioClip caseSlideDown;
     public AudioClip book;
+    public AudioClip trap;
+    public AudioClip projectile;
+    public AudioClip laserCharge;
+    public AudioClip laserZap;
+
+    // Voice
+    private Queue<AudioClip> voiceQueue = new Queue<AudioClip>();
+    private bool voicePlaying = false;
+    public AudioClip missionStart;
+    public AudioClip launchTutorial;
+    public AudioClip enemyDefeatTutorial;
+    public AudioClip approachBossTutorial;
+    public AudioClip playerDeath;
+    public AudioClip bossDefeatTutorial;
+    public AudioClip fuelCorePickup;
+    public AudioClip healthCorePickup;
+    public AudioClip knowledgeAdded;
+    public AudioClip artifact1;
+    public AudioClip artifact2;
+    public AudioClip artifact3;
+    public AudioClip artifact4;
+    public AudioClip artifact5;
+    public AudioClip artifact6;
+    public AudioClip artifact7;
+    public AudioClip artifact8;
+    public AudioClip checkpointTutorial;
+    public AudioClip enterSector1;
+    public AudioClip enterSector2;
+    public AudioClip enterSector3;
+    public AudioClip enterSector4;
+    public AudioClip enterSector5;
+    public AudioClip enterSector6;
+    public AudioClip enterSector7;
+    public AudioClip enterSector8;
+
 
     void Start() {
         EventManager.onArtifactPickup += PlayGetArtifact;
@@ -42,25 +82,27 @@ public class Sound : MonoBehaviour
         EventManager.onPickup += PlayPickup;
         EventManager.onPlayerDeath += PlayDeath;
         EventManager.onPlayerDeath += PlayRespawn;
-        EventManager.onPlayerRespawn += PlayRespawnEnd;
         EventManager.onBossDefeat += PlayExplosion;
         EventManager.onForcefieldHit += PlayForcefieldZap;
         EventManager.onForcefieldBounce += PlayForcefieldBounce;
         EventManager.onArtifactObtain += PlayCaseSlideDown;
+        EventManager.onTrapUse += PlayTrap;
+        EventManager.onProjectileFire += PlayProjectileFire;
+        EventManager.onLaserCharge += PlayLaserCharge;
+        EventManager.onLaserZap += PlayLaserZap;
 
         EventManager.onEnterBossArea += EnterCombat;
         EventManager.onExitBossArea += ExitCombat;
         
 
         BGMSourceOOC.clip = outOfCombatBGM;
-        BGMSourceOOC.volume = oocVolumeCap;
         BGMSourceIC.clip = inCombatBGM;
         BGMSourceIC.volume = 0;
 
         BGMSourceOOC.Play();
     }
 
-    public void EnterCombat(string _) {
+    public void EnterCombat(int _) {
         combat = true;
         Timing.RunCoroutine(_Fade());
     }
@@ -70,19 +112,10 @@ public class Sound : MonoBehaviour
         Timing.RunCoroutine(_Fade());
     }
 
-    public void PlayBGM() {
-
-    }
-
-    public void PauseBGM() {
-
-    }
-
-    public void StopBGM() {
-
-    }
-
     private IEnumerator<float> _Fade() {
+        if (fadeOverride) {
+            yield break;
+        }
         float time = 0;
         if (combat) {
             BGMSourceIC.Play();
@@ -131,9 +164,11 @@ public class Sound : MonoBehaviour
         }
     }
 
-    public void PlayGetArtifact(int _) {
+    public void PlayGetArtifact(int id) {
         PlaySFX(getArtifact, 0.85f);
-        Timing.RunCoroutine(_PlayArtifactPop());
+        if (id % 10 == 0) {
+            Timing.RunCoroutine(_PlayArtifactPop());
+        }
     }
 
     private IEnumerator<float> _PlayArtifactPop() {
@@ -159,18 +194,47 @@ public class Sound : MonoBehaviour
 
     public void PlayDeath() {
         PlaySFX(death, 1);
+        Timing.RunCoroutine(_DeathFade());
+        fadeOverride = true;
+    }
+
+    private IEnumerator<float> _DeathFade() {
+        float time = 0;
+        if (combat) {
+            while (time < 1) {
+                BGMSourceIC.volume = icVolumeCap - time * icVolumeCap;
+                yield return Timing.WaitForOneFrame;
+                time += Time.deltaTime;
+            }
+            BGMSourceIC.volume = 0;
+            BGMSourceOOC.Play();
+        } else {
+            while (time < 1) {
+                BGMSourceOOC.volume = oocVolumeCap - time * oocVolumeCap;
+                yield return Timing.WaitForOneFrame;
+                time += Time.deltaTime;
+            }
+            BGMSourceOOC.volume = 0;
+        }
+        yield return Timing.WaitForSeconds(4);
+        fadeOverride = false;
+        
+        time = 0;
+        while (time < 1) {
+            BGMSourceOOC.volume = time * oocVolumeCap;
+            yield return Timing.WaitForOneFrame;
+            time += Time.deltaTime;
+        }
+        BGMSourceOOC.volume = oocVolumeCap;
+
     }
 
     public void PlayRespawn() {
         PlaySFX(respawn, 0.8f);
     }
 
-    public void PlayRespawnEnd() {
-        //PlaySFX(respawnEnd, 1);
-    }
-
-    public void PlayExplosion(string _) {
-        PlaySFX(explosion, 1);
+    public void PlayExplosion(int _) {
+        PlaySFX(explosion, 0.9f);
     }
 
     public void PlayForcefieldZap() {
@@ -186,12 +250,164 @@ public class Sound : MonoBehaviour
         Timing.RunCoroutine(_PlayBook());
     }
 
-    public IEnumerator<float> _PlayBook() {
+    private IEnumerator<float> _PlayBook() {
         yield return Timing.WaitForSeconds(1.7f);
         PlaySFX(book, 1);
     }
 
+    public void PlayTrap() {
+        PlaySFX(trap, 1);
+    }
+
+    public void PlayProjectileFire() {
+        PlaySFX(projectile, 0.75f);
+    }
+
+    public void PlayLaserCharge() {
+        PlaySFX(laserCharge, 0.8f);
+    }
+
+    public void PlayLaserZap() {
+        PlaySFX(laserZap, 1);
+    }
+
+    // Voice functions
+
+    public void PlayMissionStart() {
+        PlaySFX(missionStart, 1);
+        Timing.RunCoroutine(_BGMVolumeRise());
+    }
+
+    private IEnumerator<float> _BGMVolumeRise() {
+        BGMSourceOOC.volume = oocVolumeCap / 2;
+        yield return Timing.WaitForSeconds(10.6f);
+        float time = 0;
+        while (time < 1) {
+            BGMSourceOOC.volume = oocVolumeCap / 2 + time * oocVolumeCap / 2;
+            yield return Timing.WaitForOneFrame;
+            time += Time.deltaTime;
+        }
+        BGMSourceOOC.volume = oocVolumeCap;
+    }
+
+    public void PlayLaunchTutorial() {
+        AddToVoiceQueue(launchTutorial, 1);
+    }
+
+    public void PlayEnemyDefeatTutorial() {
+        AddToVoiceQueue(enemyDefeatTutorial, 1);
+    }
+
+    public void PlayApproachBossTutorial() {
+        AddToVoiceQueue(approachBossTutorial, 1);
+    }
+
+    public void PlayPlayerDeath() {
+        AddToVoiceQueue(playerDeath, 1);
+    }
+
+    public void PlayBossDefeatTutorial() {
+        AddToVoiceQueue(bossDefeatTutorial, 1);
+    }
+
+    public void PlayFuelCorePickup() {
+        AddToVoiceQueue(fuelCorePickup, 1);
+    }
+
+    public void PlayHealthCorePickup() {
+        AddToVoiceQueue(healthCorePickup, 1);
+    }
+
+    public void PlayKnowledgeAdded() {
+        AddToVoiceQueue(knowledgeAdded, 1);
+    }
+
+    public void PlayArtifact1() {
+        AddToVoiceQueue(artifact1, 1);
+    }
+
+    public void PlayArtifact2() {
+        AddToVoiceQueue(artifact2, 1);
+    }
+
+    public void PlayArtifact3() {
+        AddToVoiceQueue(artifact3, 1);
+    }
+
+    public void PlayArtifact4() {
+        AddToVoiceQueue(artifact4, 1);
+    }
+
+    public void PlayArtifact5() {
+        AddToVoiceQueue(artifact5, 1);
+    }
+
+    public void PlayArtifact6() {
+        AddToVoiceQueue(artifact6, 1);
+    }
+
+    public void PlayArtifact7() {
+        AddToVoiceQueue(artifact7, 1);
+    }
+
+    public void PlayArtifact8() {
+        AddToVoiceQueue(artifact8, 1);
+    }
+
+    public void PlayCheckpointTutorial() {
+        AddToVoiceQueue(checkpointTutorial, 1);
+    }
+
+    public void PlayEnterSector1() {
+        AddToVoiceQueue(enterSector1, 1);
+    }
+
+    public void PlayEnterSector2() {
+        AddToVoiceQueue(enterSector2, 1);
+    }
+
+    public void PlayEnterSector3() {
+        AddToVoiceQueue(enterSector3, 1);
+    }
+
+    public void PlayEnterSector4() {
+        AddToVoiceQueue(enterSector4, 1);
+    }
+
+    public void PlayEnterSector5() {
+        AddToVoiceQueue(enterSector5, 1);
+    }
+
+    public void PlayEnterSector6() {
+        AddToVoiceQueue(enterSector6, 1);
+    }
+
+    public void PlayEnterSector7() {
+        AddToVoiceQueue(enterSector7, 1);
+    }
+
+    public void PlayEnterSector8() {
+        AddToVoiceQueue(enterSector8, 1);
+    }
+
     public void PlaySFX(AudioClip clip, float vol = 1) {
         SFXSource.PlayOneShot(clip, vol);
+    }
+
+    private void AddToVoiceQueue(AudioClip clip, float vol = 1) {
+        voiceQueue.Enqueue(clip);
+        if (!voicePlaying) {
+            Timing.RunCoroutine(_VoiceQueue());
+        }
+    }
+
+    private IEnumerator<float> _VoiceQueue() {
+        voicePlaying = true;
+        while (voiceQueue.Count > 0) {
+            AudioClip clip = voiceQueue.Dequeue();
+            voiceSource.PlayOneShot(clip, 1);
+            yield return Timing.WaitForSeconds(clip.length + 0.5f);
+        }
+        voicePlaying = false;
     }
 }

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Blade : MonoBehaviour {
+public class Blade : MonoBehaviour
+{
     private GameObject player;
     private float degreesToRotate = 180;
     private float duration = 0.25f;
@@ -28,12 +29,12 @@ public class Blade : MonoBehaviour {
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Forcefield") {
+        if (other.CompareTag("Forcefield")) {
             if (!other.isTrigger) {
                 Destroy(gameObject, duration / 5);
                 EventManager.ForcefieldHit();
             }
-        } else if (other.tag == "Damageable") {
+        } else if (other.CompareTag("Damageable")) {
             if (!other.isTrigger) {
                 other.gameObject.GetComponent<Damageable>().Damage(damage);
             }
