@@ -17,7 +17,7 @@ public class FumelingEnemy : Enemy
     private Damageable dmg;
     private Rigidbody2D playerRB;
     private Rigidbody2D rb;
-    [SerializeField] private float domainRadius = 20;
+    [SerializeField] private float domainRadius;
     [SerializeField] private float speed;
     [SerializeField] private float timeToFumigate;
 
@@ -31,6 +31,9 @@ public class FumelingEnemy : Enemy
     void Awake() {
         Action fumelingAttack = AttackLoop;
         enterStateLogic.Add(State.ATTACK, fumelingAttack);
+
+        Action fumelingIdle = Teardown;
+        exitStateLogic.Add(State.IDLE, teardown);
     }
 
     void Start() {
@@ -103,6 +106,10 @@ public class FumelingEnemy : Enemy
         }
     }
 
+    private void Teardown() {
+        rb.velocity = Vector2.zero;
+    }
+
     void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Player")) {
             GetComponent<CircleCollider2D>().radius += 20;
@@ -117,5 +124,16 @@ public class FumelingEnemy : Enemy
             state = State.IDLE;
             StateTransition();
         }
+    }
+
+    public override void EnemyDeath() {
+        EventManager.onPlayerDeath -= ResetToIdle;
+        Instantiate(deathParticles, transform.position, Quaternion.identity);
+        if (drop) {
+            GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
+            droppedFuel.GetComponent<FuelDrop>().fuel = 30;
+        }
+        EventManager.EnemyDefeat();
+        gameObject.SetActive(false);
     }
 }

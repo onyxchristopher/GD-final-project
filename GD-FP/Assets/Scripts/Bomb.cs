@@ -8,9 +8,9 @@ public class Bomb : MonoBehaviour
     [SerializeField] private GameObject explosion;
     private Rigidbody2D rb;
     private Rigidbody2D playerRB;
-    [SerializeField] private float speed = 20;
+    [SerializeField] private float speed;
 
-    [SerializeField] private float reflectScaling = 1.5f;
+    [SerializeField] private float reflectScaling;
 
     void Awake() {
         rb = GetComponent<Rigidbody2D>();
@@ -24,7 +24,7 @@ public class Bomb : MonoBehaviour
     }
 
     private IEnumerator<float> _Detonator() {
-        yield return Timing.WaitForSeconds(2.5f);
+        yield return Timing.WaitForSeconds(1.5f);
         Explode();
     }
     
@@ -36,6 +36,11 @@ public class Bomb : MonoBehaviour
             Vector2 diffVector = (rb.position - playerRB.position).normalized;
             rb.velocity = reflectScaling * speed * diffVector;
             gameObject.layer = LayerMask.NameToLayer("Attack");
+        } else if (!other.isTrigger && other.CompareTag("Damageable")) {
+            other.gameObject.GetComponent<Damageable>().Damage(18);
+            Destroy(gameObject);
+        } else if (!other.isTrigger) {
+            Destroy(gameObject);
         }
     }
 
@@ -43,8 +48,8 @@ public class Bomb : MonoBehaviour
         Instantiate(explosion, transform.position, Quaternion.identity);
         // Knock the player back if within radius
         Vector2 distToPlayer = playerRB.position - (Vector2) transform.position;
-        if (distToPlayer.magnitude < 10) {
-            playerRB.AddForce(distToPlayer.normalized * 15);
+        if (distToPlayer.magnitude < 5) {
+            playerRB.AddForce(distToPlayer.normalized * 25, ForceMode2D.Impulse);
         }
         Destroy(gameObject);
     }

@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 747cb28c910544d55bb55904fa8ef295, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 15
+  maxHealth: 5
   health: 0
   isBoss: 0
   enemy: {fileID: 0}
@@ -175,9 +175,9 @@ MonoBehaviour:
   drop: {fileID: 5922313539474208338, guid: 3007814f33983497da3e0b174119cd8c, type: 3}
   state: 0
   prevState: 0
-  domainRadius: 20
-  speed: 15
-  timeToFumigate: 1
+  domainRadius: 25
+  speed: 8
+  timeToFumigate: 0.4
   fumetrail: {fileID: 3014197273683142114, guid: bef8a2245a79541b58c5e2ed1632efb7,
     type: 3}
   timeToRecharge: 5
