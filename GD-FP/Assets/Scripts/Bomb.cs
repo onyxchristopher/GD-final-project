@@ -6,10 +6,20 @@ using MEC;
 public class Bomb : MonoBehaviour
 {
     [SerializeField] private GameObject explosion;
+    private Rigidbody2D rb;
     private Rigidbody2D playerRB;
+    [SerializeField] private float speed = 20;
+
+    [SerializeField] private float reflectScaling = 1.5f;
+
+    void Awake() {
+        rb = GetComponent<Rigidbody2D>();
+    }
 
     void Start() {
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
+        EventManager.ProjectileFire();
+        rb.velocity = speed * transform.right;
         Timing.RunCoroutine(_Detonator().CancelWith(gameObject));
     }
 
@@ -21,6 +31,11 @@ public class Bomb : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Player")) {
             Explode();
+        } else if (other.CompareTag("Shield")) {
+            playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
+            Vector2 diffVector = (rb.position - playerRB.position).normalized;
+            rb.velocity = reflectScaling * speed * diffVector;
+            gameObject.layer = LayerMask.NameToLayer("Attack");
         }
     }
 

@@ -24,6 +24,7 @@ public class FumelingEnemy : Enemy
     [SerializeField] private GameObject fumetrail;
     [SerializeField] private float timeToRecharge;
     [SerializeField] private GameObject fumebomb;
+    private bool firstMove = true;
 
     
     // Awake encodes the enemy FSM
@@ -34,6 +35,7 @@ public class FumelingEnemy : Enemy
 
     void Start() {
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         dmg = GetComponent<Damageable>();
         dmg.enemy = this;
 
@@ -41,6 +43,10 @@ public class FumelingEnemy : Enemy
     }
 
     private void AttackLoop() {
+        if (firstMove) {
+            ReassignSpawn(transform.position);
+            firstMove = false;
+        }
         if (state != State.ATTACK) {
             return;
         }
@@ -99,6 +105,7 @@ public class FumelingEnemy : Enemy
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Player")) {
+            GetComponent<CircleCollider2D>().radius += 20;
             state = State.ATTACK;
             StateTransition();
         }
@@ -106,6 +113,7 @@ public class FumelingEnemy : Enemy
 
     void OnTriggerExit2D(Collider2D other) {
         if (other.CompareTag("Player")) {
+            GetComponent<CircleCollider2D>().radius -= 20;
             state = State.IDLE;
             StateTransition();
         }

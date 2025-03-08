@@ -49,14 +49,14 @@ public class ClusterBoundary : MonoBehaviour
 
             // determine if the player has other tutorial modules on screen
             bool toSpawn;
-            if (index <= 2) {
+            if (index <= 3) {
                 toSpawn = true;
             } else {
                 toSpawn = false;
             }
             
 
-            if (index <= 2 && !modules[index].GetComponent<TutorialModule>().complete && toSpawn) {
+            if (toSpawn && !modules[index].GetComponent<TutorialModule>().complete) {
                 // the tutorial has not been completed, so it should be spawned
                 Vector2 playerLocation = other.gameObject.GetComponent<Rigidbody2D>().position;
                 Vector2 rootLocation = (Vector2) transform.position;
