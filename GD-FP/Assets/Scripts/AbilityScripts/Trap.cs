@@ -33,7 +33,7 @@ public class Trap : MonoBehaviour
         int len = Physics2D.OverlapCircle((Vector2) transform.position, explosionRadius, cf, colliders);
         for (int i = 0; i < len; i++) {
             if (colliders[i].CompareTag("Damageable")) {
-                colliders[i].GetComponent<Damageable>().Damage(damage);
+                colliders[i].GetComponent<Damageable>().Damage(damage, false, "trap");
             }
         }
     }

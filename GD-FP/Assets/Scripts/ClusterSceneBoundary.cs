@@ -17,10 +17,18 @@ public class ClusterSceneBoundary : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        scenes.QueueLoad(id);
+        if (other.CompareTag("Player")) {
+            scenes.QueueLoad(id);
+        }
     }
 
     void OnTriggerExit2D(Collider2D other) {
-        scenes.QueueUnload(id);
+        if (other.CompareTag("Player")) {
+            GameObject activeTrap = GameObject.FindWithTag("Trap");
+            if (activeTrap && (activeTrap.transform.position - other.transform.position).magnitude > 75) {
+                Destroy(activeTrap);
+            }
+            scenes.QueueUnload(id);
+        }
     }
 }

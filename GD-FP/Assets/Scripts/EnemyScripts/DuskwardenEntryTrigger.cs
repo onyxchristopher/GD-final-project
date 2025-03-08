@@ -7,7 +7,7 @@ public class DuskwardenEntryTrigger : MonoBehaviour
     private DuskwardenBossEnemy boss;
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             boss = transform.parent.GetChild(0).GetComponent<DuskwardenBossEnemy>();
             boss.Spawn();
             EventManager.EnterBossArea(3);

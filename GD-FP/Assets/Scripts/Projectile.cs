@@ -26,15 +26,15 @@ public class Projectile : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             EventManager.PlayerDamage(damage);
             Destroy(gameObject);
-        } else if (other.tag == "Shield") {
+        } else if (other.CompareTag("Shield")) {
             playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
             Vector2 diffVector = (rb.position - playerRB.position).normalized;
             rb.velocity = reflectScaling * speed * diffVector;
             gameObject.layer = LayerMask.NameToLayer("Attack");
-        } else if (!other.isTrigger && other.tag == "Damageable") {
+        } else if (!other.isTrigger && other.CompareTag("Damageable")) {
             other.gameObject.GetComponent<Damageable>().Damage(Mathf.RoundToInt(reflectScaling * damage));
             Destroy(gameObject);
         } else if (!other.isTrigger) {

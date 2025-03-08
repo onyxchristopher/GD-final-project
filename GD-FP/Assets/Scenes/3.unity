@@ -8291,12 +8291,12 @@ PrefabInstance:
     - target: {fileID: 3255472316474026184, guid: 9ac78fab4e3e540f484429de5df1bbcf,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 19.87
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 3255472316474026184, guid: 9ac78fab4e3e540f484429de5df1bbcf,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 19.93
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 3255472316474026184, guid: 9ac78fab4e3e540f484429de5df1bbcf,
         type: 3}
@@ -17897,7 +17897,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1891244994}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 800, y: 2000, z: 0}
+  m_LocalPosition: {x: -600, y: 2000, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 690182581}
@@ -19273,9 +19273,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linkedObjects: []
   protectingObjects: []
-  color: {r: 1, g: 0, b: 0, a: 1}
+  color: {r: 1, g: 1, b: 0, a: 1}
   multiplier: -1
-  offset: {x: -25, y: 30, z: 0}
+  offset: {x: 0, y: 0, z: 0}
 --- !u!120 &1439395605298484722
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -19343,8 +19343,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 0, b: 0, a: 1}
-      key1: {r: 1, g: 0, b: 0, a: 1}
+      key0: {r: 0.96862745, g: 1, b: 0, a: 1}
+      key1: {r: 0.96862745, g: 1, b: 0, a: 1}
       key2: {r: 1, g: 0, b: 0, a: 1}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}

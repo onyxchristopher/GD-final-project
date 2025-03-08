@@ -43,7 +43,7 @@ public class ClusterBoundary : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             EventManager.EnterCluster(id);
             int index = id - 1;
 

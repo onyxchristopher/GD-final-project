@@ -31,8 +31,12 @@ public class Damageable : MonoBehaviour
         health = maxHealth;
     }
     
-    public void Damage(int damage, bool suppressSound = false) {
-        if (!invuln && !protectiveForcefield){
+    public void Damage(int damage, bool suppressSound = false, string source = "null") {
+        // if the enemy is invuln and the source is a blade, return
+        if (invuln && source == "blade") {
+            return;
+        }
+        if (!protectiveForcefield){
             health -= damage;
 
             // a normal enemy should have hit sounds at all times
@@ -57,9 +61,11 @@ public class Damageable : MonoBehaviour
                     EventManager.EnemyHit();
                 }
             }
-
-            invuln = true;
-            Timing.RunCoroutine(_IFrames());
+            // only a blade confers invuln from more blade attacks
+            if (source == "blade") {
+                invuln = true;
+                Timing.RunCoroutine(_IFrames());
+            }
         }
     }
 

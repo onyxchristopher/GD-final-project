@@ -48,14 +48,14 @@ public class PlanetguardTurretEnemy : Enemy
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             state = State.ATTACK;
             StateTransition();
         }
     }
 
     void OnTriggerExit2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             state = State.IDLE;
             StateTransition();
         }

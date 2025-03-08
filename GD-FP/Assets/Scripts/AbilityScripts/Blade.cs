@@ -36,7 +36,7 @@ public class Blade : MonoBehaviour
             }
         } else if (other.CompareTag("Damageable")) {
             if (!other.isTrigger) {
-                other.gameObject.GetComponent<Damageable>().Damage(damage);
+                other.gameObject.GetComponent<Damageable>().Damage(damage, false, "blade");
             }
         }
     }

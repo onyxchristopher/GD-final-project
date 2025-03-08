@@ -78,8 +78,7 @@ public class Forcefield : MonoBehaviour
     }
 
     void OnCollisionEnter2D(Collision2D coll) {
-        string goTag = coll.gameObject.tag;
-        if (goTag == "Player") {
+        if (coll.gameObject.CompareTag("Player")) {
             Rigidbody2D rb = coll.gameObject.GetComponent<Rigidbody2D>();
             if (offset == Vector3.zero) {
                 rb.velocity = Mathf.Max(25, rb.velocity.magnitude) * multiplier * coll.GetContact(0).normal;

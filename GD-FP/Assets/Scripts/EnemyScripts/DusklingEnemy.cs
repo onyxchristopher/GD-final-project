@@ -169,7 +169,7 @@ public class DusklingEnemy : Enemy
         Instantiate(deathParticles, transform.position, Quaternion.identity);
         if (drop) {
             GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
-            droppedFuel.GetComponent<FuelDrop>().fuel = 10;
+            droppedFuel.GetComponent<FuelDrop>().fuel = 20;
         }
         EventManager.EnemyDefeat();
         gameObject.SetActive(false);
