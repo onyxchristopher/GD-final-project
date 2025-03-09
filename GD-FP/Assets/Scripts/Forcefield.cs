@@ -53,10 +53,10 @@ public class Forcefield : MonoBehaviour
 
     public void MinorForcefieldCheck(int sectorId, int objectiveId) {
         int id = sectorId * 10 + objectiveId;
-        if (id != 21 && id != 32) {
+        if (id != 21 && id != 32 && id != 41 && id != 42) {
             return;
         }
-        if ((transform.position - GameObject.FindWithTag("Player").transform.position).magnitude < 20) {
+        if ((transform.position - GameObject.FindWithTag("Player").transform.position).magnitude < 15) {
             CheckForcefield();
         }
     }
