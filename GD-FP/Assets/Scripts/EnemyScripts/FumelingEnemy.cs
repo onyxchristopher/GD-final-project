@@ -24,6 +24,7 @@ public class FumelingEnemy : Enemy
     [SerializeField] private GameObject fumetrail;
     [SerializeField] private float timeToRecharge;
     [SerializeField] private GameObject fumebomb;
+    [SerializeField] private GameObject deathParticles;
     private bool firstMove = true;
 
     
@@ -32,7 +33,7 @@ public class FumelingEnemy : Enemy
         Action fumelingAttack = AttackLoop;
         enterStateLogic.Add(State.ATTACK, fumelingAttack);
 
-        Action fumelingIdle = Teardown;
+        Action teardown = Teardown;
         exitStateLogic.Add(State.IDLE, teardown);
     }
 

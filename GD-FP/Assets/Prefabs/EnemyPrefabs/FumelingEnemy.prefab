@@ -183,3 +183,5 @@ MonoBehaviour:
   timeToRecharge: 5
   fumebomb: {fileID: 3175092453085875081, guid: 756a89f7e0a7d4c58b5dcbfd34f38638,
     type: 3}
+  deathParticles: {fileID: 8392386600044239771, guid: 8663569d089154053a986ff101eaa616,
+    type: 3}
