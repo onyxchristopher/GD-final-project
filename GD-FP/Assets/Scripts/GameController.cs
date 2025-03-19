@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
     "Planetguard",
     "Voidcharger",
     "Duskwarden",
-    "",
+    "Murkfang",
     "",
     "",
     "",

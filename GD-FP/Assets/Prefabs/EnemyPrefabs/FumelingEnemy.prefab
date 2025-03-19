@@ -180,7 +180,8 @@ MonoBehaviour:
   timeToFumigate: 0.4
   fumetrail: {fileID: 3014197273683142114, guid: bef8a2245a79541b58c5e2ed1632efb7,
     type: 3}
-  timeToRecharge: 5
+  timeToRecharge: 3.5
+  timeToDetonate: 1.5
   fumebomb: {fileID: 3175092453085875081, guid: 756a89f7e0a7d4c58b5dcbfd34f38638,
     type: 3}
   deathParticles: {fileID: 8392386600044239771, guid: 8663569d089154053a986ff101eaa616,

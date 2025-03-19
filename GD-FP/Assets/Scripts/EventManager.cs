@@ -165,4 +165,10 @@ public class EventManager : MonoBehaviour
     public static void LaserZap() {
         onLaserZap?.Invoke();
     }
+
+    public delegate void NotifyBombExplode();
+    public static event NotifyBombExplode onBombExplode;
+    public static void BombExplode() {
+        onBombExplode?.Invoke();
+    }
 }

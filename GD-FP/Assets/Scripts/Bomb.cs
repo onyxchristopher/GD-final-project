@@ -20,11 +20,14 @@ public class Bomb : MonoBehaviour
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
         EventManager.ProjectileFire();
         rb.velocity = speed * transform.right;
-        Timing.RunCoroutine(_Detonator().CancelWith(gameObject));
     }
 
-    private IEnumerator<float> _Detonator() {
-        yield return Timing.WaitForSeconds(1.5f);
+    public void Detonate(float timeToDetonate) {
+        Timing.RunCoroutine(_Detonator(timeToDetonate).CancelWith(gameObject));
+    }
+
+    private IEnumerator<float> _Detonator(float timeToDetonate) {
+        yield return Timing.WaitForSeconds(timeToDetonate);
         Explode();
     }
     
@@ -45,6 +48,7 @@ public class Bomb : MonoBehaviour
     }
 
     public void Explode() {
+        EventManager.BombExplode();
         Instantiate(explosion, transform.position, Quaternion.identity);
         // Knock the player back if within radius
         Vector2 distToPlayer = playerRB.position - (Vector2) transform.position;

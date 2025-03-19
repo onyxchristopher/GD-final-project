@@ -23,9 +23,14 @@ public class FumelingEnemy : Enemy
 
     [SerializeField] private GameObject fumetrail;
     [SerializeField] private float timeToRecharge;
+    [SerializeField] private float timeToDetonate;
     [SerializeField] private GameObject fumebomb;
     [SerializeField] private GameObject deathParticles;
     private bool firstMove = true;
+
+    private bool kiting = false;
+    private bool emitting = false;
+    private bool attacking = false;
 
     
     // Awake encodes the enemy FSM
@@ -34,7 +39,7 @@ public class FumelingEnemy : Enemy
         enterStateLogic.Add(State.ATTACK, fumelingAttack);
 
         Action teardown = Teardown;
-        exitStateLogic.Add(State.IDLE, teardown);
+        exitStateLogic.Add(State.ATTACK, teardown);
     }
 
     void Start() {
@@ -55,14 +60,20 @@ public class FumelingEnemy : Enemy
             return;
         }
         if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.KillCoroutines("fumeling");
-            Timing.RunCoroutine(_Kite().CancelWith(gameObject), "fumeling");
-            Timing.RunCoroutine(_EmitTrail().CancelWith(gameObject), "fumeling");
-            Timing.RunCoroutine(_Attack().CancelWith(gameObject), "fumeling");
+            if (!kiting) {
+                Timing.RunCoroutine(_Kite().CancelWith(gameObject), "fumeling");
+            }
+            if (!emitting) {
+                Timing.RunCoroutine(_EmitTrail().CancelWith(gameObject), "fumeling");
+            }
+            if (!attacking) {
+                Timing.RunCoroutine(_Attack().CancelWith(gameObject), "fumeling");
+            }
         }
     }
 
     private IEnumerator<float> _Kite() {
+        kiting = true;
         while (state == State.ATTACK) {
             Vector2 dirToPlayer = (playerRB.position - rb.position).normalized;
             Vector2 distToSpawn = spawnpoint - rb.position;
@@ -85,26 +96,31 @@ public class FumelingEnemy : Enemy
             }
 
             rb.rotation = Vector2.SignedAngle(Vector2.right, dirToPlayer);
-
             yield return Timing.WaitForOneFrame;
         }
+        kiting = false;
     }
 
     private IEnumerator<float> _EmitTrail() {
+        emitting = true;
         while (state == State.ATTACK) {
             Instantiate(fumetrail, transform.position,
             Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, rb.velocity)));
             yield return Timing.WaitForSeconds(timeToFumigate);
         }
+        emitting = false;
     }
 
     private IEnumerator<float> _Attack() {
+        attacking = true;
         while (state == State.ATTACK) {
             Vector2 dirToPlayer = playerRB.position - rb.position;
-            Instantiate(fumebomb, transform.position,
+            GameObject bomb = Instantiate(fumebomb, transform.position,
             Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, dirToPlayer)));
+            bomb.GetComponent<Bomb>().Detonate(timeToDetonate);
             yield return Timing.WaitForSeconds(timeToRecharge);
         }
+        attacking = false;
     }
 
     private void Teardown() {

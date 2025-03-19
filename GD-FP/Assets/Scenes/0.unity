@@ -2933,6 +2933,7 @@ MonoBehaviour:
   projectile: {fileID: 8300000, guid: f376a434020854b2797063fb36feaceb, type: 3}
   laserCharge: {fileID: 8300000, guid: c672f571f8a334a5a9a95c5b1e2d4c59, type: 3}
   laserZap: {fileID: 8300000, guid: 09382542b75be42e692b03f2089adec6, type: 3}
+  bomb: {fileID: 8300000, guid: 46caa7b00a95d46ff856327d12f4bc23, type: 3}
   missionStart: {fileID: 8300000, guid: 0dc18d03cdd1a49a6b63873513963c4f, type: 3}
   launchTutorial: {fileID: 8300000, guid: 907a9a748f11d42e1ab81b2d53d638f7, type: 3}
   enemyDefeatTutorial: {fileID: 8300000, guid: 5190265edce674eaeb864da7df016bf1, type: 3}
