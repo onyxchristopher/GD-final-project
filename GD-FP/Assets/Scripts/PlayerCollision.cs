@@ -17,6 +17,7 @@ public class PlayerCollision : MonoBehaviour
     private bool invuln = false;
     private float invulnDuration = 2;
     private Slider healthBarSlider;
+    public bool shielding;
 
     // GameController ref
     private GameController gControl;
@@ -29,6 +30,7 @@ public class PlayerCollision : MonoBehaviour
         EventManager.onPlayerDeath += CollisionInactive;
         EventManager.onPlayerRespawn += CollisionActive;
         EventManager.onNewUniverse += InitializeHealth;
+        EventManager.onShieldUse += Shielding;
     }
 
     public void InitializeHealth() {
@@ -49,7 +51,7 @@ public class PlayerCollision : MonoBehaviour
     }
 
     public void Damage(int damage) {
-        if (!invuln && !inactive){
+        if (!invuln && !inactive && !shielding){
             health -= damage;
             if (health < 0) {
                 health = 0;
@@ -92,5 +94,15 @@ public class PlayerCollision : MonoBehaviour
         inactive = false;
         SetHealth(maxHealth);
         gControl.uncrackBar(healthBarSlider);
+    }
+
+    private void Shielding(float duration) {
+        shielding = true;
+        Timing.RunCoroutine(_ShieldTimer(duration));
+    }
+
+    private IEnumerator<float> _ShieldTimer(float duration) {
+        yield return Timing.WaitForSeconds(duration);
+        shielding = false;
     }
 }

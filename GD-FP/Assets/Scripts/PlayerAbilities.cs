@@ -137,6 +137,8 @@ public class PlayerAbilities : MonoBehaviour
             GameObject shieldInstance = Instantiate(shield, transform.position, Quaternion.identity, transform);
             shieldInstance.GetComponent<Shield>().SetDuration(shieldDuration);
 
+            EventManager.ShieldUse(shieldDuration);
+
             // Start the cooldown
             shieldCd = shieldCooldownTime;
             Timing.RunCoroutine(_ShieldCooldown());

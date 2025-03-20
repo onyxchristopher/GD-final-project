@@ -66,7 +66,7 @@ public class Scenes : MonoBehaviour
 
         // Transport minor objectives
         if (id <= 4) {
-            if (id == 4) {
+            if (id == 3) {
                 // remove any asteroids in the area where the minor objs are being transported
                 Timing.RunCoroutine(_RmPlanetsDelay(level2[sectorIndex], Vector2.one * 100));
             }

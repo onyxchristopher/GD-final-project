@@ -110,6 +110,14 @@ public class EventManager : MonoBehaviour
         onTrapUse?.Invoke();
     }
 
+    public delegate void NotifyShieldUse(float duration);
+    public static event NotifyShieldUse onShieldUse;
+    public static void ShieldUse(float duration) {
+        if (onShieldUse != null) {
+            onShieldUse(duration);
+        }
+    }
+
     public delegate void NotifyPlayerHit();
     public static event NotifyPlayerHit onPlayerHit;
     public static void PlayerHit() {
