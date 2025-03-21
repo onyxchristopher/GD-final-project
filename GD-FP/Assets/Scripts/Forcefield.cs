@@ -13,13 +13,10 @@ public class Forcefield : MonoBehaviour
     // the forcefield's collider
     private EdgeCollider2D ec;
 
-    // the forcefield's color
-    [SerializeField] public Color color;
-
     // multiplier for velocity on ejection
     [SerializeField] private float multiplier = -1;
 
-    // the offset from the forcefield object where it respawns the player (zero if it does not)
+    // the offset from the forcefield object where it respawns the player (zero or one if it does not)
     [SerializeField] private Vector3 offset = Vector3.zero;
 
     void Start() {
@@ -51,12 +48,18 @@ public class Forcefield : MonoBehaviour
         EventManager.onMinorObjectiveComplete += MinorForcefieldCheck;
     }
 
+    public void ExplodeForcefieldCheck() {
+        if (offset == Vector3.one) {
+            CheckForcefield();
+        }
+    }
+
     public void MinorForcefieldCheck(int sectorId, int objectiveId) {
         int id = sectorId * 10 + objectiveId;
-        if (id != 21 && id != 32) {
+        if (id != 21 && id != 32 && id != 41 && id != 42) {
             return;
         }
-        if ((transform.position - GameObject.FindWithTag("Player").transform.position).magnitude < 20) {
+        if ((transform.position - GameObject.FindWithTag("Player").transform.position).magnitude < 15) {
             CheckForcefield();
         }
     }
@@ -78,8 +81,7 @@ public class Forcefield : MonoBehaviour
     }
 
     void OnCollisionEnter2D(Collision2D coll) {
-        string goTag = coll.gameObject.tag;
-        if (goTag == "Player") {
+        if (coll.gameObject.CompareTag("Player")) {
             Rigidbody2D rb = coll.gameObject.GetComponent<Rigidbody2D>();
             if (offset == Vector3.zero) {
                 rb.velocity = Mathf.Max(25, rb.velocity.magnitude) * multiplier * coll.GetContact(0).normal;

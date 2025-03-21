@@ -11,7 +11,7 @@ public class HealthDrop : MonoBehaviour
     }
     
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             other.gameObject.GetComponent<PlayerCollision>().SetHealth(health);
             EventManager.Pickup();
             Destroy(gameObject);

@@ -57,30 +57,36 @@ public class Scenes : MonoBehaviour
         Vector3 rootPosition = level1[sectorIndex].getCorePosition();
         root.transform.position = rootPosition;
 
+        // Reassign spawns of all centered bosses
         if (id <= 3) {
             root.transform.GetChild(0).GetComponent<Enemy>().ReassignSpawn(level1[sectorIndex].getCorePosition());
-            if (id <= 3) {
-                if (id == 3) {
-                    // remove any asteroids in the area where the minor objs are being transported
-                    Timing.RunCoroutine(_RmPlanetsDelay(level2[sectorIndex], Vector2.one * 100));
-                }
-                root.transform.GetChild(1).position = level2[sectorIndex][0].getCorePosition();
-                root.transform.GetChild(2).position = level2[sectorIndex][1].getCorePosition();
-            }
+        } else if (id == 4) {
+            root.transform.GetChild(0).GetComponent<Enemy>().ReassignSpawn(level1[sectorIndex].getCorePosition() + Vector2.right * 15);
         }
 
+        // Transport minor objectives
+        if (id <= 4) {
+            if (id == 3) {
+                // remove any asteroids in the area where the minor objs are being transported
+                Timing.RunCoroutine(_RmPlanetsDelay(level2[sectorIndex], Vector2.one * 100));
+            }
+            root.transform.GetChild(1).position = level2[sectorIndex][0].getCorePosition();
+            root.transform.GetChild(2).position = level2[sectorIndex][1].getCorePosition();
+        }
+
+        // set boss inactive if sector complete
         if (level1[sectorIndex].getComplete()) {
-            if (id <= 3) {
+            if (id <= 4) {
                 root.transform.GetChild(0).gameObject.SetActive(false);
             }
-        } else {
-            if (id == 2 || id == 3) {
+        } else { // set trigger active if sector incomplete
+            if (id == 2 || id == 3 || id == 4) {
                 root.transform.GetChild(3).gameObject.SetActive(true);
             }
         }
         for (int i = 0; i < level2[sectorIndex].Length; i++) {
             if (level2[sectorIndex][i].getComplete()) {
-                if (id <= 2) {
+                if (id <= 4) {
                     root.transform.GetChild(i + 1).gameObject.SetActive(false);
                 }
             }

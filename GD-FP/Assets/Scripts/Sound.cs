@@ -42,6 +42,11 @@ public class Sound : MonoBehaviour
     public AudioClip projectile;
     public AudioClip laserCharge;
     public AudioClip laserZap;
+    public AudioClip bomb;
+    public AudioClip enemyTeleport;
+    public AudioClip shieldReflect;
+    public AudioClip rocketFire;
+    public AudioClip rocketExplode;
 
     // Voice
     private Queue<AudioClip> voiceQueue = new Queue<AudioClip>();
@@ -90,6 +95,11 @@ public class Sound : MonoBehaviour
         EventManager.onProjectileFire += PlayProjectileFire;
         EventManager.onLaserCharge += PlayLaserCharge;
         EventManager.onLaserZap += PlayLaserZap;
+        EventManager.onBombExplode += PlayBombExplode;
+        EventManager.onEnemyTeleport += PlayEnemyTeleport;
+        EventManager.onShieldReflect += PlayShieldReflect;
+        EventManager.onRocketFire += PlayRocketFire;
+        EventManager.onRocketExplode += PlayRocketExplode;
 
         EventManager.onEnterBossArea += EnterCombat;
         EventManager.onExitBossArea += ExitCombat;
@@ -269,6 +279,26 @@ public class Sound : MonoBehaviour
 
     public void PlayLaserZap() {
         PlaySFX(laserZap, 1);
+    }
+    
+    public void PlayBombExplode() {
+        PlaySFX(bomb, 0.5f);
+    }
+
+    public void PlayEnemyTeleport() {
+        PlaySFX(enemyTeleport, 1);
+    }
+
+    public void PlayShieldReflect() {
+        PlaySFX(shieldReflect, 1);
+    }
+
+    public void PlayRocketFire() {
+        PlaySFX(rocketFire, 0.5f);
+    }
+
+    public void PlayRocketExplode() {
+        PlaySFX(rocketExplode, 0.8f);
     }
 
     // Voice functions

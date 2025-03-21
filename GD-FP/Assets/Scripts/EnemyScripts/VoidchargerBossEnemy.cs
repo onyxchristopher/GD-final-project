@@ -6,10 +6,10 @@ using MEC;
 
 /*
 The voidcharger has two states: IDLE and ATTACK.
-It starts in IDLE, and when its trigger is entered by the player, enacts a forcefield around its domain.
+It starts in IDLE, and when its trigger is entered by the player, enacts a forcefield around its domain, moving to ATTACK.
 In ATTACK, it briefly telegraphs its movement and then charges at the player. If it hits the player,
-it damages them and knocks them back. If it hits a forcefield wall, it bounces off with an approximation of
-an elastic collision. It moves back to IDLE and removes the forcefield if the player dies.
+it damages them and knocks them back. If it hits a forcefield wall, it stops.
+It moves back to IDLE and removes the forcefield if the player dies.
 
 The voidcharger is vulnerable on its sides and back.
 */
@@ -53,10 +53,6 @@ public class VoidchargerBossEnemy : Enemy
         telegraphArrow = transform.GetChild(2).gameObject;
 
         EventManager.onPlayerDeath += ResetToIdle;
-    }
-
-    void OnEnable() {
-        ReassignSpawn(transform.position);
     }
 
     // ATTACK state functions
@@ -119,10 +115,10 @@ public class VoidchargerBossEnemy : Enemy
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.gameObject.tag == "Player") {
+        if (collision.gameObject.CompareTag("Player")) {
             collision.gameObject.GetComponent<PlayerCollision>().HullCollision();
             hitPlayerTrigger = true;
-        } else if (collision.gameObject.tag == "Forcefield") {
+        } else if (collision.gameObject.CompareTag("Forcefield")) {
             forcefieldTrigger = true;
         }
     }

@@ -43,20 +43,20 @@ public class ClusterBoundary : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             EventManager.EnterCluster(id);
             int index = id - 1;
 
             // determine if the player has other tutorial modules on screen
             bool toSpawn;
-            if (index <= 2) {
+            if (index <= 4) {
                 toSpawn = true;
             } else {
                 toSpawn = false;
             }
             
 
-            if (index <= 2 && !modules[index].GetComponent<TutorialModule>().complete && toSpawn) {
+            if (toSpawn && !modules[index].GetComponent<TutorialModule>().complete) {
                 // the tutorial has not been completed, so it should be spawned
                 Vector2 playerLocation = other.gameObject.GetComponent<Rigidbody2D>().position;
                 Vector2 rootLocation = (Vector2) transform.position;

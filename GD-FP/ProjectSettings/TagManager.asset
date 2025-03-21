@@ -33,6 +33,9 @@ TagManager:
   - VoidchargerRespawnField
   - DuskwardenRespawnField
   - Duskwarden
+  - Murkfang
+  - MurkfangRespawnField
+  - Rocket
   layers:
   - Default
   - TransparentFX

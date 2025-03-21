@@ -11,7 +11,7 @@ public class VoidchargerBackEnemy : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Blade") {
+        if (other.CompareTag("Blade")) {
             bossHealth.Damage(other.GetComponent<Blade>().GetDamage());
         }
     }

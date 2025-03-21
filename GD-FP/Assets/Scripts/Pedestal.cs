@@ -27,13 +27,13 @@ public class Pedestal : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player" && !withinSetSpawnDelay) {
+        if (other.CompareTag("Player") && !withinSetSpawnDelay) {
             EventManager.SetSpawn(transform.position + transform.up * 3);
         }
     }
 
     void OnTriggerStay2D(Collider2D other) {
-        if (other.gameObject.tag == "Player") {
+        if (other.gameObject.CompareTag("Player")) {
             if (!pColl.inactive) {
                 pMove.SetFuel(Time.deltaTime * fuelPerSecond);
                 if (pMove.GetFuel() > pMove.maxFuel - 1) {

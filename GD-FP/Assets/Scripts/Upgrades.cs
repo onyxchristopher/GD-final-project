@@ -70,6 +70,9 @@ public class Upgrades : MonoBehaviour
                 case 21:
                     playerMovement.IncreaseMaxFuel(minorFuelUpgrade);
                     break;
+                case 41:
+                    playerMovement.IncreaseMaxFuel(minorFuelUpgrade);
+                    break;
                 default:
                     playerCollision.IncreaseMaxHealth(minorHealthUpgrade);
                     break;

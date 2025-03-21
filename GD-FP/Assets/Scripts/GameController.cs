@@ -18,11 +18,10 @@ public class GameController : MonoBehaviour
     "Planetguard",
     "Voidcharger",
     "Duskwarden",
+    "Murkfang",
     "",
-    "",
-    "",
-    "",
-    ""};
+    ""
+    };
 
     // Script refs
     private Generation gen;
@@ -84,7 +83,7 @@ public class GameController : MonoBehaviour
 
         // Initialize universe and cluster objects
         universe = new GameObject("Universe");
-        for (int i = 0; i < level1.Length; i++) {
+        for (int i = 0; i < 6; i++) {
             Vector2 boundingSize = level1[i].getBounds().size;
             Vector3 corePos = (Vector3) level1[i].getCorePosition();
 

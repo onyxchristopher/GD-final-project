@@ -110,6 +110,14 @@ public class EventManager : MonoBehaviour
         onTrapUse?.Invoke();
     }
 
+    public delegate void NotifyShieldUse(float duration);
+    public static event NotifyShieldUse onShieldUse;
+    public static void ShieldUse(float duration) {
+        if (onShieldUse != null) {
+            onShieldUse(duration);
+        }
+    }
+
     public delegate void NotifyPlayerHit();
     public static event NotifyPlayerHit onPlayerHit;
     public static void PlayerHit() {
@@ -164,5 +172,35 @@ public class EventManager : MonoBehaviour
     public static event NotifyLaserZap onLaserZap;
     public static void LaserZap() {
         onLaserZap?.Invoke();
+    }
+
+    public delegate void NotifyBombExplode();
+    public static event NotifyBombExplode onBombExplode;
+    public static void BombExplode() {
+        onBombExplode?.Invoke();
+    }
+
+    public delegate void NotifyEnemyTeleport();
+    public static event NotifyEnemyTeleport onEnemyTeleport;
+    public static void EnemyTeleport() {
+        onEnemyTeleport?.Invoke();
+    }
+
+    public delegate void NotifyShieldReflect();
+    public static event NotifyShieldReflect onShieldReflect;
+    public static void ShieldReflect() {
+        onShieldReflect?.Invoke();
+    }
+
+    public delegate void NotifyRocketFire();
+    public static event NotifyRocketFire onRocketFire;
+    public static void RocketFire() {
+        onRocketFire?.Invoke();
+    }
+
+    public delegate void NotifyRocketExplode();
+    public static event NotifyRocketExplode onRocketExplode;
+    public static void RocketExplode() {
+        onRocketExplode?.Invoke();
     }
 }

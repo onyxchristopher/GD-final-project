@@ -7,11 +7,11 @@ public class FuelDrop : MonoBehaviour
     [HideInInspector] public int fuel; // the amount of fuel inside the drop
 
     void Start() {
-        Destroy(gameObject, 20);
+        Destroy(gameObject, 60);
     }
     
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             other.gameObject.GetComponent<PlayerMovement>().SetFuel(fuel);
             EventManager.Pickup();
             Destroy(gameObject);

@@ -7,7 +7,7 @@ public class VoidchargerEntryTrigger : MonoBehaviour
     private VoidchargerBossEnemy boss;
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player") {
+        if (other.CompareTag("Player")) {
             boss = transform.parent.GetChild(0).GetComponent<VoidchargerBossEnemy>();
             boss.state = Enemy.State.ATTACK;
             boss.StateTransition();
