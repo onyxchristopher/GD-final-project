@@ -11,6 +11,7 @@ public class Bomb : MonoBehaviour
     [SerializeField] private float speed;
 
     [SerializeField] private float reflectScaling;
+    [SerializeField] private Sprite shieldedBomb;
 
     void Awake() {
         rb = GetComponent<Rigidbody2D>();
@@ -39,6 +40,8 @@ public class Bomb : MonoBehaviour
             Vector2 diffVector = (rb.position - playerRB.position).normalized;
             rb.velocity = reflectScaling * speed * diffVector;
             gameObject.layer = LayerMask.NameToLayer("Attack");
+            EventManager.ShieldReflect();
+            GetComponent<SpriteRenderer>().sprite = shieldedBomb;
         } else if (!other.isTrigger && other.CompareTag("Damageable")) {
             other.gameObject.GetComponent<Damageable>().Damage(18);
             Destroy(gameObject);

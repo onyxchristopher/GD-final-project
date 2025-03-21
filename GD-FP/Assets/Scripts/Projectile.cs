@@ -34,6 +34,8 @@ public class Projectile : MonoBehaviour
             Vector2 diffVector = (rb.position - playerRB.position).normalized;
             rb.velocity = reflectScaling * speed * diffVector;
             gameObject.layer = LayerMask.NameToLayer("Attack");
+            EventManager.ShieldReflect();
+            GetComponent<SpriteRenderer>().color = Color.cyan;
         } else if (!other.isTrigger && other.CompareTag("Damageable")) {
             other.gameObject.GetComponent<Damageable>().Damage(Mathf.RoundToInt(reflectScaling * damage));
             Destroy(gameObject);

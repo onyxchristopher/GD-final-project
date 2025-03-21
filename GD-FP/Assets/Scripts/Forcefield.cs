@@ -13,13 +13,10 @@ public class Forcefield : MonoBehaviour
     // the forcefield's collider
     private EdgeCollider2D ec;
 
-    // the forcefield's color
-    [SerializeField] public Color color;
-
     // multiplier for velocity on ejection
     [SerializeField] private float multiplier = -1;
 
-    // the offset from the forcefield object where it respawns the player (zero if it does not)
+    // the offset from the forcefield object where it respawns the player (zero or one if it does not)
     [SerializeField] private Vector3 offset = Vector3.zero;
 
     void Start() {
@@ -49,6 +46,12 @@ public class Forcefield : MonoBehaviour
         }
 
         EventManager.onMinorObjectiveComplete += MinorForcefieldCheck;
+    }
+
+    public void ExplodeForcefieldCheck() {
+        if (offset == Vector3.one) {
+            CheckForcefield();
+        }
     }
 
     public void MinorForcefieldCheck(int sectorId, int objectiveId) {

@@ -6,7 +6,7 @@ using MEC;
 public class Rocket : MonoBehaviour
 {
     private RocketeerEnemy rocketeer;
-    private GameObject explosion;
+    [SerializeField] private GameObject explosion;
     private Rigidbody2D rb;
     private Rigidbody2D playerRB;
     [SerializeField] private float speed;
@@ -14,6 +14,7 @@ public class Rocket : MonoBehaviour
     [SerializeField] private float timeToDetonate;
     [SerializeField] private int damage;
     [SerializeField] private float reflectScaling;
+    [SerializeField] private Sprite shieldedRocket;
     private bool reflected = false;
 
     void Awake() {
@@ -22,7 +23,7 @@ public class Rocket : MonoBehaviour
 
     void Start() {
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
-        EventManager.ProjectileFire();
+        EventManager.RocketFire();
         rb.velocity = speed * transform.right;
         Timing.RunCoroutine(_Detonator().CancelWith(gameObject), "rocket");
     }
@@ -48,7 +49,7 @@ public class Rocket : MonoBehaviour
         if (!reflected) {
             Explode();
         } else {
-            yield return Timing.WaitForSeconds(2);
+            yield return Timing.WaitForSeconds(1.5f);
             Explode();
         }
     }
@@ -66,8 +67,13 @@ public class Rocket : MonoBehaviour
             rb.velocity = reflectScaling * speed * diffVector;
             gameObject.layer = LayerMask.NameToLayer("Attack");
             reflected = true;
+            EventManager.ShieldReflect();
+            GetComponent<SpriteRenderer>().sprite = shieldedRocket;
         } else if (!other.isTrigger && other.CompareTag("Damageable")) {
-            other.gameObject.GetComponent<Damageable>().Damage(2 * damage);
+            other.GetComponent<Damageable>().Damage(2 * damage);
+            Explode();
+        } else if (other.CompareTag("Forcefield")) {
+            other.GetComponent<Forcefield>().ExplodeForcefieldCheck();
             Explode();
         } else if (!other.isTrigger) {
             Explode();
@@ -75,8 +81,8 @@ public class Rocket : MonoBehaviour
     }
 
     public void Explode() {
-        EventManager.BombExplode();
-        //Instantiate(explosion, transform.position, Quaternion.identity);
+        EventManager.RocketExplode();
+        Instantiate(explosion, transform.position, Quaternion.AngleAxis(rb.rotation, Vector3.forward));
         // rocket must tell its source that it is exploding
         if (rocketeer) {
             rocketeer.activeRocket = false;

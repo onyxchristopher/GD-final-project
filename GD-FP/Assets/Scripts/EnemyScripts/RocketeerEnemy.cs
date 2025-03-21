@@ -18,7 +18,7 @@ public class RocketeerEnemy : Enemy
     private Damageable dmg;
     [SerializeField] private float timeToFire;
     [SerializeField] private GameObject deathParticles;
-    public bool activeRocket = false;
+    [HideInInspector] public bool activeRocket = false;
 
     // Awake encodes the enemy FSM
     void Awake() {

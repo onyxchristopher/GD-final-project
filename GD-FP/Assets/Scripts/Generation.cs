@@ -66,7 +66,7 @@ public class Generation : MonoBehaviour
             orderedNextPathRects[i] = nextRect;
         }
 
-        // visualizeClusters(orderedLevel1Clusters, largeGridSize * totalSize, largeOffset);
+        visualizeClusters(orderedLevel1Clusters, largeGridSize * totalSize, largeOffset);
 
         // level 2
 
@@ -104,7 +104,7 @@ public class Generation : MonoBehaviour
             // add the subcluster array to the main array
             orderedLevel2Clusters[i] = orderClusters(subclusters, numSmallClusters, parent);
 
-            // visualizeClusters(orderedLevel2Clusters[i], largeClusterSize, smallOffset);
+            visualizeClusters(orderedLevel2Clusters[i], largeClusterSize, smallOffset);
         }
 
         return (root, orderedLevel1Clusters, orderedLevel2Clusters);

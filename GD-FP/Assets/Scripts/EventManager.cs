@@ -179,4 +179,28 @@ public class EventManager : MonoBehaviour
     public static void BombExplode() {
         onBombExplode?.Invoke();
     }
+
+    public delegate void NotifyEnemyTeleport();
+    public static event NotifyEnemyTeleport onEnemyTeleport;
+    public static void EnemyTeleport() {
+        onEnemyTeleport?.Invoke();
+    }
+
+    public delegate void NotifyShieldReflect();
+    public static event NotifyShieldReflect onShieldReflect;
+    public static void ShieldReflect() {
+        onShieldReflect?.Invoke();
+    }
+
+    public delegate void NotifyRocketFire();
+    public static event NotifyRocketFire onRocketFire;
+    public static void RocketFire() {
+        onRocketFire?.Invoke();
+    }
+
+    public delegate void NotifyRocketExplode();
+    public static event NotifyRocketExplode onRocketExplode;
+    public static void RocketExplode() {
+        onRocketExplode?.Invoke();
+    }
 }

@@ -49,7 +49,7 @@ public class ClusterBoundary : MonoBehaviour
 
             // determine if the player has other tutorial modules on screen
             bool toSpawn;
-            if (index <= 3) {
+            if (index <= 4) {
                 toSpawn = true;
             } else {
                 toSpawn = false;

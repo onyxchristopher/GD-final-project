@@ -91,9 +91,9 @@ public class MurkfangBossEnemy : Enemy
             Vector2 distToPlayer = playerRB.position - rb.position;
             Vector2 teleportLocation = rb.position + distToPlayer.normalized * (distToPlayer.magnitude + teleportDist);
             Vector2 teleportOffset = teleportLocation - spawnpoint;
-            Debug.Log(teleportOffset);
             if (Mathf.Abs(teleportOffset.x) <= 53 && Mathf.Abs(teleportOffset.y) <= 53) {
                 rb.position = teleportLocation;
+                EventManager.EnemyTeleport();
             }
         }
     }

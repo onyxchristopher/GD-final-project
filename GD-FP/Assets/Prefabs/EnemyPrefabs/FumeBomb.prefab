@@ -137,3 +137,4 @@ MonoBehaviour:
     type: 3}
   speed: 15
   reflectScaling: 2
+  shieldedBomb: {fileID: 21300000, guid: 6a247e99ac7f444519531d3b347c62ca, type: 3}
