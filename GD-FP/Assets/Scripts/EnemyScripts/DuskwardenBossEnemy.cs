@@ -46,11 +46,6 @@ public class DuskwardenBossEnemy : Enemy
         gameObject.SetActive(false);
     }
 
-    public override void ResetToIdle() {
-        state = State.IDLE;
-        StateTransition();
-    }
-
     public void Spawn() {
         Vector2 dirToPlayer = playerRB.position - (Vector2) transform.parent.position;
         float angle = Vector2.SignedAngle(Vector2.right, dirToPlayer);

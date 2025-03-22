@@ -19,6 +19,9 @@ public class Forcefield : MonoBehaviour
     // the offset from the forcefield object where it respawns the player (zero or one if it does not)
     [SerializeField] private Vector3 offset = Vector3.zero;
 
+    // sends a message to the echoceptor if true
+    [SerializeField] private bool echoceptorLastField = false;
+
     void Start() {
         // copy over visual points to collider
         ec = gameObject.GetComponent<EdgeCollider2D>();
@@ -56,7 +59,7 @@ public class Forcefield : MonoBehaviour
 
     public void MinorForcefieldCheck(int sectorId, int objectiveId) {
         int id = sectorId * 10 + objectiveId;
-        if (id != 21 && id != 32 && id != 41 && id != 42) {
+        if (id != 21 && id != 32 && id != 41 && id != 42 && id != 51 && id != 52) {
             return;
         }
         if ((transform.position - GameObject.FindWithTag("Player").transform.position).magnitude < 15) {
@@ -73,17 +76,22 @@ public class Forcefield : MonoBehaviour
             }
         }
         if (activeLinkedObjCount == 0) {
-            gameObject.SetActive(false);
+            if (echoceptorLastField) {
+                Enemy boss = transform.parent.GetComponent<Enemy>();
+                boss.state = Enemy.State.TRACK;
+                boss.StateTransition();
+            }
             for (int i = 0; i < protectingObjects.Length; i++) {
                 protectingObjects[i].GetComponent<Damageable>().protectiveForcefield = null;
             }
+            gameObject.SetActive(false);
         }
     }
 
     void OnCollisionEnter2D(Collision2D coll) {
         if (coll.gameObject.CompareTag("Player")) {
             Rigidbody2D rb = coll.gameObject.GetComponent<Rigidbody2D>();
-            if (offset == Vector3.zero) {
+            if (offset == Vector3.zero || offset == Vector3.one) {
                 rb.velocity = Mathf.Max(25, rb.velocity.magnitude) * multiplier * coll.GetContact(0).normal;
                 EventManager.ForcefieldBounce();
             } else {

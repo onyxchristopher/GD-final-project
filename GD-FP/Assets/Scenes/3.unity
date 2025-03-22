@@ -9916,7 +9916,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linkedObjects: []
   protectingObjects: []
-  color: {r: 0.96862745, g: 1, b: 0, a: 1}
   multiplier: -1
   offset: {x: 0, y: 0, z: 0}
 --- !u!68 &980151889
@@ -17897,7 +17896,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1891244994}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -600, y: 2000, z: 0}
+  m_LocalPosition: {x: -200, y: 2000, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 690182581}
@@ -19235,7 +19234,7 @@ GameObject:
   - component: {fileID: 1439395605298484721}
   - component: {fileID: 1439395605298484722}
   m_Layer: 15
-  m_Name: ForcefieldRed
+  m_Name: ForcefieldMinor
   m_TagString: Forcefield
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19273,7 +19272,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linkedObjects: []
   protectingObjects: []
-  color: {r: 1, g: 1, b: 0, a: 1}
   multiplier: -1
   offset: {x: 0, y: 0, z: 0}
 --- !u!120 &1439395605298484722
@@ -19478,7 +19476,6 @@ MonoBehaviour:
   - {fileID: 1303127478}
   protectingObjects:
   - {fileID: 1533426926}
-  color: {r: 1, g: 1, b: 0, a: 1}
   multiplier: -1
   offset: {x: 0, y: 0, z: 0}
 --- !u!68 &1885797987921355281

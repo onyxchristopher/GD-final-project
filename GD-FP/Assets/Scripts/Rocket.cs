@@ -16,6 +16,7 @@ public class Rocket : MonoBehaviour
     [SerializeField] private float reflectScaling;
     [SerializeField] private Sprite shieldedRocket;
     private bool reflected = false;
+    [SerializeField] private bool longerReflectTime = false;
 
     void Awake() {
         rb = GetComponent<Rigidbody2D>();
@@ -26,6 +27,7 @@ public class Rocket : MonoBehaviour
         EventManager.RocketFire();
         rb.velocity = speed * transform.right;
         Timing.RunCoroutine(_Detonator().CancelWith(gameObject), "rocket");
+        Destroy(gameObject, 10);
     }
 
     public void SetSource(RocketeerEnemy source) {
@@ -49,14 +51,17 @@ public class Rocket : MonoBehaviour
         if (!reflected) {
             Explode();
         } else {
-            yield return Timing.WaitForSeconds(1.5f);
+            if (longerReflectTime) {
+                yield return Timing.WaitForSeconds(4);
+            } else {
+                yield return Timing.WaitForSeconds(1.5f);
+            }
             Explode();
         }
     }
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Player")) {
-            Timing.KillCoroutines("rocket");
             Vector2 distToPlayer = playerRB.position - (Vector2) transform.position;
             playerRB.AddForce(distToPlayer.normalized * 25, ForceMode2D.Impulse);
             EventManager.PlayerDamage(damage);

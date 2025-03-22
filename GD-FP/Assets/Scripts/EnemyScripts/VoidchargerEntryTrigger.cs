@@ -12,7 +12,7 @@ public class VoidchargerEntryTrigger : MonoBehaviour
             boss.state = Enemy.State.ATTACK;
             boss.StateTransition();
             EventManager.EnterBossArea(2);
-            BoxCollider2D bc = gameObject.GetComponent<BoxCollider2D>();
+            BoxCollider2D bc = GetComponent<BoxCollider2D>();
             bc.size = bc.size + Vector2.one * 10;
         }
     }

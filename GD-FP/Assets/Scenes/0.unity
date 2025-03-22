@@ -871,7 +871,7 @@ MonoBehaviour:
   startingBladeDamage: 5
   startingTrapCooldown: 3
   startingTrapDamage: 10
-  startingShieldCooldown: 6
+  startingShieldCooldown: 5
   startingShieldDuration: 1.2
   trapSprite: {fileID: 21300000, guid: e4fa169fdf5b346b199b3d0cb4003755, type: 3}
   shieldSprite: {fileID: 21300000, guid: 1eeb39e2dc7ab4d1c9fe3dc25036a910, type: 3}
@@ -1450,11 +1450,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradedBladeLength: 7
   upgradedTrapCooldown: 1.8
-  upgradedShieldCooldown: 5
-  upgradedBladeDamage: 10
-  upgradedTrapDamage: 10
-  upgradedShieldDuration: 2
-  minorFuelUpgrade: 20
+  upgradedShieldCooldown: 3
+  minorFuelUpgrade: 30
   minorHealthUpgrade: 3
 --- !u!114 &467730946
 MonoBehaviour:

@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
     "Voidcharger",
     "Duskwarden",
     "Murkfang",
-    "",
+    "Echoceptor",
     ""
     };
 
