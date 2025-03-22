@@ -61,7 +61,7 @@ public class Scenes : MonoBehaviour
         root.transform.position = rootPosition;
 
         // Reassign spawns of all centered bosses
-        if (id <= 3 || id >= 5) {
+        if (id <= 3 || id == 5) {
             root.transform.GetChild(0).GetComponent<Enemy>().ReassignSpawn(level1[sectorIndex].getCorePosition());
         } else if (id == 4) {
             root.transform.GetChild(0).GetComponent<Enemy>().ReassignSpawn(level1[sectorIndex].getCorePosition() + Vector2.right * 15);

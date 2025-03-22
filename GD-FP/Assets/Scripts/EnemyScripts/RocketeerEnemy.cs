@@ -79,9 +79,12 @@ public class RocketeerEnemy : Enemy
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
         Instantiate(deathParticles, transform.position, Quaternion.identity);
-        if (drop) {
+        if (drop && drop.CompareTag("FuelDrop")) {
             GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
             droppedFuel.GetComponent<FuelDrop>().fuel = 40;
+        } else if (drop && drop.CompareTag("HealthDrop")) {
+            GameObject droppedHealth = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
+            droppedHealth.GetComponent<HealthDrop>().health = 15;
         }
         EventManager.EnemyDefeat();
         gameObject.SetActive(false);

@@ -37,6 +37,8 @@ TagManager:
   - MurkfangRespawnField
   - Rocket
   - EchoceptorRespawnField
+  - FuelDrop
+  - HealthDrop
   layers:
   - Default
   - TransparentFX

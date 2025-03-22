@@ -11,7 +11,7 @@ public class Pedestal : MonoBehaviour
     private PlayerCollision pColl;
     private PlayerMovement pMove;
 
-    void Start() {
+    void Awake() {
         GameObject player = GameObject.FindWithTag("Player");
         pColl = player.GetComponent<PlayerCollision>();
         pMove = player.GetComponent<PlayerMovement>();
