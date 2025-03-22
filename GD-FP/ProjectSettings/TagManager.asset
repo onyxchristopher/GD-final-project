@@ -36,6 +36,7 @@ TagManager:
   - Murkfang
   - MurkfangRespawnField
   - Rocket
+  - EchoceptorRespawnField
   layers:
   - Default
   - TransparentFX

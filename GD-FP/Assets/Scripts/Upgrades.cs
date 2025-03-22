@@ -12,9 +12,6 @@ public class Upgrades : MonoBehaviour
     [SerializeField] private float upgradedBladeLength;
     [SerializeField] private float upgradedTrapCooldown;
     [SerializeField] private float upgradedShieldCooldown;
-    [SerializeField] private int upgradedBladeDamage;
-    [SerializeField] private int upgradedTrapDamage;
-    [SerializeField] private float upgradedShieldDuration;
 
     [SerializeField] private int minorFuelUpgrade;
     [SerializeField] private int minorHealthUpgrade;
@@ -53,13 +50,7 @@ public class Upgrades : MonoBehaviour
                     playerAbilities.SetShieldCooldown(upgradedShieldCooldown);
                     break;
                 case 6:
-                    playerAbilities.SetBladeDamage(upgradedBladeDamage);
-                    break;
-                case 7:
-                    playerAbilities.SetTrapDamage(upgradedTrapDamage);
-                    break;
-                case 8:
-                    playerAbilities.SetShieldDuration(upgradedShieldDuration);
+                    Debug.Log("TBD");
                     break;
                 default:
                     Debug.Log("Artifact ID unset");
@@ -71,6 +62,9 @@ public class Upgrades : MonoBehaviour
                     playerMovement.IncreaseMaxFuel(minorFuelUpgrade);
                     break;
                 case 41:
+                    playerMovement.IncreaseMaxFuel(minorFuelUpgrade);
+                    break;
+                case 61:
                     playerMovement.IncreaseMaxFuel(minorFuelUpgrade);
                     break;
                 default:
