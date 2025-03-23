@@ -12,6 +12,7 @@ When the forcefields around the Echoceptor are destroyed, it moves to TRACK.
 In TRACK, it continues its rocket-firing pattern but moves opposite the player around the center of the domain.
 When the Echoceptor is hit, it emits an echo, knocking the player back.
 */
+
 public class EchoceptorBossEnemy : Enemy
 {
     private Damageable dmg;
@@ -161,11 +162,6 @@ public class EchoceptorBossEnemy : Enemy
 
     private void SpawnForcefield() {
         field = Instantiate(forcefield, transform.parent.position, Quaternion.identity, transform.parent);
-    }
-
-    private void Teardown() {
-        EventManager.onEnemyHit -= Echo;
-        EventManager.ExitBossArea();
     }
 
     public override void EnemyDeath() {

@@ -9,7 +9,6 @@ public class GameController : MonoBehaviour
 {    
     // Boss management
     private GameObject activeBoss;
-    private int activeBossHealth;
     private GameObject bossBar;
     private GameObject bossText;
     private Slider bossHealthBar;
@@ -20,8 +19,15 @@ public class GameController : MonoBehaviour
     "Duskwarden",
     "Murkfang",
     "Echoceptor",
-    ""
+    "The Abyssal Forge"
     };
+
+    // Abyssal forge memory
+
+    [HideInInspector] public bool rightCoreDefeated;
+    [HideInInspector] public bool topCoreDefeated;
+    [HideInInspector] public bool leftCoreDefeated;
+    [HideInInspector] public bool bottomCoreDefeated;
 
     // Script refs
     private Generation gen;
@@ -141,6 +147,7 @@ public class GameController : MonoBehaviour
     }
 
     public void HideBossUI() {
+        activeBoss = null;
         bossBar.SetActive(false);
         bossText.SetActive(false);
     }

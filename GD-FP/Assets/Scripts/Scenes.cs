@@ -67,6 +67,10 @@ public class Scenes : MonoBehaviour
             root.transform.GetChild(0).GetComponent<Enemy>().ReassignSpawn(level1[sectorIndex].getCorePosition() + Vector2.right * 15);
         }
 
+        if (id == 6) {
+            root.transform.GetChild(0).GetComponent<AbyssforgeBossEnemy>().Spawn(rootPosition);
+        }
+
         // Transport minor objectives
         if (id <= 5) {
             if (id == 3) {

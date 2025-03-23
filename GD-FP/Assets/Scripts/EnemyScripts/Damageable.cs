@@ -15,7 +15,6 @@ public class Damageable : MonoBehaviour
     private float invulnDuration = 0.3f;
     public Enemy enemy;
     public GameObject linkedForcefield;
-    private LineRenderer lr;
     public GameObject protectiveForcefield;
     [SerializeField] private GameObject healthbar;
     [SerializeField] private Vector3 healthBarOffset = new Vector3(0, 3.5f, 0);
@@ -45,6 +44,17 @@ public class Damageable : MonoBehaviour
                 gameController.SetBossHealthBar(health);
             }
 
+            // Damage the Abyssal Forge if one of its cores are damaged
+            if (gameObject.name == "AbyssCoreEnemy") {
+                // if the core is overkilled (health < 0) send only the remaining damage to the boss
+                if (health <= 0) {
+                    transform.parent.parent.GetComponent<Damageable>().Damage(health + damage, true);
+                } else {
+                    transform.parent.parent.GetComponent<Damageable>().Damage(damage, true);
+                }
+                
+            }
+
             if (health <= 0) {
                 enemy.EnemyDeath();
                 if (!isBoss && !suppressSound) {
@@ -61,7 +71,7 @@ public class Damageable : MonoBehaviour
                     EventManager.EnemyHit();
                 }
             }
-            // only a blade confers invuln from more blade attacks
+            // a blade confers invuln from more blade attacks
             if (source == "blade") {
                 invuln = true;
                 Timing.RunCoroutine(_IFrames());

@@ -79,7 +79,7 @@ public class MessageDashboard : MonoBehaviour
 
     // Avoid repetitive sector messages
     private IEnumerator<float> _SectorMsgTimer() {
-        yield return Timing.WaitForSeconds(5);
+        yield return Timing.WaitForSeconds(15);
         recentSectorNum = 0;
     }
 
