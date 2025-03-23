@@ -52,6 +52,9 @@ public class Damageable : MonoBehaviour
                 } else {
                     transform.parent.parent.GetComponent<Damageable>().Damage(damage, true);
                 }
+                if (maxHealth == 100) {
+                    GetComponent<AbyssforgeGreaterCore>().GreaterCoreDamaged();
+                }
                 
             }
 

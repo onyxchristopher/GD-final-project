@@ -22,6 +22,8 @@ public class GameController : MonoBehaviour
     "The Abyssal Forge"
     };
 
+    public static bool fiveArtifactsReclaimed;
+
     // Abyssal forge memory
 
     [HideInInspector] public bool rightCoreDefeated;

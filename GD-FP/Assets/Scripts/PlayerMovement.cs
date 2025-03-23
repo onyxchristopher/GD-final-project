@@ -36,8 +36,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashAccel;
     [SerializeField] private float dashDuration;
 
-    [SerializeField] private float deathSequenceTime;
-
     // Spawnpoint
     private Vector3 startingOrigin = new Vector3(0, 2, 0); // the player's initial spawnpoint
     private Vector3 origin; // the player's spawnpoint

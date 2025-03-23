@@ -5,8 +5,7 @@ using UnityEngine;
 using MEC;
 
 /*
-The Abyssal Forge has two states: IDLE and TRACK.
-It starts in IDLE, and when its trigger is entered by the player, moves to TRACK.
+The Abyssal Forge is stateless, and all stateful functionality is managed by its children.
 */
 
 public class AbyssforgeBossEnemy : Enemy
@@ -20,11 +19,9 @@ public class AbyssforgeBossEnemy : Enemy
         gControl = GameObject.FindWithTag("GameController").GetComponent<GameController>();
     }
 
-    void Start() {
-        dmg = gameObject.GetComponent<Damageable>();
-    }
-
     public void Spawn(Vector3 pos) {
+        dmg = gameObject.GetComponent<Damageable>();
+        dmg.enemy = this;
         spawnpoint = (Vector2) pos;
         if (gControl.rightCoreDefeated) {
             transform.GetChild(0).gameObject.SetActive(false);
@@ -67,8 +64,6 @@ public class AbyssforgeBossEnemy : Enemy
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Player")) {
-            state = State.TRACK;
-            StateTransition();
             EventManager.EnterBossArea(6);
             GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(40, 0, 1);
             gameObject.GetComponent<BoxCollider2D>().size += (Vector2.one * 25);
@@ -77,11 +72,19 @@ public class AbyssforgeBossEnemy : Enemy
 
     void OnTriggerExit2D(Collider2D other) {
         if (other.CompareTag("Player")) {
-            state = State.IDLE;
-            StateTransition();
             EventManager.ExitBossArea();
             GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(30, 1, 1);
             gameObject.GetComponent<BoxCollider2D>().size -= (Vector2.one * 25);
         }
+    }
+
+    public override void EnemyDeath() {
+        Instantiate(finalDeathParticles, transform.position, Quaternion.identity);
+        EventManager.BossDefeat(6);
+        EventManager.ExitBossArea();
+        if (drop) {
+            GameObject artifact = Instantiate(drop, transform.position, Quaternion.identity);
+        }
+        gameObject.SetActive(false);
     }
 }

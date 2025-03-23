@@ -134,26 +134,27 @@ public class EchoceptorBossEnemy : Enemy
     private IEnumerator<float> _Mirror() {
         // Move to desired place
         float time = 0;
-        Vector2 pos = rb.position;
+        Vector3 pos = transform.position;
         while (time < timeToStartMirroring) {
-            rb.position = Vector2.Lerp(pos, CalcMirrorPosition(), time / timeToStartMirroring);
+            transform.position = Vector3.Lerp(pos, CalcMirrorPosition(), time / timeToStartMirroring);
             yield return Timing.WaitForOneFrame;
             time += Time.deltaTime;
         }
         // Begin mirroring
         while (state == State.TRACK) {
             yield return Timing.WaitForOneFrame;
-            rb.position = CalcMirrorPosition();
+            transform.position = CalcMirrorPosition();
         }
     }
 
-    private Vector2 CalcMirrorPosition() {
-        Vector2 center = (Vector2) transform.parent.position;
-        return playerRB.position + 2 * (center - playerRB.position);
+    private Vector3 CalcMirrorPosition() {
+        Vector3 center = transform.parent.position;
+        Vector3 playerpos = (Vector3) playerRB.position;
+        return playerpos + 2 * (center - playerpos);
     }
 
     private void Echo() {
-        Instantiate(echo, (Vector3) rb.position, Quaternion.identity);
+        Instantiate(echo, transform.position, Quaternion.identity);
 
         // Force of launch decreases with distance
         Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;

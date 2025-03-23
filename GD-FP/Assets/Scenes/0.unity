@@ -646,12 +646,12 @@ GameObject:
   - component: {fileID: 207719367}
   - component: {fileID: 207719366}
   - component: {fileID: 207719365}
-  - component: {fileID: 207719368}
   - component: {fileID: 207719369}
   - component: {fileID: 207719370}
   - component: {fileID: 207719371}
   - component: {fileID: 207719372}
   - component: {fileID: 207719373}
+  - component: {fileID: 207719368}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -754,8 +754,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &207719368
-BoxCollider2D:
+--- !u!60 &207719368
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -777,9 +777,16 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 2, y: 2}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: -1, y: -0.5}
+      - {x: -1, y: 0.5}
+      - {x: -0.5, y: 1}
+      - {x: 0.5, y: 1}
+      - {x: 1, y: 0.5}
+      - {x: 1, y: -0.5}
+      - {x: 0.5, y: -1}
+      - {x: -0.5, y: -1}
 --- !u!50 &207719369
 Rigidbody2D:
   serializedVersion: 4
@@ -827,7 +834,6 @@ MonoBehaviour:
   dashSpeed: 15
   dashAccel: 1.5
   dashDuration: 0.6
-  deathSequenceTime: 3
   playerRespawn: {fileID: 1940737534848662661, guid: 50d30498c6380428ea9b009bd09b225a,
     type: 3}
   playerDeath: {fileID: 6728520527900382309, guid: 94662b0275e654f1d85d9b214632e41c,
@@ -1408,6 +1414,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ace2dc059216c4a3f995b024e0acbef6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rightCoreDefeated: 0
+  topCoreDefeated: 0
+  leftCoreDefeated: 0
+  bottomCoreDefeated: 0
   cam: {fileID: 0}
   cameraRect:
     serializedVersion: 2

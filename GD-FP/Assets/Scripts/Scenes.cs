@@ -69,6 +69,9 @@ public class Scenes : MonoBehaviour
 
         if (id == 6) {
             root.transform.GetChild(0).GetComponent<AbyssforgeBossEnemy>().Spawn(rootPosition);
+            if (GameController.fiveArtifactsReclaimed) {
+                root.transform.GetChild(1).gameObject.SetActive(false);
+            }
         }
 
         // Transport minor objectives

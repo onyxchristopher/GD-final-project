@@ -11,17 +11,39 @@ public class ArtifactCase : MonoBehaviour
     private float timeToSlide = 0.8f;
     private float timeBeforeBook = 1;
     private float timeAfterBook = 1;
+    private bool a1 = false;
+    private bool a2 = false;
+    private bool a3 = false;
+    private bool a4 = false;
+    private bool a5 = false;
 
     void Start() {
         rectTransform = gameObject.GetComponent<RectTransform>();
         EventManager.onArtifactObtain += FillKnowledge;
     }
 
-    public void FillKnowledge(int id) {
-        Timing.RunCoroutine(_BookSequence(id));
+    public void FillKnowledge(int index) {
+        Timing.RunCoroutine(_BookSequence(index));
     }
 
-    private IEnumerator<float> _BookSequence(int id) {
+    private IEnumerator<float> _BookSequence(int index) {
+        // remove sector 6 block if 5 artifacts found
+        if (index == 1) {
+            a1 = true;
+        } else if (index == 2) {
+            a2 = true;
+        } else if (index == 3) {
+            a3 = true;
+        } else if (index == 4) {
+            a4 = true;
+        } else if (index == 5) {
+            a5 = true;
+        }
+
+        if (a1 && a2 && a3 && a4 && a5) {
+            GameController.fiveArtifactsReclaimed = true;
+        }
+
         // slide case down
         float time = 0;
         while (time < timeToSlide) {
@@ -35,7 +57,7 @@ public class ArtifactCase : MonoBehaviour
         yield return Timing.WaitForSeconds(timeBeforeBook);
 
         // place book
-        transform.GetChild(id - 1).gameObject.SetActive(false);
+        transform.GetChild(index - 1).gameObject.SetActive(false);
 
         // wait to slide case up
         yield return Timing.WaitForSeconds(timeAfterBook);
