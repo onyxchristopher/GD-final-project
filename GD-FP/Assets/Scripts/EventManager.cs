@@ -215,4 +215,10 @@ public class EventManager : MonoBehaviour
     public static void PlayAgain() {
         onPlayAgain?.Invoke();
     }
+
+    public delegate void NotifyNewGame();
+    public static event NotifyNewGame onNewGame;
+    public static void NewGame() {
+        onNewGame?.Invoke();
+    }
 }

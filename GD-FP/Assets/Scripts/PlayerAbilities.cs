@@ -92,6 +92,13 @@ public class PlayerAbilities : MonoBehaviour
         trapCdSlider.value = startingTrapCooldown;
         shieldCdSlider.value = startingShieldCooldown;
 
+        Transform trapImage = GameObject.FindWithTag("CooldownIcons").transform.GetChild(1).GetChild(0);
+        trapImage.GetComponent<Image>().sprite = lockSprite;
+        trapImage.localScale = new Vector3(0.55f, 0.6f, 1);
+
+        Transform shieldImage = GameObject.FindWithTag("CooldownIcons").transform.GetChild(2).GetChild(0);
+        shieldImage.GetComponent<Image>().sprite = lockSprite;
+        shieldImage.localScale = new Vector3(0.55f, 0.6f, 1);
     }
 
     // blade
@@ -219,7 +226,28 @@ public class PlayerAbilities : MonoBehaviour
         shieldDuration = duration;
     }
 
-    void OnRestartGame() {
+    private void OnRestartGame() {
+        Timing.RunCoroutine(_RestartTimer());
+    }
+
+    private IEnumerator<float> _RestartTimer() {
+        Transform endcanvas = GameObject.FindWithTag("EndCanvas").transform;
+        endcanvas.GetChild(3).GetComponent<Animator>().SetTrigger("Fadeout");
+        yield return Timing.WaitForSeconds(1);
+
+        GameObject.FindWithTag("MainCanvasParent").transform.GetChild(0).gameObject.SetActive(true);
+
         EventManager.PlayAgain();
+        endcanvas.GetChild(0).gameObject.SetActive(false);
+        endcanvas.GetChild(1).gameObject.SetActive(false);
+        endcanvas.GetChild(2).gameObject.SetActive(false);
+        endcanvas.parent.GetChild(1).gameObject.SetActive(false);
+
+        InitializeAbilities();
+
+        yield return Timing.WaitForSeconds(3);
+        EventManager.NewGame();
+        endcanvas.GetChild(3).GetComponent<Animator>().SetTrigger("Fadein");
+        Destroy(endcanvas.gameObject, 1.1f);
     }
 }

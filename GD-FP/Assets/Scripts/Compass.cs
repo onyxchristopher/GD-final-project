@@ -59,6 +59,10 @@ public class Compass : MonoBehaviour
         level2 = l2;
         UpdateMajor(1);
 
+        if (majorArrowTransform) {
+            Destroy(majorArrowTransform.gameObject);
+        }
+
         // create arrows which are children of the compass
         for (int i = 0; i < minorArrowTransforms.Length; i++) {
             GameObject minorArrow = Instantiate(minorCompassArrow, Vector3.zero, Quaternion.identity, transform);
@@ -71,6 +75,10 @@ public class Compass : MonoBehaviour
         majorArrow.GetComponent<Image>().color = new Color(0, 0.5f, 1, 0.5f);
 
         majorShown = true;
+
+        // sector 6 has no minor objectives
+        minorProg.Add(61);
+        minorProg.Add(62);
     }
 
     public void EnteringCluster(int clusterNum) {

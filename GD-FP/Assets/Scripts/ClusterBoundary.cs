@@ -27,10 +27,11 @@ public class ClusterBoundary : MonoBehaviour
     void Start() {
         player = GameObject.FindWithTag("Player");
         gControl = GameObject.FindWithTag("GameController").GetComponent<GameController>();
-        ResetAll();
+        InitializeTutorialModules();
+        EventManager.onPlayAgain += InitializeTutorialModules;
     }
 
-    public void ResetAll() {
+    public void InitializeTutorialModules() {
         if (modules[id - 1]) {
             Destroy(modules[id - 1]);
         }

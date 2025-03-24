@@ -66,8 +66,6 @@ public class Sound : MonoBehaviour
     public AudioClip artifact4;
     public AudioClip artifact5;
     public AudioClip artifact6;
-    public AudioClip artifact7;
-    public AudioClip artifact8;
     public AudioClip checkpointTutorial;
     public AudioClip enterSector1;
     public AudioClip enterSector2;
@@ -75,8 +73,8 @@ public class Sound : MonoBehaviour
     public AudioClip enterSector4;
     public AudioClip enterSector5;
     public AudioClip enterSector6;
-    public AudioClip enterSector7;
-    public AudioClip enterSector8;
+    public AudioClip finalBossDefeat;
+    public AudioClip finalKnowledge;
 
 
     void Start() {
@@ -376,14 +374,6 @@ public class Sound : MonoBehaviour
         AddToVoiceQueue(artifact6, 1);
     }
 
-    public void PlayArtifact7() {
-        AddToVoiceQueue(artifact7, 1);
-    }
-
-    public void PlayArtifact8() {
-        AddToVoiceQueue(artifact8, 1);
-    }
-
     public void PlayCheckpointTutorial() {
         AddToVoiceQueue(checkpointTutorial, 1);
     }
@@ -412,13 +402,19 @@ public class Sound : MonoBehaviour
         AddToVoiceQueue(enterSector6, 1);
     }
 
-    public void PlayEnterSector7() {
-        AddToVoiceQueue(enterSector7, 1);
+    public void PlayFinalBossDefeat() {
+        Timing.RunCoroutine(_FinalBossDefeatTimer());
     }
 
-    public void PlayEnterSector8() {
-        AddToVoiceQueue(enterSector8, 1);
+    private IEnumerator<float> _FinalBossDefeatTimer() {
+        yield return Timing.WaitForSeconds(1);
+        AddToVoiceQueue(finalBossDefeat, 1);
     }
+
+    public void PlayFinalKnowledge() {
+        AddToVoiceQueue(finalKnowledge, 1);
+    }
+
 
     public void PlaySFX(AudioClip clip, float vol = 1) {
         SFXSource.PlayOneShot(clip, vol);

@@ -33,7 +33,6 @@ TagManager:
   - VoidchargerRespawnField
   - DuskwardenRespawnField
   - Duskwarden
-  - Murkfang
   - MurkfangRespawnField
   - Rocket
   - EchoceptorRespawnField
@@ -42,6 +41,7 @@ TagManager:
   - Abyssforge
   - MainCanvas
   - EndCanvas
+  - MainCanvasParent
   layers:
   - Default
   - TransparentFX

@@ -58,7 +58,9 @@ public class PlayerMovement : MonoBehaviour
         EventManager.onPlayerDeath += DeathSequence;
         EventManager.onNewUniverse += InitializeMovement;
         EventManager.onSetSpawn += SetSpawn;
-        EventManager.onPlayAgain += Restart;
+        EventManager.onPlayAgain += InitializeMovement;
+        EventManager.onNewGame += RestartActions;
+
         playerInput.actions.FindActionMap("UI").Disable();
 
         //Timing.RunCoroutine(_EnableActions());
@@ -208,7 +210,7 @@ public class PlayerMovement : MonoBehaviour
         playerInput.actions.FindActionMap("Player").Enable();
     }
 
-    private void Restart() {
+    private void RestartActions() {
         playerInput.actions.FindActionMap("UI").Disable();
         playerInput.actions.FindActionMap("Player").Enable();
     }

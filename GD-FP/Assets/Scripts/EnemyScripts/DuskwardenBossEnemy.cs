@@ -42,7 +42,6 @@ public class DuskwardenBossEnemy : Enemy
         dmg.enemy = this;
         cf.SetLayerMask(LayerMask.GetMask("Planet", "Player"));
         cf.useTriggers = false;
-        EventManager.onPlayerDeath += ResetToIdle;
         gameObject.SetActive(false);
     }
 
@@ -56,6 +55,7 @@ public class DuskwardenBossEnemy : Enemy
         SpawnForcefield();
         GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(60, 0, 1);
         Timing.RunCoroutine(_CheckLOS().CancelWith(gameObject));
+        EventManager.onPlayerDeath += ResetToIdle;
     }
 
     private IEnumerator<float> _CheckLOS() {
@@ -125,6 +125,7 @@ public class DuskwardenBossEnemy : Enemy
 
     private void EndLoop() {
         EventManager.ExitBossArea();
+        EventManager.onPlayerDeath -= ResetToIdle;
     }
 
     public override void EnemyDeath() {

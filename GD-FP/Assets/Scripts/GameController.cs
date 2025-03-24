@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -55,8 +56,9 @@ public class GameController : MonoBehaviour
     public float timeToRespawn = 1.5f;
 
     [SerializeField] private GameObject endscreen;
-    
-    
+    private Text timeText;
+    private float gameTime;
+    private int completedRuns = 0;
 
     void Awake() {
         bossBar = GameObject.FindWithTag("BossBar");
@@ -80,6 +82,8 @@ public class GameController : MonoBehaviour
         EventManager.onEnterBossArea += DisplayBossUI;
         EventManager.onExitBossArea += HideBossUI;
         EventManager.onEndGame += EndingSequence;
+        EventManager.onPlayAgain += Restart;
+        EventManager.onNewGame += EnableStopwatch;
 
         Timing.RunCoroutine(_CompassArrowDelay());
     }
@@ -88,12 +92,17 @@ public class GameController : MonoBehaviour
         EventManager.NewUniverse();
 
         // Procedurally generate world and initialize compass
-        int seed = 42; // Random.Range(0, 1000000);
+        int seed = UnityEngine.Random.Range(0, 1000000);
+        if (completedRuns == 0) {
+            seed = 42;
+        }
+        
         (Cluster level0, Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
         compass.InitializeCompass(level1, level2);
 
         // Initialize universe and cluster objects
         universe = new GameObject("Universe");
+        universe.tag = "Universe";
         for (int i = 0; i < 6; i++) {
             Vector2 boundingSize = level1[i].getBounds().size;
             Vector3 corePos = (Vector3) level1[i].getCorePosition();
@@ -119,10 +128,8 @@ public class GameController : MonoBehaviour
     private IEnumerator<float> _CompassArrowDelay() {
         yield return Timing.WaitForSeconds(12.5f);
         compass.CalculateAnchorRadius(cam.pixelRect);
-    }
 
-    public void Pause() {
-
+        EnableStopwatch();
     }
 
     // Checking if camera resolution has changed
@@ -169,21 +176,63 @@ public class GameController : MonoBehaviour
         bar.transform.GetChild(1).GetComponent<Image>().sprite = uncrackedBar;
     }
 
+    // Timer and ending sequence
+
+    private IEnumerator<float> _GameTime() {
+        gameTime = 0;
+        while (true) {
+            gameTime += Time.deltaTime;
+            yield return Timing.WaitForOneFrame;
+        }
+    }
+
     private void EndingSequence() {
         Timing.RunCoroutine(_EndGame());
     }
 
     private IEnumerator<float> _EndGame() {
+        // End stopwatch
+        completedRuns++;
+
+        // Wait for ending sequence
         yield return Timing.WaitForSeconds(7);
+
+        // Transport player home, spawn endscreen
         EventManager.SetSpawn(2 * Vector3.up);
         PlayerMovement pMove = GameObject.FindWithTag("Player").GetComponent<PlayerMovement>();
-        pMove.gameObject.transform.position = 2 * Vector3.up;
+        pMove.transform.position = 2 * Vector3.up;
         pMove.playerInput.actions.FindActionMap("Player").Disable();
+        pMove.rb.velocity = Vector2.zero;
 
         GameObject.FindWithTag("MainCanvas").SetActive(false);
+
         yield return Timing.WaitForSeconds(0.1f);
-        Instantiate(endscreen);
+
+        GameObject currentEndscreen = Instantiate(endscreen);
+
+        // Measure time
+
+        TimeSpan spannedTime = TimeSpan.FromSeconds(gameTime);
+        string finalTime = "Final time: " + spannedTime.ToString("mm':'ss'.'fff");
+
+        timeText = currentEndscreen.transform.GetChild(0).GetChild(2).GetComponent<Text>();
+        timeText.text = finalTime;
+
         yield return Timing.WaitForSeconds(2);
         pMove.playerInput.actions.FindActionMap("UI").Enable();
+    }
+
+    private void Restart() {
+        fiveArtifactsReclaimed = false;
+        rightCoreDefeated = false;
+        topCoreDefeated = false;
+        leftCoreDefeated = false;
+        bottomCoreDefeated = false;
+        Destroy(GameObject.FindWithTag("Universe")); // uh oh
+        InitializeUniverse();
+    }
+
+    private void EnableStopwatch() {
+        Timing.RunCoroutine(_GameTime(), "gametime");
     }
 }

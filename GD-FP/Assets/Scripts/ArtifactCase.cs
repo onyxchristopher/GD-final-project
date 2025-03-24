@@ -20,6 +20,7 @@ public class ArtifactCase : MonoBehaviour
     void Start() {
         rectTransform = gameObject.GetComponent<RectTransform>();
         EventManager.onArtifactObtain += FillKnowledge;
+        EventManager.onPlayAgain += Restart;
     }
 
     public void FillKnowledge(int index) {
@@ -79,6 +80,11 @@ public class ArtifactCase : MonoBehaviour
     public void Restart() {
         for (int i = 0; i < transform.childCount; i++) {
             transform.GetChild(i).gameObject.SetActive(true);
+            a1 = false;
+            a2 = false;
+            a3 = false;
+            a4 = false;
+            a5 = false;
         }
     }
 }

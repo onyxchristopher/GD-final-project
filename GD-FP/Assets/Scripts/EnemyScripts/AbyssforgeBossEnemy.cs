@@ -25,19 +25,19 @@ public class AbyssforgeBossEnemy : Enemy
         spawnpoint = (Vector2) pos;
         if (gControl.rightCoreDefeated) {
             transform.GetChild(0).gameObject.SetActive(false);
-            dmg.Damage(15, true);
+            dmg.Damage(25, true);
         }
         if (gControl.topCoreDefeated) {
             transform.GetChild(1).gameObject.SetActive(false);
-            dmg.Damage(15, true);
+            dmg.Damage(25, true);
         }
         if (gControl.leftCoreDefeated) {
             transform.GetChild(2).gameObject.SetActive(false); 
-            dmg.Damage(15, true);
+            dmg.Damage(25, true);
         }
         if (gControl.bottomCoreDefeated) {
             transform.GetChild(3).gameObject.SetActive(false);
-            dmg.Damage(15, true);
+            dmg.Damage(25, true);
         }
     }
 

@@ -61,6 +61,7 @@ public class VoidchargerBossEnemy : Enemy
         if (state != State.ATTACK) {
             return;
         }
+        EventManager.onPlayerDeath += ResetToIdle;
         if (gameObject != null && gameObject.activeInHierarchy) {
             Timing.RunCoroutine(_RotateAndCharge().CancelWith(gameObject));
         }
@@ -128,6 +129,7 @@ public class VoidchargerBossEnemy : Enemy
     private void EndLoop() {
         rb.velocity = Vector2.zero;
         EventManager.ExitBossArea();
+        EventManager.onPlayerDeath -= ResetToIdle;
     }
 
     // death

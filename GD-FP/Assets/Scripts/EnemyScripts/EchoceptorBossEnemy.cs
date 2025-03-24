@@ -30,6 +30,8 @@ public class EchoceptorBossEnemy : Enemy
     [SerializeField] private float gapBetweenFiring;
     [SerializeField] private GameObject deathParticles;
 
+    private bool knockbackEcho = true;
+
     // Awake encodes the enemy FSM
     void Awake() {
         Action echoceptorAttack = AttackLoop;
@@ -45,8 +47,6 @@ public class EchoceptorBossEnemy : Enemy
         rb = GetComponent<Rigidbody2D>();
         dmg = GetComponent<Damageable>();
         dmg.enemy = this;
-
-        EventManager.onPlayerDeath += ResetToIdle;
     }
 
     public void Spawn() {
@@ -59,6 +59,8 @@ public class EchoceptorBossEnemy : Enemy
         state = State.IDLE;
         StateTransition();
         EventManager.onEnemyHit -= Echo;
+        EventManager.onShieldUse += DoNotEcho;
+        EventManager.onPlayerDeath -= ResetToIdle;
         EventManager.ExitBossArea();
     }
 
@@ -66,6 +68,7 @@ public class EchoceptorBossEnemy : Enemy
         if (state != State.ATTACK) {
             return;
         }
+        EventManager.onPlayerDeath += ResetToIdle;
         if (gameObject != null && gameObject.activeInHierarchy) {
             Timing.RunCoroutine(_Fire().CancelWith(gameObject));
         }
@@ -157,17 +160,30 @@ public class EchoceptorBossEnemy : Enemy
         Instantiate(echo, transform.position, Quaternion.identity);
 
         // Force of launch decreases with distance
-        Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
-        playerRB.AddForce(dirToPlayer.normalized * Mathf.Max(25, 60 - dirToPlayer.magnitude / 2), ForceMode2D.Impulse);
+        if (knockbackEcho) {
+            Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
+            playerRB.AddForce(dirToPlayer.normalized * Mathf.Max(25, 60 - dirToPlayer.magnitude / 2), ForceMode2D.Impulse);
+        }
     }
 
     private void SpawnForcefield() {
         field = Instantiate(forcefield, transform.parent.position, Quaternion.identity, transform.parent);
     }
 
+    private void DoNotEcho(float duration) {
+        Timing.RunCoroutine(_NoEcho(duration).CancelWith(gameObject));
+    }
+
+    private IEnumerator<float> _NoEcho(float duration) {
+        knockbackEcho = false;
+        yield return Timing.WaitForSeconds(duration);
+        knockbackEcho = true;
+    }
+
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
         EventManager.onEnemyHit -= Echo;
+        EventManager.onShieldUse -= DoNotEcho;
         Instantiate(deathParticles, transform.position, Quaternion.identity);
         GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(30, 1, 1);
         EventManager.BossDefeat(5);

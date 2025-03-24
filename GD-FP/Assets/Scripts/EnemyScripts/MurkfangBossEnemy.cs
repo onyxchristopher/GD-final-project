@@ -44,14 +44,13 @@ public class MurkfangBossEnemy : Enemy
         rb = GetComponent<Rigidbody2D>();
         dmg = GetComponent<Damageable>();
         dmg.enemy = this;
-
-        EventManager.onPlayerDeath += ResetToIdle;
     }
 
     private void AttackLoop() {
         if (state != State.ATTACK) {
             return;
         }
+        EventManager.onPlayerDeath += ResetToIdle;
         if (gameObject != null && gameObject.activeInHierarchy) {
             Timing.RunCoroutine(_Rotate().CancelWith(gameObject));
             Timing.RunCoroutine(_Fire().CancelWith(gameObject));
@@ -108,6 +107,7 @@ public class MurkfangBossEnemy : Enemy
 
     private void Teardown() {
         EventManager.ExitBossArea();
+        EventManager.onPlayerDeath -= ResetToIdle;
     }
 
     public override void EnemyDeath() {

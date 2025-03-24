@@ -21,6 +21,7 @@ public class MessageDashboard : MonoBehaviour
         EventManager.onBossDefeat += BossDefeatMsg;
         EventManager.onArtifactPickup += CorePickupMsg;
         EventManager.onArtifactObtain += ArtifactObtainMsg;
+        EventManager.onPlayAgain += ResetDashboard;
 
         sound = GameObject.FindWithTag("Sound").GetComponent<Sound>();
         Timing.RunCoroutine(_LaunchTimer());
@@ -65,12 +66,6 @@ public class MessageDashboard : MonoBehaviour
                 case 6:
                     sound.PlayEnterSector6();
                     break;
-                case 7:
-                    sound.PlayEnterSector7();
-                    break;
-                case 8:
-                    sound.PlayEnterSector8();
-                    break;
             }
             Timing.RunCoroutine(_SectorMsgTimer());
             recentSectorNum = sectorNum;
@@ -103,16 +98,21 @@ public class MessageDashboard : MonoBehaviour
         }
     }
 
-    public void BossDefeatMsg(int _) {
-        ChangeTextTo($"You found an artifact!\n\nFly over it to pick it up.");
-        sound.PlayBossDefeatTutorial();
+    public void BossDefeatMsg(int id) {
+        if (id == 6) {
+            ChangeTextTo("You found the last artifact!");
+            sound.PlayFinalBossDefeat();
+        } else {
+            ChangeTextTo("You found an artifact!\n\nFly over it to pick it up.");
+            sound.PlayBossDefeatTutorial();
+        }
     }
 
     public void CorePickupMsg(int id) {
         if (id % 10 == 0) {
             return;
         }
-        if (id == 21 || id == 41 || id == 61 || id == 81) {
+        if (id == 21 || id == 41) {
             ChangeTextTo("Max fuel has been increased!");
             sound.PlayFuelCorePickup();
         } else {
@@ -127,6 +127,11 @@ public class MessageDashboard : MonoBehaviour
 
     private IEnumerator<float> _ArtifactRouter(int firstDigit) {
         yield return Timing.WaitForSeconds(1.8f);
+        if (firstDigit == 6) {
+            ChangeTextTo("You've recovered all our knowledge! Excellent work, Commander.");
+            sound.PlayFinalKnowledge();
+            yield break;
+        }
         ChangeTextTo("Knowledge has been added to the library.");
         sound.PlayKnowledgeAdded();
         yield return Timing.WaitForSeconds(4);
@@ -154,16 +159,8 @@ public class MessageDashboard : MonoBehaviour
                 sound.PlayArtifact5();
                 break;
             case 6:
-                ChangeTextTo("Your trap skill now has a larger radius!");
+                ChangeTextTo("You found all the artifacts!");
                 sound.PlayArtifact6();
-                break;
-            case 7:
-                ChangeTextTo("Your shield skill now has a longer duration!");
-                sound.PlayArtifact7();
-                break;
-            case 8:
-                ChangeTextTo(""); // TBD
-                sound.PlayArtifact8();
                 break;
         }
     }
@@ -173,7 +170,13 @@ public class MessageDashboard : MonoBehaviour
         sound.PlayCheckpointTutorial();
     }
 
+    private void ResetDashboard() {
+        ChangeTextTo("");
+    }
+
     private void ChangeTextTo(string msg) {
         textComponent.text = msg;
     }
+
+    
 }
