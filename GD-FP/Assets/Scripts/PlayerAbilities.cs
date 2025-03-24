@@ -218,4 +218,8 @@ public class PlayerAbilities : MonoBehaviour
     public void SetShieldDuration(float duration) {
         shieldDuration = duration;
     }
+
+    void OnRestartGame() {
+        EventManager.PlayAgain();
+    }
 }

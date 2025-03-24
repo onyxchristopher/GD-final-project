@@ -70,6 +70,10 @@ public class ArtifactCase : MonoBehaviour
             time += Time.deltaTime;
         }
         rectTransform.anchoredPosition = offScreenPosition;
+
+        if (index == 6) {
+            EventManager.EndGame();
+        }
     }
 
     public void Restart() {

@@ -53,6 +53,8 @@ public class GameController : MonoBehaviour
 
     public float timeToMove = 3;
     public float timeToRespawn = 1.5f;
+
+    [SerializeField] private GameObject endscreen;
     
     
 
@@ -77,6 +79,7 @@ public class GameController : MonoBehaviour
 
         EventManager.onEnterBossArea += DisplayBossUI;
         EventManager.onExitBossArea += HideBossUI;
+        EventManager.onEndGame += EndingSequence;
 
         Timing.RunCoroutine(_CompassArrowDelay());
     }
@@ -164,5 +167,23 @@ public class GameController : MonoBehaviour
 
     public void uncrackBar(Slider bar) {
         bar.transform.GetChild(1).GetComponent<Image>().sprite = uncrackedBar;
+    }
+
+    private void EndingSequence() {
+        Timing.RunCoroutine(_EndGame());
+    }
+
+    private IEnumerator<float> _EndGame() {
+        yield return Timing.WaitForSeconds(7);
+        EventManager.SetSpawn(2 * Vector3.up);
+        PlayerMovement pMove = GameObject.FindWithTag("Player").GetComponent<PlayerMovement>();
+        pMove.gameObject.transform.position = 2 * Vector3.up;
+        pMove.playerInput.actions.FindActionMap("Player").Disable();
+
+        GameObject.FindWithTag("MainCanvas").SetActive(false);
+        yield return Timing.WaitForSeconds(0.1f);
+        Instantiate(endscreen);
+        yield return Timing.WaitForSeconds(2);
+        pMove.playerInput.actions.FindActionMap("UI").Enable();
     }
 }

@@ -20,9 +20,8 @@ public class Damageable : MonoBehaviour
     [SerializeField] private Vector3 healthBarOffset = new Vector3(0, 3.5f, 0);
     private Slider healthBarSlider;
 
-    void Start() {
+    void Awake() {
         gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
-
         health = maxHealth;
     }
 

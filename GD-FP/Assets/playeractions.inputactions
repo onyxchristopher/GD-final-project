@@ -209,8 +209,29 @@
         {
             "name": "UI",
             "id": "095b64db-b700-4fa4-9949-a543e2cc73e1",
-            "actions": [],
-            "bindings": []
+            "actions": [
+                {
+                    "name": "RestartGame",
+                    "type": "Button",
+                    "id": "ff7f3679-496b-47de-bb4f-c14d75bcb95f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "44d714ef-0b64-41fb-959e-9770829749e4",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RestartGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

@@ -203,4 +203,16 @@ public class EventManager : MonoBehaviour
     public static void RocketExplode() {
         onRocketExplode?.Invoke();
     }
+
+    public delegate void NotifyEndGame();
+    public static event NotifyEndGame onEndGame;
+    public static void EndGame() {
+        onEndGame?.Invoke();
+    }
+
+    public delegate void NotifyPlayAgain();
+    public static event NotifyPlayAgain onPlayAgain;
+    public static void PlayAgain() {
+        onPlayAgain?.Invoke();
+    }
 }

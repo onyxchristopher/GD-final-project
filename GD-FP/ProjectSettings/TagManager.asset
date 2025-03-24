@@ -40,6 +40,8 @@ TagManager:
   - FuelDrop
   - HealthDrop
   - Abyssforge
+  - MainCanvas
+  - EndCanvas
   layers:
   - Default
   - TransparentFX

@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
 
     // Player components
     [HideInInspector] public Rigidbody2D rb;
-    private PlayerInput playerInput; // the player input component
+    public PlayerInput playerInput; // the player input component
     private InputAction playerMove; // the player move action
 
     // Fuel system
@@ -56,13 +56,16 @@ public class PlayerMovement : MonoBehaviour
         playerMove = playerInput.actions.FindAction("Move");
 
         EventManager.onPlayerDeath += DeathSequence;
-
         EventManager.onNewUniverse += InitializeMovement;
         EventManager.onSetSpawn += SetSpawn;
+        EventManager.onPlayAgain += Restart;
+        playerInput.actions.FindActionMap("UI").Disable();
+
         //Timing.RunCoroutine(_EnableActions());
     }
 
     private IEnumerator<float> _EnableActions() {
+        
         playerInput.actions.FindActionMap("Player").Disable();
         yield return Timing.WaitForSeconds(12.5f);
         playerInput.actions.FindActionMap("Player").Enable();
@@ -202,6 +205,11 @@ public class PlayerMovement : MonoBehaviour
         Destroy(pr);
         SetFuel(maxFuel);
         gControl.uncrackBar(fuelBarSlider);
+        playerInput.actions.FindActionMap("Player").Enable();
+    }
+
+    private void Restart() {
+        playerInput.actions.FindActionMap("UI").Disable();
         playerInput.actions.FindActionMap("Player").Enable();
     }
 }
