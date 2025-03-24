@@ -107,7 +107,6 @@ public class MurkfangBossEnemy : Enemy
 
     private void Teardown() {
         EventManager.ExitBossArea();
-        EventManager.onPlayerDeath -= ResetToIdle;
     }
 
     public override void EnemyDeath() {

@@ -125,7 +125,6 @@ public class DuskwardenBossEnemy : Enemy
 
     private void EndLoop() {
         EventManager.ExitBossArea();
-        EventManager.onPlayerDeath -= ResetToIdle;
     }
 
     public override void EnemyDeath() {

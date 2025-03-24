@@ -127,9 +127,10 @@ public class VoidchargerBossEnemy : Enemy
     // IDLE state functions
 
     private void EndLoop() {
-        rb.velocity = Vector2.zero;
-        EventManager.ExitBossArea();
-        EventManager.onPlayerDeath -= ResetToIdle;
+        if (rb) {
+            rb.velocity = Vector2.zero;
+            EventManager.ExitBossArea();
+        }
     }
 
     // death

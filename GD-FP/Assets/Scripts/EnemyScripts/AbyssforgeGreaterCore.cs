@@ -88,6 +88,7 @@ public class AbyssforgeGreaterCore : Enemy
         yield return Timing.WaitForSeconds(1.5f);
         transform.GetChild(3).gameObject.SetActive(false);
         megalaser = transform.GetChild(0);
+        megalaser.position = transform.position;
         megalaser.gameObject.SetActive(true);
 
         while (state == State.ATTACK) {

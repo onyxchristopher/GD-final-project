@@ -210,8 +210,11 @@ public class PlayerMovement : MonoBehaviour
         playerInput.actions.FindActionMap("Player").Enable();
     }
 
-    private void RestartActions() {
+    public void DisableUIActions() {
         playerInput.actions.FindActionMap("UI").Disable();
+    }
+
+    private void RestartActions() {
         playerInput.actions.FindActionMap("Player").Enable();
     }
 }

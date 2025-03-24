@@ -32,7 +32,6 @@ public class Sound : MonoBehaviour
     public AudioClip pickup;
     public AudioClip death;
     public AudioClip respawn;
-    public AudioClip respawnEnd;
     public AudioClip explosion;
     public AudioClip forcefieldZap;
     public AudioClip forcefieldBounce;
@@ -65,7 +64,6 @@ public class Sound : MonoBehaviour
     public AudioClip artifact3;
     public AudioClip artifact4;
     public AudioClip artifact5;
-    public AudioClip artifact6;
     public AudioClip checkpointTutorial;
     public AudioClip enterSector1;
     public AudioClip enterSector2;
@@ -368,10 +366,6 @@ public class Sound : MonoBehaviour
 
     public void PlayArtifact5() {
         AddToVoiceQueue(artifact5, 1);
-    }
-
-    public void PlayArtifact6() {
-        AddToVoiceQueue(artifact6, 1);
     }
 
     public void PlayCheckpointTutorial() {

@@ -227,6 +227,7 @@ public class PlayerAbilities : MonoBehaviour
     }
 
     private void OnRestartGame() {
+        GetComponent<PlayerMovement>().DisableUIActions();
         Timing.RunCoroutine(_RestartTimer());
     }
 

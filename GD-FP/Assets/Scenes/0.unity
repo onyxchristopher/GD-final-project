@@ -2742,12 +2742,10 @@ MonoBehaviour:
   knowledgeAdded: {fileID: 8300000, guid: 2c82ec072896c4ce4bd5ce9d2888a5ed, type: 3}
   artifact1: {fileID: 8300000, guid: c28eb36f47e0c48dd9c179330c092cf3, type: 3}
   artifact2: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
-  artifact3: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
-  artifact4: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
-  artifact5: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
+  artifact3: {fileID: 8300000, guid: c3ec5fcdb750c44beb07830b5f7f67bb, type: 3}
+  artifact4: {fileID: 8300000, guid: 70b42bdd6bb504d90ac18ae1f446590f, type: 3}
+  artifact5: {fileID: 8300000, guid: 5e584d69086054474954017225fd0e99, type: 3}
   artifact6: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
-  artifact7: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
-  artifact8: {fileID: 8300000, guid: 2b15f3c526316439a9feee5716fda385, type: 3}
   checkpointTutorial: {fileID: 8300000, guid: 4206dcd1c87be495c93fea0e3897fc7f, type: 3}
   enterSector1: {fileID: 8300000, guid: fe2f85fa10b254a02966f095db9be4c4, type: 3}
   enterSector2: {fileID: 8300000, guid: 70165fd2bddba4877bb6763dbe9f2efa, type: 3}
@@ -2755,8 +2753,8 @@ MonoBehaviour:
   enterSector4: {fileID: 8300000, guid: 706b8fb9b75df49a78a673aa44d7872a, type: 3}
   enterSector5: {fileID: 8300000, guid: 7681c901751094094a9e204ab02280b9, type: 3}
   enterSector6: {fileID: 8300000, guid: 0796e9a597bd142f18fd3f45d429080f, type: 3}
-  enterSector7: {fileID: 8300000, guid: f0c8547ba21264b3584d0fb5ace3f8a7, type: 3}
-  enterSector8: {fileID: 8300000, guid: 62e4517fe94b3431caed1eaa9056d0db, type: 3}
+  finalBossDefeat: {fileID: 8300000, guid: 4134c679e62e64c868a387a514f8c7b7, type: 3}
+  finalKnowledge: {fileID: 8300000, guid: e04603ade77c241759afa23fff9b3893, type: 3}
 --- !u!1 &1001013449
 GameObject:
   m_ObjectHideFlags: 0

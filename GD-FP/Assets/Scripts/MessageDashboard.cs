@@ -158,10 +158,6 @@ public class MessageDashboard : MonoBehaviour
                 ChangeTextTo("Your shield skill now has a shorter cooldown!");
                 sound.PlayArtifact5();
                 break;
-            case 6:
-                ChangeTextTo("You found all the artifacts!");
-                sound.PlayArtifact6();
-                break;
         }
     }
 
