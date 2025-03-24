@@ -166,7 +166,7 @@ public class Generation : MonoBehaviour
         
         // place random points in bounding rect set back from edge
         int outerIterations = 0;
-        int maxIterations = 100;
+        int maxIterations = 500;
         bool overlap = true;
         while (overlap && outerIterations < maxIterations){
             overlap = false;

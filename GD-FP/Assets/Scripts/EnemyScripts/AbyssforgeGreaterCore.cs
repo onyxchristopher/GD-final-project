@@ -15,7 +15,6 @@ public class AbyssforgeGreaterCore : Enemy
     private Transform megalaser;
     private int numHitsTaken = 0;
     private int totalHitsNeeded = 19;
-    private bool knockbackEcho = true;
 
     [SerializeField] private GameObject deathParticles;
 
@@ -38,25 +37,13 @@ public class AbyssforgeGreaterCore : Enemy
         EventManager.onPlayerDeath -= ResetToIdle;
     }
 
-    private void DoNotEcho(float duration) {
-        Timing.RunCoroutine(_NoEcho(duration).CancelWith(gameObject));
-    }
-
-    private IEnumerator<float> _NoEcho(float duration) {
-        knockbackEcho = false;
-        yield return Timing.WaitForSeconds(duration);
-        knockbackEcho = true;
-    }
-
     public void GreaterCoreDamaged() {
         // echo
         Instantiate(echo, transform.position, Quaternion.identity);
 
         // Force of launch decreases with distance
-        if (knockbackEcho) {
-            Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
-            playerRB.AddForce(dirToPlayer.normalized * 50, ForceMode2D.Impulse);
-        }
+        Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
+        playerRB.AddForce(dirToPlayer.normalized * 50, ForceMode2D.Impulse);
 
         // reduce in size
         if (numHitsTaken < totalHitsNeeded) {
@@ -73,7 +60,6 @@ public class AbyssforgeGreaterCore : Enemy
             return;
         }
         EventManager.onPlayerDeath += ResetToIdle;
-        EventManager.onShieldUse += DoNotEcho;
         if (gameObject != null && gameObject.activeInHierarchy) {
             Timing.RunCoroutine(_Megalaser().CancelWith(gameObject), Segment.FixedUpdate);
         }
@@ -110,12 +96,15 @@ public class AbyssforgeGreaterCore : Enemy
     }
 
     private void Teardown() {
-        GetComponents<CircleCollider2D>()[1].radius -= 20;
+        try {
+            GetComponents<CircleCollider2D>()[1].radius -= 20;
+        } catch (MissingReferenceException e) {
+            Debug.Log(e);
+        }
     }
 
     public override void EnemyDeath() {
         Instantiate(deathParticles, transform.position, Quaternion.identity);
         EventManager.onPlayerDeath -= ResetToIdle;
-        EventManager.onShieldUse -= DoNotEcho;
     }
 }

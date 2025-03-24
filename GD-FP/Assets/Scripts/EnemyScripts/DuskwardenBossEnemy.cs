@@ -137,7 +137,10 @@ public class DuskwardenBossEnemy : Enemy
             GameObject artifact = Instantiate(drop, transform.parent.position + Vector3.right * 16, Quaternion.identity);
         }
         field.GetComponent<Forcefield>().CheckForcefield();
-        GameObject.FindWithTag("DuskwardenRespawnField").SetActive(false);
+        GameObject respawnField = GameObject.FindWithTag("DuskwardenRespawnField");
+        if (respawnField) {
+            respawnField.SetActive(false);
+        }
         gameObject.SetActive(false);
     }
 }

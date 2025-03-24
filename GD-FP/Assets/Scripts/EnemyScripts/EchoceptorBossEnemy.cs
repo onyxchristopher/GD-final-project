@@ -30,8 +30,6 @@ public class EchoceptorBossEnemy : Enemy
     [SerializeField] private float gapBetweenFiring;
     [SerializeField] private GameObject deathParticles;
 
-    private bool knockbackEcho = true;
-
     // Awake encodes the enemy FSM
     void Awake() {
         Action echoceptorAttack = AttackLoop;
@@ -59,7 +57,6 @@ public class EchoceptorBossEnemy : Enemy
         state = State.IDLE;
         StateTransition();
         EventManager.onEnemyHit -= Echo;
-        EventManager.onShieldUse += DoNotEcho;
         EventManager.onPlayerDeath -= ResetToIdle;
         EventManager.ExitBossArea();
     }
@@ -160,7 +157,7 @@ public class EchoceptorBossEnemy : Enemy
         Instantiate(echo, transform.position, Quaternion.identity);
 
         // Force of launch decreases with distance
-        if (knockbackEcho) {
+        if (gameObject.activeInHierarchy) {
             Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
             playerRB.AddForce(dirToPlayer.normalized * Mathf.Max(25, 60 - dirToPlayer.magnitude / 2), ForceMode2D.Impulse);
         }
@@ -170,20 +167,9 @@ public class EchoceptorBossEnemy : Enemy
         field = Instantiate(forcefield, transform.parent.position, Quaternion.identity, transform.parent);
     }
 
-    private void DoNotEcho(float duration) {
-        Timing.RunCoroutine(_NoEcho(duration).CancelWith(gameObject));
-    }
-
-    private IEnumerator<float> _NoEcho(float duration) {
-        knockbackEcho = false;
-        yield return Timing.WaitForSeconds(duration);
-        knockbackEcho = true;
-    }
-
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
         EventManager.onEnemyHit -= Echo;
-        EventManager.onShieldUse -= DoNotEcho;
         Instantiate(deathParticles, transform.position, Quaternion.identity);
         GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(30, 1, 1);
         EventManager.BossDefeat(5);
@@ -193,7 +179,10 @@ public class EchoceptorBossEnemy : Enemy
             transform.parent.position + Vector3.right * 70 - Vector3.up * 7.5f, Quaternion.identity);
         }
         field.GetComponent<Forcefield>().CheckForcefield();
-        GameObject.FindWithTag("EchoceptorRespawnField").SetActive(false);
+        GameObject respawnField = GameObject.FindWithTag("EchoceptorRespawnField");
+        if (respawnField) {
+            respawnField.SetActive(false);
+        }
         gameObject.SetActive(false);
     }
 }

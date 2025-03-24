@@ -94,8 +94,9 @@ public class GameController : MonoBehaviour
         // Procedurally generate world and initialize compass
         int seed = UnityEngine.Random.Range(0, 1000000);
         if (completedRuns == 0) {
-            seed = 42;
+            //seed = 42;
         }
+        Debug.Log(seed);
         
         (Cluster level0, Cluster[] level1, Cluster[][] level2) = gen.generate(seed);
         compass.InitializeCompass(level1, level2);
@@ -116,7 +117,7 @@ public class GameController : MonoBehaviour
             clusterI.GetComponent<ClusterBoundary>().setId(level1[i].getId());
 
             // instantiate cluster scene boundary at core, set collider size, set name and id
-            GameObject csb = Instantiate(clusterSceneBoundary, corePos, Quaternion.identity);
+            GameObject csb = Instantiate(clusterSceneBoundary, corePos, Quaternion.identity); // MAKE PART OF UNIVERSE?
             csb.GetComponent<BoxCollider2D>().size = boundingSize + Vector2.one * sceneLoadingRadius * 2;
             csb.name = $"CSB{i+1}";
             csb.GetComponent<ClusterSceneBoundary>().setId(level1[i].getId());
@@ -195,7 +196,7 @@ public class GameController : MonoBehaviour
         completedRuns++;
 
         // Wait for ending sequence
-        yield return Timing.WaitForSeconds(7);
+        yield return Timing.WaitForSeconds(3);
 
         // Transport player home, spawn endscreen
         EventManager.SetSpawn(2 * Vector3.up);
@@ -219,7 +220,7 @@ public class GameController : MonoBehaviour
         timeText.text = finalTime;
 
         yield return Timing.WaitForSeconds(2);
-        pMove.playerInput.actions.FindActionMap("UI").Enable();
+        //pMove.playerInput.actions.FindActionMap("UI").Enable();
     }
 
     private void Restart() {

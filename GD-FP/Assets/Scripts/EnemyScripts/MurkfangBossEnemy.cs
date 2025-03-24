@@ -119,7 +119,10 @@ public class MurkfangBossEnemy : Enemy
             GameObject artifact = Instantiate(drop, transform.parent.position + Vector3.right * -50, Quaternion.identity);
         }
         field.GetComponent<Forcefield>().CheckForcefield();
-        GameObject.FindWithTag("MurkfangRespawnField").SetActive(false);
+        GameObject respawnField = GameObject.FindWithTag("MurkfangRespawnField");
+        if (respawnField) {
+            respawnField.SetActive(false);
+        }
         gameObject.SetActive(false);
     }
 }

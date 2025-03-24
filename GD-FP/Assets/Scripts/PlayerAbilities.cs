@@ -249,6 +249,6 @@ public class PlayerAbilities : MonoBehaviour
         yield return Timing.WaitForSeconds(3);
         EventManager.NewGame();
         endcanvas.GetChild(3).GetComponent<Animator>().SetTrigger("Fadein");
-        Destroy(endcanvas.gameObject, 1.1f);
+        Destroy(endcanvas.parent.gameObject, 1.1f);
     }
 }

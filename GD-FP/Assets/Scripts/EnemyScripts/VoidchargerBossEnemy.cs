@@ -144,7 +144,10 @@ public class VoidchargerBossEnemy : Enemy
             GameObject artifact = Instantiate(drop, transform.parent.position + Vector3.right * 57, Quaternion.identity);
         }
         field.GetComponent<Forcefield>().CheckForcefield();
-        GameObject.FindWithTag("VoidchargerRespawnField").SetActive(false);
+        GameObject respawnField = GameObject.FindWithTag("VoidchargerRespawnField");
+        if (respawnField) {
+            respawnField.SetActive(false);
+        }
         gameObject.SetActive(false);
     }
 }

@@ -33,7 +33,7 @@ public class Compass : MonoBehaviour
     private List<int> minorProg = new List<int>();
 
     // Compass arrow references
-    private RectTransform majorArrowTransform;
+    public RectTransform majorArrowTransform;
     private RectTransform[] minorArrowTransforms = new RectTransform[16];
 
     // Visual elements
@@ -52,6 +52,7 @@ public class Compass : MonoBehaviour
         EventManager.onExitCluster += LeavingCluster;
         EventManager.onEnterBossArea += HideCompass;
         EventManager.onExitBossArea += ShowCompass;
+        EventManager.onEndGame += DestroyMajor;
     }
 
     public void InitializeCompass(Cluster[] l1, Cluster[][] l2) {
@@ -243,9 +244,13 @@ public class Compass : MonoBehaviour
         }
     }
 
+    public void DestroyMajor() {
+        if (majorArrowTransform) {
+            Destroy(arrow.gameObject);
+        }
+    }
+
     public void Restart() {
-        majorShown = false;
-        minorShown = false;
         for (int i = 0; i < transform.childCount; i++) {
             Destroy(transform.GetChild(i).gameObject);
         }
