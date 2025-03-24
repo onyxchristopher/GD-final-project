@@ -246,7 +246,7 @@ public class Compass : MonoBehaviour
 
     public void DestroyMajor() {
         if (majorArrowTransform) {
-            Destroy(arrow.gameObject);
+            Destroy(majorArrowTransform.gameObject);
         }
     }
 
