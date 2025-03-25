@@ -166,9 +166,9 @@ public class Generation : MonoBehaviour
         
         // place random points in bounding rect set back from edge
         int outerIterations = 0;
-        int maxIterations = 500;
+        int maxIterations = 100;
         bool overlap = true;
-        while (overlap && outerIterations < maxIterations){
+        while (overlap && outerIterations < maxIterations) {
             overlap = false;
             for (int i = 0; i < numClusters; i++) {
                 Rect rect = randomizeCluster(zeroRect, clusterSize);
@@ -187,6 +187,7 @@ public class Generation : MonoBehaviour
         }
         if (outerIterations >= maxIterations) {
             Debug.Log("Arrangement not found");
+            generate(42);
         }
         
         

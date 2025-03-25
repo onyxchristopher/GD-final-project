@@ -63,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
 
         playerInput.actions.FindActionMap("UI").Disable();
 
-        //Timing.RunCoroutine(_EnableActions());
+        Timing.RunCoroutine(_EnableActions());
     }
 
     private IEnumerator<float> _EnableActions() {

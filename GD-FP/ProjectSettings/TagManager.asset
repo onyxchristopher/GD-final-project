@@ -42,6 +42,7 @@ TagManager:
   - MainCanvas
   - EndCanvas
   - MainCanvasParent
+  - Endscreen
   layers:
   - Default
   - TransparentFX

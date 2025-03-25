@@ -94,7 +94,7 @@ public class GameController : MonoBehaviour
         // Procedurally generate world and initialize compass
         int seed = UnityEngine.Random.Range(0, 1000000);
         if (completedRuns == 0) {
-            //seed = 42;
+            seed = 42;
         }
         Debug.Log(seed);
         
