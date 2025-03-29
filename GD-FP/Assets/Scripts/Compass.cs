@@ -224,7 +224,6 @@ public class Compass : MonoBehaviour
 
     // calculate radius, re-called on camera rect change
     public void CalculateAnchorRadius(Rect cameraRect) {
-        return;
         cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         float aspect = cam.aspect;
         RectTransform canvasTransform = transform.parent.gameObject.GetComponent<RectTransform>();

@@ -126,6 +126,8 @@ public class GameController : MonoBehaviour
         scenes.InitializeScenes(level1.Length, level0, level1, level2);
     }
 
+    
+
     private IEnumerator<float> _CompassArrowDelay() {
         yield return Timing.WaitForSeconds(12.5f);
         compass.CalculateAnchorRadius(cam.pixelRect);
@@ -133,12 +135,14 @@ public class GameController : MonoBehaviour
 
     // Checking if camera resolution has changed
     private IEnumerator<float> _CameraChangeCheck() {
-        if (cam.pixelRect.ToString() != cameraRect.ToString()) {
-            cameraRect = cam.pixelRect;
-            compass.CalculateAnchorRadius(cameraRect);
+        while (true) {
+            if (cam.pixelRect.ToString() != cameraRect.ToString()) {
+                cameraRect = cam.pixelRect;
+                compass.CalculateAnchorRadius(cameraRect);
+            }
+            yield return Timing.WaitForOneFrame;
         }
-        yield return Timing.WaitForOneFrame;
-        Timing.RunCoroutine(_CameraChangeCheck(), Segment.SlowUpdate);
+        
     }
 
     // Boss UI
@@ -192,7 +196,7 @@ public class GameController : MonoBehaviour
             initialText.GetChild(i).GetComponent<DestroyAfterTime>().DestroyTrigger();
         }
 
-        Timing.RunCoroutine(_CompassArrowDelay());
+        //Timing.RunCoroutine(_CompassArrowDelay());
         EnableStopwatch();
     }
 
