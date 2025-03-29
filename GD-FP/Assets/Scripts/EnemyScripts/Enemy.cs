@@ -33,17 +33,20 @@ public class Enemy : MonoBehaviour
     }
 
     public void StateTransition() {
+        // if transitioning to a different state from the current one
         if (state != prevState) {
             // tries to find any action to be taken on state transition
             Action exitAction = null;
             Action enterAction = null;
+            // if prevState has any associated exit actions, execute them
             if (exitStateLogic.TryGetValue(prevState, out exitAction)) {
                 exitAction();
             }
+            // if state has any associated entry actions, execute them
             if (enterStateLogic.TryGetValue(state, out enterAction)) {
                 enterAction();
             }
-            prevState = state;
+            prevState = state; // update prevState so it can be used for the next transition
         }
     }
 

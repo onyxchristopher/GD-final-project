@@ -58,13 +58,13 @@ public class DusklingEnemy : Enemy
 
     private void IdleLoop() {
         if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.RunCoroutine(_IdleRotate().CancelWith(gameObject));
+            Timing.RunCoroutine(_IdleRotate().CancelWith(gameObject), Segment.FixedUpdate);
         }
     }
 
     private IEnumerator<float> _IdleRotate() {
         while (state != State.ATTACK) {
-            transform.RotateAround(asteroid, Vector3.forward, idleRotationSpeed);
+            transform.RotateAround(asteroid, Vector3.forward, idleRotationSpeed * 50 * Time.deltaTime);
             yield return Timing.WaitForOneFrame;
         }
     }
@@ -79,21 +79,24 @@ public class DusklingEnemy : Enemy
     }
 
     private IEnumerator<float> _CheckLOS() {
-        // check LOS while not in idle state or if a laser is active
+        // check line of sight while not in idle state or if a laser is active
         while (state != State.IDLE || laserInstance) {
+            // check line of sight
             Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
             Physics2D.Raycast((Vector2) transform.position, dirToPlayer, cf, raycastResults, 50);
             
-            // if duskling has not fired lately and raycast gets a hit, move to ATTACK
+            // if duskling has not fired lately and raycast gets a hit on player, attack
             if (!firedWithinDelay && raycastResults[0] && raycastResults[0].collider.gameObject.CompareTag("Player")) {
+                // charge a laser
                 firedWithinDelay = true;
                 GameObject laserobj = Instantiate(laser, transform.position, Quaternion.identity, transform);
                 laserInstance = laserobj.GetComponent<Laser>();
                 laserInstance.SelfDestructInSeconds(timeToFire);
+                // change state
                 state = State.ATTACK;
                 StateTransition();
             }
-            if (laserInstance && raycastResults[0]) {
+            if (laserInstance && raycastResults[0]) { // update the active laser's line renderer
                 if (raycastResults[0].collider.gameObject.CompareTag("Player")) {
                     laserInstance.UpdateAndSetPositions(transform.position, (Vector3) playerRB.position);
                 } else {
@@ -109,7 +112,7 @@ public class DusklingEnemy : Enemy
             return;
         }
         if (gameObject != null && gameObject.activeInHierarchy) {
-            Timing.RunCoroutine(_RotateToPlayer().CancelWith(gameObject));
+            Timing.RunCoroutine(_RotateToPlayer().CancelWith(gameObject), Segment.FixedUpdate);
             Timing.RunCoroutine(_Fire().CancelWith(gameObject));
         }
     }
@@ -119,9 +122,9 @@ public class DusklingEnemy : Enemy
             Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
             float angle = Vector2.SignedAngle(transform.up, dirToPlayer);
             if (angle > 5) {
-                transform.RotateAround(asteroid, Vector3.forward, attackRotationSpeed);
+                transform.RotateAround(asteroid, Vector3.forward, attackRotationSpeed * 60 * Time.deltaTime);
             } else if (angle < -5) {
-                transform.RotateAround(asteroid, Vector3.forward, -attackRotationSpeed);
+                transform.RotateAround(asteroid, Vector3.forward, -attackRotationSpeed * 60 * Time.deltaTime);
             }
             yield return Timing.WaitForOneFrame;
         }

@@ -7,7 +7,7 @@ public class ClusterBoundary : MonoBehaviour
     // cluster id
     private int id;
 
-    // module to spawn
+    // modules to spawn
     [SerializeField] private GameObject[] entryTutorialModules;
 
     // keep track of the modules

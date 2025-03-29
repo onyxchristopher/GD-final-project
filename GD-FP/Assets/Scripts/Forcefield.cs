@@ -28,6 +28,7 @@ public class Forcefield : MonoBehaviour
         LineRenderer line = gameObject.GetComponent<LineRenderer>();
         Vector2[] pts;
 
+        // an extra point is needed for looped forcefields
         bool isLooped = gameObject.GetComponent<LineRenderer>().loop;
         if (isLooped) {
             pts = new Vector2[line.positionCount + 1];
@@ -36,14 +37,14 @@ public class Forcefield : MonoBehaviour
         }
         
         for (int i = 0; i < line.positionCount; i++) {
-            pts[i] = (Vector2) line.GetPosition(i);
+            pts[i] = (Vector2) line.GetPosition(i); // copy points
         }
         if (isLooped) {
-            pts[line.positionCount] = pts[0];
+            pts[line.positionCount] = pts[0]; // if looped, set last point to zeroth's location
         }
         ec.points = pts;
 
-        // link objects
+        // link Damageable objects so they send a message to the forcefield when destroyed
         for (int i = 0; i < linkedObjects.Length; i++) {
             linkedObjects[i].GetComponent<Damageable>().linkedForcefield = gameObject;
         }

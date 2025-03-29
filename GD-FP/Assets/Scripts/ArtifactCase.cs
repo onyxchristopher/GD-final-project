@@ -11,11 +11,11 @@ public class ArtifactCase : MonoBehaviour
     private float timeToSlide = 0.8f;
     private float timeBeforeBook = 1;
     private float timeAfterBook = 1;
-    private bool a1 = false;
-    private bool a2 = false;
-    private bool a3 = false;
-    private bool a4 = false;
-    private bool a5 = false;
+    private bool a1found = false;
+    private bool a2found = false;
+    private bool a3found = false;
+    private bool a4found = false;
+    private bool a5found = false;
 
     void Start() {
         rectTransform = gameObject.GetComponent<RectTransform>();
@@ -28,20 +28,20 @@ public class ArtifactCase : MonoBehaviour
     }
 
     private IEnumerator<float> _BookSequence(int index) {
-        // remove sector 6 block if 5 artifacts found
+        // sector 6 is blocked by a forcefield which is removed when all artifacts are found
         if (index == 1) {
-            a1 = true;
+            a1found = true;
         } else if (index == 2) {
-            a2 = true;
+            a2found = true;
         } else if (index == 3) {
-            a3 = true;
+            a3found = true;
         } else if (index == 4) {
-            a4 = true;
+            a4found = true;
         } else if (index == 5) {
-            a5 = true;
+            a5found = true;
         }
 
-        if (a1 && a2 && a3 && a4 && a5) {
+        if (a1found && a2found && a3found && a4found && a5found) { // if five artifacts found
             GameController.fiveArtifactsReclaimed = true;
         }
 
@@ -80,11 +80,11 @@ public class ArtifactCase : MonoBehaviour
     public void Restart() {
         for (int i = 0; i < transform.childCount; i++) {
             transform.GetChild(i).gameObject.SetActive(true);
-            a1 = false;
-            a2 = false;
-            a3 = false;
-            a4 = false;
-            a5 = false;
+            a1found = false;
+            a2found = false;
+            a3found = false;
+            a4found = false;
+            a5found = false;
         }
     }
 }

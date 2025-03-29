@@ -5,7 +5,7 @@ using MEC;
 
 public class Pedestal : MonoBehaviour
 {
-    private float setSpawnDelay = 15;
+    private float setSpawnDelay = 10;
     private bool withinSetSpawnDelay = false;
     private float fuelPerSecond = 20;
     private PlayerCollision pColl;
@@ -22,7 +22,6 @@ public class Pedestal : MonoBehaviour
         if (!withinSetSpawnDelay) {
             withinSetSpawnDelay = true;
             Timing.RunCoroutine(_SetSpawnTimer());
-            // pop up the spawn set msg
         }
     }
 

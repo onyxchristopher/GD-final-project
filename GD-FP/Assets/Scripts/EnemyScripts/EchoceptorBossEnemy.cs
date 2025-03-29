@@ -168,21 +168,23 @@ public class EchoceptorBossEnemy : Enemy
     }
 
     public override void EnemyDeath() {
-        EventManager.onPlayerDeath -= ResetToIdle;
-        EventManager.onEnemyHit -= Echo;
-        Instantiate(deathParticles, transform.position, Quaternion.identity);
-        GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(30, 1, 1);
-        EventManager.BossDefeat(5);
-        EventManager.ExitBossArea();
-        if (drop) {
+        EventManager.onPlayerDeath -= ResetToIdle; // unsubscribe to event
+        EventManager.onEnemyHit -= Echo; // unsubscribe to event
+        Instantiate(deathParticles, transform.position, Quaternion.identity); // emit death particles
+        GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(30, 1, 1); // shrink camera
+        EventManager.BossDefeat(5); // notify other scripts of boss defeat
+        EventManager.ExitBossArea(); // notify other scripts to exit the boss area
+        if (drop) { // drop the artifact
             GameObject artifact = Instantiate(drop,
             transform.parent.position + Vector3.right * 70 - Vector3.up * 7.5f, Quaternion.identity);
         }
-        field.GetComponent<Forcefield>().CheckForcefield();
+        field.GetComponent<Forcefield>().CheckForcefield(); // check the forcefield around the boss arena
+        
+        // deactivate the boss trigger
         GameObject respawnField = GameObject.FindWithTag("EchoceptorRespawnField");
         if (respawnField) {
             respawnField.SetActive(false);
         }
-        gameObject.SetActive(false);
+        gameObject.SetActive(false); // deactivate the boss
     }
 }

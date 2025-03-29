@@ -24,14 +24,11 @@ public class Generation : MonoBehaviour
     public static Vector2 farAway = new Vector2(0, 3000);
 
     public (Cluster, Cluster[], Cluster[][]) generate(int seed) {
-
-        // set seed
-        Random.InitState(seed);
+        Random.InitState(seed); // set seed
 
         // initialize the root core
         Rect universe = new Rect(largeOffset, totalSize * largeGridSize);
         Vector2 corePosition = calculateCorePosition(universe, coreLocation);
-        
         Cluster root = new Cluster(0, universe, corePosition, null);
 
         // make cluster bounds
@@ -165,33 +162,31 @@ public class Generation : MonoBehaviour
         );
         
         // place random points in bounding rect set back from edge
-        int outerIterations = 0;
-        int maxIterations = 100;
+        int outerIterations = 0; // number of inner loops
+        int maxIterations = 100; // iteration limit
         bool overlap = true;
-        while (overlap && outerIterations < maxIterations) {
+        while (overlap && outerIterations < maxIterations) { // end loop if successful or iteration limit exceeded
             overlap = false;
             for (int i = 0; i < numClusters; i++) {
-                Rect rect = randomizeCluster(zeroRect, clusterSize);
-                // re-randomize if there is overlap
-                int innerIterations = 0;
+                Rect rect = randomizeCluster(zeroRect, clusterSize); // generate a random rectangle
+                // re-randomize until there is no overlap
+                int innerIterations = 0; // number of re-randomizations
                 while (checkOverlap(clusters, i, rect, coreBounds, boundsIndex, offset) && innerIterations < maxIterations) {
                     rect = randomizeCluster(zeroRect, clusterSize);
                     innerIterations++;
                 }
                 if (innerIterations >= maxIterations) {
-                    overlap = true;
+                    overlap = true; // tells the outer loop to rerandomize
                 }
-                clusters[i] = rect;
+                clusters[i] = rect; // places the rect in the main array
             }
             outerIterations++;
         }
         if (outerIterations >= maxIterations) {
             Debug.Log("Arrangement not found");
-            generate(42);
         }
         
-        
-        // rescale clusters to grid and offset
+        // rescale clusters to be in world space rather than algorithm space
         Rect[] scaledClusters = new Rect[numClusters];
 
         for (int i = 0; i < numClusters; i++) {
@@ -212,14 +207,17 @@ public class Generation : MonoBehaviour
 
     // helper for checking the overlap of the random rectangle with others and the core's
     private bool checkOverlap(Rect[] clusters, int numClusters, Rect rect, Rect coreBounds, int boundsIndex, Vector2 smallOffset) {
+        // checks overlap with the core
         if (rect.Overlaps(coreBounds)) {
             return true;
         }
+        // checks overlap with other rectangles
         for (int i = 0; i < numClusters; i++) {
             if (clusters[i].Overlaps(rect)) {
                 return true;
             }
         }
+        // checks overlap with paths
         if (boundsIndex >= 0) {
             Rect transformedRect = new Rect(rect.position * smallGridSize + smallOffset, rect.size * smallGridSize);
             if (transformedRect.Overlaps(orderedPrevPathRects[boundsIndex])
@@ -239,7 +237,7 @@ public class Generation : MonoBehaviour
         Vector2 prevCore;
         Vector2 currentCore = orderedl1[clusterIndex].getCorePosition();
         Vector2 nextCore;
-
+        // finds the previous and next core
         if (clusterIndex == 0) {
             prevCore = Vector2.zero;
             nextCore = orderedl1[clusterIndex + 1].getCorePosition();
@@ -251,15 +249,16 @@ public class Generation : MonoBehaviour
             nextCore = orderedl1[clusterIndex + 1].getCorePosition();
         }
 
-        Vector2 currToPrev = prevCore - currentCore;
+        // finds the paths connecting the cores
+        Vector2 currToPrev = prevCore - currentCore; 
         Vector2 currToNext = nextCore - currentCore;
         
         currToPrev = currToPrev * 0.5f / Mathf.Max(Mathf.Abs(currToPrev.x), Mathf.Abs(currToPrev.y));
         currToNext = currToNext * 0.5f / Mathf.Max(Mathf.Abs(currToNext.x), Mathf.Abs(currToNext.y));
-
         currToPrev = Rect.NormalizedToPoint(orderedl1[clusterIndex].getBounds(), currToPrev + Vector2.one / 2);
         currToNext = Rect.NormalizedToPoint(orderedl1[clusterIndex].getBounds(), currToNext + Vector2.one / 2);
         
+        // creates rectangles to represent the paths
         Rect prevRect = Rect.MinMaxRect(
             Mathf.Min(currentCore.x, currToPrev.x),
             Mathf.Min(currentCore.y, currToPrev.y),
@@ -272,24 +271,6 @@ public class Generation : MonoBehaviour
             Mathf.Max(currentCore.x, currToNext.x),
             Mathf.Max(currentCore.y, currToNext.y)
         );
-
-        // Debug drawline
-        /*Vector3 bottomLeft = (Vector3) (prevRect.position);
-        Vector3 bottomRight = bottomLeft + Vector3.right * prevRect.width;
-        Vector3 topLeft = bottomLeft + Vector3.up * prevRect.height;
-        Vector3 topRight = bottomRight + Vector3.up * prevRect.height;
-        Debug.DrawLine(bottomLeft, bottomRight, Color.red, 15, false);
-        Debug.DrawLine(bottomRight, topRight, Color.red, 15, false);
-        Debug.DrawLine(topRight, topLeft, Color.red, 15, false);
-        Debug.DrawLine(topLeft, bottomLeft, Color.red, 15, false);
-        bottomLeft = (Vector3) (nextRect.position);
-        bottomRight = bottomLeft + Vector3.right * nextRect.width;
-        topLeft = bottomLeft + Vector3.up * nextRect.height;
-        topRight = bottomRight + Vector3.up * nextRect.height;
-        Debug.DrawLine(bottomLeft, bottomRight, Color.red, 15, false);
-        Debug.DrawLine(bottomRight, topRight, Color.red, 15, false);
-        Debug.DrawLine(topRight, topLeft, Color.red, 15, false);
-        Debug.DrawLine(topLeft, bottomLeft, Color.red, 15, false);*/
 
         return (prevRect, nextRect);
     }
@@ -345,14 +326,16 @@ public class Generation : MonoBehaviour
             (Vector3) clusters[i].getParentCore().getCorePosition(),
             Color.white, 10+clusters[i].getId(), false);
             */
-            if (i == 0) {
+            if (off == largeOffset) {
+                if (i == 0) {
                 Debug.DrawLine((Vector3) clusters[0].getCorePosition(),
                 (Vector3) clusters[0].getParentCore().getCorePosition(),
                 Color.yellow, 15+clusters[i].getId(), false);
-            } else {
-                Debug.DrawLine((Vector3) clusters[i-1].getCorePosition(),
-                (Vector3) clusters[i].getCorePosition(),
-                Color.yellow, 15+clusters[i].getId(), false);
+                } else {
+                    Debug.DrawLine((Vector3) clusters[i-1].getCorePosition(),
+                    (Vector3) clusters[i].getCorePosition(),
+                    Color.yellow, 15+clusters[i].getId(), false);
+                }
             }
         }
     }

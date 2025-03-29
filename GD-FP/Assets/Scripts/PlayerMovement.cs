@@ -20,21 +20,20 @@ public class PlayerMovement : MonoBehaviour
     private Slider fuelBarSlider; // slider showing fuel level
 
     // Movement system
-    [SerializeField] private float fastAccel; // acceleration at speed 0 to f
-    [SerializeField] private float softMaxSpeed; // the speed at which fast-accel stops
-    [SerializeField] private float slowAccel; // acceleration at speed f to m
-    [SerializeField] private float maxSpeed; // natural speed cap
-    [SerializeField] private float brakeConstant; // the multiplier for braking
-    [SerializeField] private float decelConstant; // the multiplier for deceleration
-    [SerializeField] private float decelThreshold; // above what velocity the deceleration can occur
-    [SerializeField] private float throttle; // absolute max speed
+    [SerializeField] private float fastAccel; // Acceleration below softMaxSpeed
+    [SerializeField] private float softMaxSpeed; // Speed at which acceleration slows down
+    [SerializeField] private float slowAccel; // Acceleration between softMaxSpeed and maxSpeed
+    [SerializeField] private float maxSpeed; // Speed at which acceleration stops
+    [SerializeField] private float brakeConstant; // Multiplier for acceleration opposite to movement direction
+    [SerializeField] private float decelConstant; // Multiplier for deceleration when no movement keys are pressed
+    [SerializeField] private float decelThreshold; // Speed above which deceleration occurs
+    [SerializeField] private float throttle; // Absolute max speed
+    [SerializeField] private float dashSpeed; // Lowest possible starting speed of dash
+    [SerializeField] private float dashAccel; // Acceleration and deceleration while dashing
+    [SerializeField] private float dashDuration; // Duration of dash
 
     private bool dashQueued = false;
     private bool dashEnding = false;
-
-    [SerializeField] private float dashSpeed;
-    [SerializeField] private float dashAccel;
-    [SerializeField] private float dashDuration;
 
     // Spawnpoint
     private Vector3 startingOrigin = new Vector3(0, 2, 0); // the player's initial spawnpoint
@@ -109,17 +108,21 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private IEnumerator<float> _Dash() {
+        // get normalized player input vector
         Vector2 normMoveDir = playerMove.ReadValue<Vector2>().normalized;
-        float speed = rb.velocity.magnitude;
+        float speed = rb.velocity.magnitude; // get player speed
 
-        // if pressing anything, dash in direction of press
+        // if pressing any movement keys, dash in direction of keypress
         if (normMoveDir.magnitude > 0.5) {
             dashQueued = true; // lets FixedUpdate know to dash
             if (speed < dashSpeed) {
+                // if below dashSpeed, dash at that speed
                 rb.velocity = dashSpeed * normMoveDir;
             } else if (speed < throttle) {
+                // if below throttle, dash at same speed
                 rb.velocity = speed * normMoveDir;
             } else {
+                // if above throttle, dash at that speed
                 rb.velocity = throttle * normMoveDir;
             }
             yield return Timing.WaitForSeconds(dashDuration / 2);
@@ -132,30 +135,32 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate() {
         Vector2 moveDir = playerMove.ReadValue<Vector2>(); // get player input
-        Vector2 normMoveDir = moveDir.normalized; // normalized player input vector
-        Vector2 normVel = rb.velocity.normalized; // normalized player velocity
+        Vector2 normMoveDir = moveDir.normalized; // get normalized player input vector
+        Vector2 normVel = rb.velocity.normalized; // get normalized player velocity
 
+        // decelerate if no keys are pressed
         if (normMoveDir == Vector2.zero && rb.velocity.magnitude > decelThreshold) {
             rb.AddForce(-normVel * decelConstant, ForceMode2D.Impulse);
-        } else if (!dashQueued && !dashEnding) {
+        } else if (!dashQueued && !dashEnding) { // while not dashing
             // consider x and y axes seperately
             for (int axis = 0; axis <= 1; axis++) {
                 Vector2 acceleration = Vector2.zero;
-
-                float moveComponent = normMoveDir[axis];
-                float velComponent = rb.velocity[axis];
+                float moveComponent = normMoveDir[axis]; // get the component of player input
+                float velComponent = rb.velocity[axis]; // get the component of player velocity
                 
-                if (moveComponent * velComponent >= 0) { // if same dir
+                if (moveComponent * velComponent >= 0) { // if components are same dir
+                    // move according to the acceleration curve
                     acceleration[axis] = accelCurve(Mathf.Abs(rb.velocity[axis])) * moveComponent;
                     rb.AddForce(acceleration, ForceMode2D.Impulse);
-                } else { // opposite dir
+                } else { // components are opposite dir
+                    // reverse direction at a very fast constant acceleration
                     acceleration[axis] = brakeConstant * fastAccel * moveComponent;
                     rb.AddForce(acceleration, ForceMode2D.Impulse);
                 }
             }
-        } else if (dashQueued) {
+        } else if (dashQueued) { // first half of the dash
             rb.AddForce(dashAccel * normVel, ForceMode2D.Impulse);
-        } else {
+        } else { // second half of the dash
             rb.AddForce(-dashAccel * normVel, ForceMode2D.Impulse);
         }
         

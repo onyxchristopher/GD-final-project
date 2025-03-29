@@ -54,7 +54,7 @@ public class DuskwardenBossEnemy : Enemy
         StateTransition();
         SpawnForcefield();
         GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(60, 0, 1);
-        Timing.RunCoroutine(_CheckLOS().CancelWith(gameObject));
+        Timing.RunCoroutine(_CheckLOS().CancelWith(gameObject), Segment.FixedUpdate);
         EventManager.onPlayerDeath += ResetToIdle;
     }
 
@@ -81,7 +81,7 @@ public class DuskwardenBossEnemy : Enemy
                 }
             }
             if (state == State.TRACK) {
-                transform.RotateAround(transform.parent.position, Vector3.forward, idleRotationSpeed);
+                transform.RotateAround(transform.parent.position, Vector3.forward, idleRotationSpeed * 60 * Time.deltaTime);
             }
             yield return Timing.WaitForOneFrame;
         }

@@ -79,7 +79,7 @@ public class AbyssforgeGreaterCore : Enemy
 
         while (state == State.ATTACK) {
             yield return Timing.WaitForOneFrame;
-            megalaser.Rotate(rotationVector);
+            megalaser.Rotate(rotationVector * 60 * Time.deltaTime);
         }
     }
 

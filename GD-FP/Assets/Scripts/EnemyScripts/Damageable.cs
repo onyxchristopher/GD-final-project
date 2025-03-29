@@ -34,16 +34,14 @@ public class Damageable : MonoBehaviour
         if (invuln && source == "blade") {
             return;
         } else if (source == "blade") {
-            invuln = true;
+            invuln = true; // a blade grants 0.3 seconds invuln from more blade attacks
             Timing.RunCoroutine(_IFrames());
         }
-        if (!protectiveForcefield){
-            health -= damage;
+        if (!protectiveForcefield){ // if the enemy is not being protected by a forcefield
+            health -= damage; // subtract damage from health
 
-            // a normal enemy should have hit sounds at all times
-            // a boss should have hit sounds but not on death
             if (isBoss) {
-                gameController.SetBossHealthBar(health);
+                gameController.SetBossHealthBar(health); // manage boss health bar
             }
 
             // Damage the Abyssal Forge if one of its cores is damaged
@@ -60,20 +58,24 @@ public class Damageable : MonoBehaviour
                 
             }
 
-            if (health <= 0) {
-                enemy.EnemyDeath();
+            // a normal enemy should have hit sounds at all times
+            // a boss should have hit sounds but not on death
+
+            if (health <= 0) { // enemy is dead
+                enemy.EnemyDeath(); // call the attached enemy's EnemyDeath function
                 if (!isBoss && !suppressSound) {
-                    EventManager.EnemyHit();
+                    EventManager.EnemyHit(); // plays the enemy hit sound
                 }
+                // if the enemy was linked to a forcefield, check if all linked enemies are dead
                 if (linkedForcefield) {
                     linkedForcefield.GetComponent<Forcefield>().CheckForcefield();
                 }
-            } else {
+            } else { // enemy is not dead
                 if (!isBoss) {
                     DisplayHealthbar(); // display healthbar if non-boss not dead
                 }
                 if (!suppressSound) {
-                    EventManager.EnemyHit();
+                    EventManager.EnemyHit(); // plays the enemy hit sound
                 }
             }
         }

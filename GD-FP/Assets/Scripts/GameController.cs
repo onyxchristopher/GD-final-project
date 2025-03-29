@@ -117,7 +117,7 @@ public class GameController : MonoBehaviour
             clusterI.GetComponent<ClusterBoundary>().setId(level1[i].getId());
 
             // instantiate cluster scene boundary at core, set collider size, set name and id
-            GameObject csb = Instantiate(clusterSceneBoundary, corePos, Quaternion.identity); // MAKE PART OF UNIVERSE?
+            GameObject csb = Instantiate(clusterSceneBoundary, corePos, Quaternion.identity);
             csb.GetComponent<BoxCollider2D>().size = boundingSize + Vector2.one * sceneLoadingRadius * 2;
             csb.name = $"CSB{i+1}";
             csb.GetComponent<ClusterSceneBoundary>().setId(level1[i].getId());
@@ -229,7 +229,7 @@ public class GameController : MonoBehaviour
         topCoreDefeated = false;
         leftCoreDefeated = false;
         bottomCoreDefeated = false;
-        Destroy(GameObject.FindWithTag("Universe")); // uh oh
+        Destroy(GameObject.FindWithTag("Universe"));
         InitializeUniverse();
     }
 
