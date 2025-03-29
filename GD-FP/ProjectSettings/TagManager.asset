@@ -33,10 +33,19 @@ TagManager:
   - VoidchargerRespawnField
   - DuskwardenRespawnField
   - Duskwarden
-  - Murkfang
   - MurkfangRespawnField
   - Rocket
   - EchoceptorRespawnField
+  - FuelDrop
+  - HealthDrop
+  - Abyssforge
+  - MainCanvas
+  - EndCanvas
+  - MainCanvasParent
+  - Endscreen
+  - Startscreen
+  - MessageDashboard
+  - InitialText
   layers:
   - Default
   - TransparentFX

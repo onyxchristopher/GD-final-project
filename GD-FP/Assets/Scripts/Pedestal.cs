@@ -5,30 +5,30 @@ using MEC;
 
 public class Pedestal : MonoBehaviour
 {
-    private float setSpawnDelay = 15;
+    private float setSpawnDelay = 10;
     private bool withinSetSpawnDelay = false;
     private float fuelPerSecond = 20;
+    [SerializeField] private int sectorNum;
     private PlayerCollision pColl;
     private PlayerMovement pMove;
 
-    void Start() {
+    void Awake() {
         GameObject player = GameObject.FindWithTag("Player");
         pColl = player.GetComponent<PlayerCollision>();
         pMove = player.GetComponent<PlayerMovement>();
         EventManager.onSetSpawn += CheckSpawnDelay;
     }
 
-    public void CheckSpawnDelay(Vector3 spawn) {
+    public void CheckSpawnDelay(Vector3 spawn, int _) {
         if (!withinSetSpawnDelay) {
             withinSetSpawnDelay = true;
             Timing.RunCoroutine(_SetSpawnTimer());
-            // pop up the spawn set msg
         }
     }
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Player") && !withinSetSpawnDelay) {
-            EventManager.SetSpawn(transform.position + transform.up * 3);
+            EventManager.SetSpawn(transform.position + transform.up * 3, sectorNum);
         }
     }
 

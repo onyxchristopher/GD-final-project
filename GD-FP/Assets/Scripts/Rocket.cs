@@ -36,27 +36,30 @@ public class Rocket : MonoBehaviour
 
     private IEnumerator<float> _Detonator() {
         float time = 0;
+        // waits to detonate the rocket
         while (time < timeToDetonate && !reflected) {
+            // turns toward the player
             Vector2 dirToPlayer = playerRB.position - rb.position;
             float angle = Vector2.SignedAngle(transform.right, dirToPlayer);
             if (angle >= maxTurn) {
-                rb.rotation += maxTurn;
+                rb.rotation += (maxTurn * 60 * Time.deltaTime);
             } else if (angle <= -maxTurn) {
-                rb.rotation -= maxTurn;
-            }
-            rb.velocity = speed * transform.right;
+                rb.rotation -= (maxTurn * 60 * Time.deltaTime);
+            } 
+            rb.velocity = speed * transform.right; // resets the rocket's velocity after turning
             yield return Timing.WaitForOneFrame;
             time += Time.deltaTime;
         }
+        // if the detonation timer ends without the rocket being reflected by the shield, it explodes
         if (!reflected) {
             Explode();
-        } else {
-            if (longerReflectTime) {
+        } else { // the rocket has been reflected
+            if (longerReflectTime) { // the boss's rockets need to travel farther
                 yield return Timing.WaitForSeconds(4);
             } else {
                 yield return Timing.WaitForSeconds(1.5f);
             }
-            Explode();
+            Explode(); // if the rocket does not hit anything after being reflected, it explodes
         }
     }
 

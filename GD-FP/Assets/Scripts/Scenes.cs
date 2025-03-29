@@ -60,11 +60,25 @@ public class Scenes : MonoBehaviour
         Vector3 rootPosition = level1[sectorIndex].getCorePosition();
         root.transform.position = rootPosition;
 
+        if (root.transform.position.x > 800 || root.transform.position.x < -800 ||
+        root.transform.position.y > 800 || root.transform.position.y < -800) {
+            Debug.Log(level1[sectorIndex].getCorePosition());
+            rootPosition = level1[sectorIndex].getCorePosition();
+            root.transform.position = level1[sectorIndex].getCorePosition();
+        }
+
         // Reassign spawns of all centered bosses
-        if (id <= 3 || id >= 5) {
+        if (id <= 3 || id == 5) {
             root.transform.GetChild(0).GetComponent<Enemy>().ReassignSpawn(level1[sectorIndex].getCorePosition());
         } else if (id == 4) {
             root.transform.GetChild(0).GetComponent<Enemy>().ReassignSpawn(level1[sectorIndex].getCorePosition() + Vector2.right * 15);
+        }
+
+        if (id == 6) {
+            root.transform.GetChild(0).GetComponent<AbyssforgeBossEnemy>().Spawn(rootPosition);
+            if (GameController.fiveArtifactsReclaimed) {
+                root.transform.GetChild(1).gameObject.SetActive(false);
+            }
         }
 
         // Transport minor objectives

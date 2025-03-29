@@ -44,14 +44,13 @@ public class MurkfangBossEnemy : Enemy
         rb = GetComponent<Rigidbody2D>();
         dmg = GetComponent<Damageable>();
         dmg.enemy = this;
-
-        EventManager.onPlayerDeath += ResetToIdle;
     }
 
     private void AttackLoop() {
         if (state != State.ATTACK) {
             return;
         }
+        EventManager.onPlayerDeath += ResetToIdle;
         if (gameObject != null && gameObject.activeInHierarchy) {
             Timing.RunCoroutine(_Rotate().CancelWith(gameObject));
             Timing.RunCoroutine(_Fire().CancelWith(gameObject));
@@ -120,7 +119,10 @@ public class MurkfangBossEnemy : Enemy
             GameObject artifact = Instantiate(drop, transform.parent.position + Vector3.right * -50, Quaternion.identity);
         }
         field.GetComponent<Forcefield>().CheckForcefield();
-        GameObject.FindWithTag("MurkfangRespawnField").SetActive(false);
+        GameObject respawnField = GameObject.FindWithTag("MurkfangRespawnField");
+        if (respawnField) {
+            respawnField.SetActive(false);
+        }
         gameObject.SetActive(false);
     }
 }

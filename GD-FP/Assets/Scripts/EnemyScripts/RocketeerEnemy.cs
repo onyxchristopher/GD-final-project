@@ -5,7 +5,7 @@ using UnityEngine;
 using MEC;
 
 /*
-The sentry turret has two states: IDLE and ATTACK.
+The rocketeer has two states: IDLE and ATTACK.
 It starts in IDLE, and when its trigger is entered by the player, moves to ATTACK.
 In ATTACK, it shoots a rocket at the player when there is no other active rocket.
 It moves back to IDLE when its trigger is exited by the player.
@@ -71,17 +71,24 @@ public class RocketeerEnemy : Enemy
 
     void OnTriggerExit2D(Collider2D other) {
         if (other.CompareTag("Player")) {
-            state = State.IDLE;
-            StateTransition();
+            ResetToIdle();
         }
     }
 
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
         Instantiate(deathParticles, transform.position, Quaternion.identity);
-        if (drop) {
+
+        if (timeToFire == 0.7f) {
+            transform.parent.parent.GetComponent<AbyssforgeBossEnemy>().CoreDefeated(transform.position);
+        }
+
+        if (drop && drop.CompareTag("FuelDrop")) {
             GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
             droppedFuel.GetComponent<FuelDrop>().fuel = 40;
+        } else if (drop && drop.CompareTag("HealthDrop")) {
+            GameObject droppedHealth = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
+            droppedHealth.GetComponent<HealthDrop>().health = 15;
         }
         EventManager.EnemyDefeat();
         gameObject.SetActive(false);

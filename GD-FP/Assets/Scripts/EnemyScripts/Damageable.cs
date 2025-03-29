@@ -12,18 +12,16 @@ public class Damageable : MonoBehaviour
     [HideInInspector] public int health;
     [SerializeField] private bool isBoss;
     private bool invuln = false;
-    private float invulnDuration = 0.3f;
+    private float invulnDuration = 0.8f;
     public Enemy enemy;
     public GameObject linkedForcefield;
-    private LineRenderer lr;
     public GameObject protectiveForcefield;
     [SerializeField] private GameObject healthbar;
     [SerializeField] private Vector3 healthBarOffset = new Vector3(0, 3.5f, 0);
     private Slider healthBarSlider;
 
-    void Start() {
+    void Awake() {
         gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
-
         health = maxHealth;
     }
 
@@ -35,36 +33,50 @@ public class Damageable : MonoBehaviour
         // if the enemy is invuln and the source is a blade, return
         if (invuln && source == "blade") {
             return;
+        } else if (source == "blade") {
+            invuln = true; // a blade grants 0.8 seconds invuln from more blade attacks
+            Timing.RunCoroutine(_IFrames());
         }
-        if (!protectiveForcefield){
-            health -= damage;
+        if (!protectiveForcefield){ // if the enemy is not being protected by a forcefield
+            health -= damage; // subtract damage from health
+
+            if (isBoss) {
+                gameController.SetBossHealthBar(health); // manage boss health bar
+            }
+
+            // Damage the Abyssal Forge if one of its cores is damaged
+            if (gameObject.name == "AbyssCoreEnemy") {
+                // if the core is overkilled (health < 0) send only the remaining damage to the boss
+                if (health <= 0) {
+                    transform.parent.parent.GetComponent<Damageable>().Damage(health + damage, true);
+                } else {
+                    transform.parent.parent.GetComponent<Damageable>().Damage(damage, true);
+                }
+                if (maxHealth == 100) {
+                    GetComponent<AbyssforgeGreaterCore>().GreaterCoreDamaged();
+                }
+                
+            }
 
             // a normal enemy should have hit sounds at all times
             // a boss should have hit sounds but not on death
-            if (isBoss) {
-                gameController.SetBossHealthBar(health);
-            }
 
-            if (health <= 0) {
-                enemy.EnemyDeath();
+            if (health <= 0) { // enemy is dead
+                enemy.EnemyDeath(); // call the attached enemy's EnemyDeath function
                 if (!isBoss && !suppressSound) {
-                    EventManager.EnemyHit();
+                    EventManager.EnemyHit(); // plays the enemy hit sound
                 }
+                // if the enemy was linked to a forcefield, check if all linked enemies are dead
                 if (linkedForcefield) {
                     linkedForcefield.GetComponent<Forcefield>().CheckForcefield();
                 }
-            } else {
+            } else { // enemy is not dead
                 if (!isBoss) {
                     DisplayHealthbar(); // display healthbar if non-boss not dead
                 }
                 if (!suppressSound) {
-                    EventManager.EnemyHit();
+                    EventManager.EnemyHit(); // plays the enemy hit sound
                 }
-            }
-            // only a blade confers invuln from more blade attacks
-            if (source == "blade") {
-                invuln = true;
-                Timing.RunCoroutine(_IFrames());
             }
         }
     }

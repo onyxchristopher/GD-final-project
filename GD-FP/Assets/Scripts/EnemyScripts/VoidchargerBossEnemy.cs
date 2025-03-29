@@ -61,6 +61,7 @@ public class VoidchargerBossEnemy : Enemy
         if (state != State.ATTACK) {
             return;
         }
+        EventManager.onPlayerDeath += ResetToIdle;
         if (gameObject != null && gameObject.activeInHierarchy) {
             Timing.RunCoroutine(_RotateAndCharge().CancelWith(gameObject));
         }
@@ -126,22 +127,27 @@ public class VoidchargerBossEnemy : Enemy
     // IDLE state functions
 
     private void EndLoop() {
-        rb.velocity = Vector2.zero;
-        EventManager.ExitBossArea();
+        if (rb) {
+            rb.velocity = Vector2.zero;
+            EventManager.ExitBossArea();
+        }
     }
 
     // death
 
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
-        Instantiate(deathParticles, transform.position, Quaternion.identity);
+        Instantiate(deathParticles, transform.position, Quaternion.Euler(0, 0, rb.rotation));
         EventManager.BossDefeat(2);
         EventManager.ExitBossArea();
         if (drop) {
             GameObject artifact = Instantiate(drop, transform.parent.position + Vector3.right * 57, Quaternion.identity);
         }
         field.GetComponent<Forcefield>().CheckForcefield();
-        GameObject.FindWithTag("VoidchargerRespawnField").SetActive(false);
+        GameObject respawnField = GameObject.FindWithTag("VoidchargerRespawnField");
+        if (respawnField) {
+            respawnField.SetActive(false);
+        }
         gameObject.SetActive(false);
     }
 }

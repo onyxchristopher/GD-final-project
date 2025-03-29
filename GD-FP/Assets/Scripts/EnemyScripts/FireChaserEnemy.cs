@@ -24,6 +24,8 @@ public class FireChaserEnemy : Enemy
     public bool firstMove = true;
     [SerializeField] private GameObject deathParticles;
 
+    [SerializeField] private int fuelToDrop = 15;
+
     // Awake encodes the enemy FSM
     void Awake() {
         Action chaserAttack = Moving;
@@ -156,10 +158,10 @@ public class FireChaserEnemy : Enemy
 
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
-        Instantiate(deathParticles, transform.position, Quaternion.identity);
+        Instantiate(deathParticles, transform.position, Quaternion.Euler(0, 0, rb.rotation));
         if (drop) {
             GameObject droppedFuel = Instantiate(drop, transform.position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(45, 136)));
-            droppedFuel.GetComponent<FuelDrop>().fuel = 10;
+            droppedFuel.GetComponent<FuelDrop>().fuel = fuelToDrop;
         }
         EventManager.EnemyDefeat();
         gameObject.SetActive(false);

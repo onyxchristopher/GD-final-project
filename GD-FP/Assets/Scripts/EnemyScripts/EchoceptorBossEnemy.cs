@@ -12,6 +12,7 @@ When the forcefields around the Echoceptor are destroyed, it moves to TRACK.
 In TRACK, it continues its rocket-firing pattern but moves opposite the player around the center of the domain.
 When the Echoceptor is hit, it emits an echo, knocking the player back.
 */
+
 public class EchoceptorBossEnemy : Enemy
 {
     private Damageable dmg;
@@ -44,8 +45,6 @@ public class EchoceptorBossEnemy : Enemy
         rb = GetComponent<Rigidbody2D>();
         dmg = GetComponent<Damageable>();
         dmg.enemy = this;
-
-        EventManager.onPlayerDeath += ResetToIdle;
     }
 
     public void Spawn() {
@@ -58,6 +57,7 @@ public class EchoceptorBossEnemy : Enemy
         state = State.IDLE;
         StateTransition();
         EventManager.onEnemyHit -= Echo;
+        EventManager.onPlayerDeath -= ResetToIdle;
         EventManager.ExitBossArea();
     }
 
@@ -65,6 +65,7 @@ public class EchoceptorBossEnemy : Enemy
         if (state != State.ATTACK) {
             return;
         }
+        EventManager.onPlayerDeath += ResetToIdle;
         if (gameObject != null && gameObject.activeInHierarchy) {
             Timing.RunCoroutine(_Fire().CancelWith(gameObject));
         }
@@ -133,54 +134,57 @@ public class EchoceptorBossEnemy : Enemy
     private IEnumerator<float> _Mirror() {
         // Move to desired place
         float time = 0;
-        Vector2 pos = rb.position;
+        Vector3 pos = transform.position;
         while (time < timeToStartMirroring) {
-            rb.position = Vector2.Lerp(pos, CalcMirrorPosition(), time / timeToStartMirroring);
+            transform.position = Vector3.Lerp(pos, CalcMirrorPosition(), time / timeToStartMirroring);
             yield return Timing.WaitForOneFrame;
             time += Time.deltaTime;
         }
         // Begin mirroring
         while (state == State.TRACK) {
             yield return Timing.WaitForOneFrame;
-            rb.position = CalcMirrorPosition();
+            transform.position = CalcMirrorPosition();
         }
     }
 
-    private Vector2 CalcMirrorPosition() {
-        Vector2 center = (Vector2) transform.parent.position;
-        return playerRB.position + 2 * (center - playerRB.position);
+    private Vector3 CalcMirrorPosition() {
+        Vector3 center = transform.parent.position;
+        Vector3 playerpos = (Vector3) playerRB.position;
+        return playerpos + 2 * (center - playerpos);
     }
 
     private void Echo() {
-        Instantiate(echo, (Vector3) rb.position, Quaternion.identity);
+        Instantiate(echo, transform.position, Quaternion.identity);
 
         // Force of launch decreases with distance
-        Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
-        playerRB.AddForce(dirToPlayer.normalized * Mathf.Max(25, 60 - dirToPlayer.magnitude / 2), ForceMode2D.Impulse);
+        if (gameObject.activeInHierarchy) {
+            Vector2 dirToPlayer = playerRB.position - (Vector2) transform.position;
+            playerRB.AddForce(dirToPlayer.normalized * Mathf.Max(25, 60 - dirToPlayer.magnitude / 2), ForceMode2D.Impulse);
+        }
     }
 
     private void SpawnForcefield() {
         field = Instantiate(forcefield, transform.parent.position, Quaternion.identity, transform.parent);
     }
 
-    private void Teardown() {
-        EventManager.onEnemyHit -= Echo;
-        EventManager.ExitBossArea();
-    }
-
     public override void EnemyDeath() {
-        EventManager.onPlayerDeath -= ResetToIdle;
-        EventManager.onEnemyHit -= Echo;
-        Instantiate(deathParticles, transform.position, Quaternion.identity);
-        GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(30, 1, 1);
-        EventManager.BossDefeat(5);
-        EventManager.ExitBossArea();
-        if (drop) {
+        EventManager.onPlayerDeath -= ResetToIdle; // unsubscribe to event
+        EventManager.onEnemyHit -= Echo; // unsubscribe to event
+        Instantiate(deathParticles, transform.position, Quaternion.identity); // emit death particles
+        GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(30, 1, 1); // shrink camera
+        EventManager.BossDefeat(5); // notify other scripts of boss defeat
+        EventManager.ExitBossArea(); // notify other scripts to exit the boss area
+        if (drop) { // drop the artifact
             GameObject artifact = Instantiate(drop,
             transform.parent.position + Vector3.right * 70 - Vector3.up * 7.5f, Quaternion.identity);
         }
-        field.GetComponent<Forcefield>().CheckForcefield();
-        GameObject.FindWithTag("EchoceptorRespawnField").SetActive(false);
-        gameObject.SetActive(false);
+        field.GetComponent<Forcefield>().CheckForcefield(); // check the forcefield around the boss arena
+        
+        // deactivate the boss trigger
+        GameObject respawnField = GameObject.FindWithTag("EchoceptorRespawnField");
+        if (respawnField) {
+            respawnField.SetActive(false);
+        }
+        gameObject.SetActive(false); // deactivate the boss
     }
 }

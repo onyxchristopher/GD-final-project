@@ -410,6 +410,7 @@ MonoBehaviour:
   protectingObjects: []
   multiplier: -1
   offset: {x: 80, y: 88, z: 0}
+  echoceptorLastField: 0
 --- !u!68 &195512066
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -435,6 +436,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1891244995}
     m_Modifications:
+    - target: {fileID: 7142628274115944221, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: sectorNum
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 8878907731781219608, guid: f44c438698b3c44e88b725b36a3c74bc,
         type: 3}
       propertyPath: m_Color.b
@@ -595,7 +601,7 @@ MonoBehaviour:
   fireDelay: 0.2
   timeToTeleport: 2.2
   detonateScale: 0.6
-  timeToDetonate: 1
+  timeToDetonate: 0.6
   teleportDist: 15
   fumebomb: {fileID: 3175092453085875081, guid: 756a89f7e0a7d4c58b5dcbfd34f38638,
     type: 3}
@@ -865,6 +871,7 @@ MonoBehaviour:
   protectingObjects: []
   multiplier: -1
   offset: {x: 60, y: 0, z: 0}
+  echoceptorLastField: 0
 --- !u!68 &578796685
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -1287,6 +1294,7 @@ MonoBehaviour:
   protectingObjects: []
   multiplier: -1
   offset: {x: 0, y: 0, z: 0}
+  echoceptorLastField: 0
 --- !u!68 &1050127293
 EdgeCollider2D:
   m_ObjectHideFlags: 0

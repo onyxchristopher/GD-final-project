@@ -136,11 +136,11 @@ public class EventManager : MonoBehaviour
         onPickup?.Invoke();
     }
 
-    public delegate void NotifySetSpawn(Vector3 spawn);
+    public delegate void NotifySetSpawn(Vector3 spawn, int sectorNum);
     public static event NotifySetSpawn onSetSpawn;
-    public static void SetSpawn(Vector3 spawn) {
+    public static void SetSpawn(Vector3 spawn, int sectorNum) {
         if (onSetSpawn != null) {
-            onSetSpawn(spawn);
+            onSetSpawn(spawn, sectorNum);
         }
     }
 
@@ -202,5 +202,23 @@ public class EventManager : MonoBehaviour
     public static event NotifyRocketExplode onRocketExplode;
     public static void RocketExplode() {
         onRocketExplode?.Invoke();
+    }
+
+    public delegate void NotifyEndGame();
+    public static event NotifyEndGame onEndGame;
+    public static void EndGame() {
+        onEndGame?.Invoke();
+    }
+
+    public delegate void NotifyPlayAgain();
+    public static event NotifyPlayAgain onPlayAgain;
+    public static void PlayAgain() {
+        onPlayAgain?.Invoke();
+    }
+
+    public delegate void NotifyNewGame();
+    public static event NotifyNewGame onNewGame;
+    public static void NewGame() {
+        onNewGame?.Invoke();
     }
 }

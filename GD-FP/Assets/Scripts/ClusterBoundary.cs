@@ -7,7 +7,7 @@ public class ClusterBoundary : MonoBehaviour
     // cluster id
     private int id;
 
-    // module to spawn
+    // modules to spawn
     [SerializeField] private GameObject[] entryTutorialModules;
 
     // keep track of the modules
@@ -27,10 +27,10 @@ public class ClusterBoundary : MonoBehaviour
     void Start() {
         player = GameObject.FindWithTag("Player");
         gControl = GameObject.FindWithTag("GameController").GetComponent<GameController>();
-        ResetAll();
+        InitializeTutorialModules();
     }
 
-    public void ResetAll() {
+    public void InitializeTutorialModules() {
         if (modules[id - 1]) {
             Destroy(modules[id - 1]);
         }

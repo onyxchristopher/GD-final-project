@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
+using MEC;
 
 public class Compass : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class Compass : MonoBehaviour
     // the vector location of the next major objective
     private Vector2 major;
 
-    // the vector locations of all nearby minor objectives
+    // the array indices of all active minor objectives
     private List<int> indices = new List<int>();
 
     // player rigidbody
@@ -33,8 +34,8 @@ public class Compass : MonoBehaviour
     private List<int> minorProg = new List<int>();
 
     // Compass arrow references
-    private RectTransform majorArrowTransform;
-    private RectTransform[] minorArrowTransforms = new RectTransform[16];
+    public RectTransform majorArrowTransform;
+    private RectTransform[] minorArrowTransforms = new RectTransform[12];
 
     // Visual elements
     [SerializeField] private GameObject majorCompassArrow;
@@ -42,38 +43,53 @@ public class Compass : MonoBehaviour
 
     private bool majorShown = true;
     private bool minorShown = false;
+    private int respawnSector = 0;
 
     void Start()
     {
         playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
+    }
 
+    public void InitializeCompass(Cluster[] l1, Cluster[][] l2) {
         EventManager.onArtifactPickup += UpdateProgression;
         EventManager.onEnterCluster += EnteringCluster;
         EventManager.onExitCluster += LeavingCluster;
         EventManager.onEnterBossArea += HideCompass;
-        EventManager.onExitBossArea += ShowCompass;
-    }
+        EventManager.onExitBossArea += ShowCompassCheck;
+        EventManager.onSetSpawn += SetRespawnSector;
+        EventManager.onPlayerDeath += DeactivateAll;
+        EventManager.onPlayerRespawn += RespawnAlignment;
 
-    public void InitializeCompass(Cluster[] l1, Cluster[][] l2) {
+        currCluster = 0;
         level1 = l1;
         level2 = l2;
         UpdateMajor(1);
+
+        if (majorArrowTransform) {
+            Destroy(majorArrowTransform.gameObject);
+        }
 
         // create arrows which are children of the compass
         for (int i = 0; i < minorArrowTransforms.Length; i++) {
             GameObject minorArrow = Instantiate(minorCompassArrow, Vector3.zero, Quaternion.identity, transform);
             minorArrowTransforms[i] = minorArrow.GetComponent<RectTransform>();
-            minorArrow.GetComponent<Image>().color = Color.clear;
+            minorArrow.SetActive(false);
         }
 
         GameObject majorArrow = Instantiate(majorCompassArrow, Vector3.zero, Quaternion.identity, transform);
         majorArrowTransform = majorArrow.GetComponent<RectTransform>();
-        majorArrow.GetComponent<Image>().color = new Color(0, 0.5f, 1, 0.5f);
 
         majorShown = true;
+
+        // sector 6 has no minor objectives
+        minorProg.Add(61);
+        minorProg.Add(62);
     }
 
     public void EnteringCluster(int clusterNum) {
+        if (GameObject.FindWithTag("Player").GetComponent<PlayerCollision>().inactive) {
+            return;
+        }
         currCluster = clusterNum;
 
         // update the minor arrows to the current cluster
@@ -94,47 +110,59 @@ public class Compass : MonoBehaviour
         HideMinor();
     }
 
+    private void ShowCompassCheck() {
+        Timing.RunCoroutine(_ShowCompassCheck());
+    }
+
+    private IEnumerator<float> _ShowCompassCheck() {
+        majorShown = true;
+        minorShown = true;
+        yield return Timing.WaitForOneFrame;
+        if (!GameObject.FindWithTag("Player").GetComponent<PlayerCollision>().inactive) {
+            ShowCompass();
+        }
+    }
+
     public void ShowCompass() {
         ShowMajor();
         ShowMinor();
     }
 
     private void ShowMajor() {
-        if (!majorShown) {
-            majorArrowTransform.gameObject.GetComponent<Animator>().SetTrigger("ShowCompass");
-            majorShown = true;
-        }
+        majorShown = true;
+        majorArrowTransform.gameObject.SetActive(true);
     }
 
     private void ShowMinor() {
-        if (!minorShown) {
-            for (int i = 0; i < indices.Count; i++) {
-                minorArrowTransforms[indices[i]].gameObject.GetComponent<Animator>().SetTrigger("ShowCompass");
-            }
-            minorShown = true;
+        if (currCluster == 0 || currCluster == 6) {
+            HideMinor();
+            return;
+        }
+        minorShown = true;
+        for (int i = 0; i < indices.Count; i++) {
+            minorArrowTransforms[indices[i]].gameObject.SetActive(true);
         }
     }
 
     private void HideMajor() {
-        if (majorShown) {
-            majorArrowTransform.gameObject.GetComponent<Animator>().SetTrigger("HideCompass");
-            majorShown = false;
-        }
+        majorArrowTransform.gameObject.SetActive(false);
+        majorShown = false;
     }
 
     private void HideMinor() {
-        if (minorShown) {
-            for (int i = 0; i < indices.Count; i++) {
-                minorArrowTransforms[indices[i]].gameObject.GetComponent<Animator>().SetTrigger("HideCompass");
-            }
-            minorShown = false;
+        for (int i = 0; i < indices.Count; i++) {
+            minorArrowTransforms[indices[i]].gameObject.SetActive(false);
         }
+        minorShown = false;
     }
 
     public void UpdateProgression(int id) {
         int firstDigit = id / 10;
         int secondDigit = id % 10;
-
+        if (id == 60) {
+            DestroyAllArrows();
+            return;
+        }
         // major progression
         if (secondDigit == 0) {
             majorProg.Add(id);
@@ -164,6 +192,10 @@ public class Compass : MonoBehaviour
 
     // point to the minor objectives of the cluster entered
     private void UpdateMinor(int clusterNum) {
+        if (clusterNum == 0) {
+            indices = new List<int>();
+            return;
+        }
         int clusterIndex = clusterNum - 1;
         int numMinor = level2[clusterIndex].Length;
         indices = new List<int>();
@@ -174,6 +206,20 @@ public class Compass : MonoBehaviour
                 indices.Add(2 * (clusterNum - 1) + i);
             }
         }
+    }
+
+    private void SetRespawnSector(Vector3 _, int sectorNum) {
+        respawnSector = sectorNum;
+    }
+
+    private void DeactivateAll() {
+        HideMajor();
+        HideMinor();
+    }
+
+    private void RespawnAlignment() {
+        ShowMajor();
+        EnteringCluster(respawnSector);
     }
 
     // calculate radius, re-called on camera rect change
@@ -235,11 +281,25 @@ public class Compass : MonoBehaviour
         }
     }
 
-    public void Restart() {
+    public void DestroyAllArrows() {
         majorShown = false;
         minorShown = false;
-        for (int i = 0; i < transform.childCount; i++) {
-            Destroy(transform.GetChild(i).gameObject);
+        if (majorArrowTransform) {
+            Destroy(majorArrowTransform.gameObject);
         }
+        for (int i = 0; i < minorArrowTransforms.Length; i++) {
+            Destroy(minorArrowTransforms[i].gameObject);
+        }
+        majorProg.Clear();
+        minorProg.Clear();
+
+        EventManager.onArtifactPickup -= UpdateProgression;
+        EventManager.onEnterCluster -= EnteringCluster;
+        EventManager.onExitCluster -= LeavingCluster;
+        EventManager.onEnterBossArea -= HideCompass;
+        EventManager.onExitBossArea -= ShowCompassCheck;
+        EventManager.onSetSpawn -= SetRespawnSector;
+        EventManager.onPlayerDeath -= DeactivateAll;
+        EventManager.onPlayerRespawn -= RespawnAlignment;
     }
 }

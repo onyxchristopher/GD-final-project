@@ -38,10 +38,13 @@ public class Artifact : MonoBehaviour
                 gameObject.transform.GetChild(3).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
                 gameObject.transform.GetChild(4).GetChild(0).GetComponent<Animator>().SetTrigger("Pickup");
             }
+
+            if (id == 60) {
+                Timing.KillCoroutines("gametime");
+            }
             
             EventManager.ArtifactPickup(id);
             if (id % 10 == 0) {
-                EventManager.SetSpawn(transform.position);
                 Timing.RunCoroutine(_MoveArtifactToPlayer());
                 Destroy(gameObject.GetComponent<BoxCollider2D>());
                 Destroy(gameObject, timeToPickup + 0.5f);

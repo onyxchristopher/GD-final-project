@@ -50,7 +50,6 @@ public class Upgrades : MonoBehaviour
                     playerAbilities.SetShieldCooldown(upgradedShieldCooldown);
                     break;
                 case 6:
-                    Debug.Log("TBD");
                     break;
                 default:
                     Debug.Log("Artifact ID unset");

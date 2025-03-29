@@ -31,6 +31,7 @@ public class PlayerCollision : MonoBehaviour
         EventManager.onPlayerRespawn += CollisionActive;
         EventManager.onNewUniverse += InitializeHealth;
         EventManager.onShieldUse += Shielding;
+        EventManager.onPlayAgain += InitializeHealth;
     }
 
     public void InitializeHealth() {

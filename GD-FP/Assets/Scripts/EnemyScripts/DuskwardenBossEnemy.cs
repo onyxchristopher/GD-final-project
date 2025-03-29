@@ -42,7 +42,6 @@ public class DuskwardenBossEnemy : Enemy
         dmg.enemy = this;
         cf.SetLayerMask(LayerMask.GetMask("Planet", "Player"));
         cf.useTriggers = false;
-        EventManager.onPlayerDeath += ResetToIdle;
         gameObject.SetActive(false);
     }
 
@@ -55,7 +54,8 @@ public class DuskwardenBossEnemy : Enemy
         StateTransition();
         SpawnForcefield();
         GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(60, 0, 1);
-        Timing.RunCoroutine(_CheckLOS().CancelWith(gameObject));
+        Timing.RunCoroutine(_CheckLOS().CancelWith(gameObject), Segment.FixedUpdate);
+        EventManager.onPlayerDeath += ResetToIdle;
     }
 
     private IEnumerator<float> _CheckLOS() {
@@ -81,7 +81,7 @@ public class DuskwardenBossEnemy : Enemy
                 }
             }
             if (state == State.TRACK) {
-                transform.RotateAround(transform.parent.position, Vector3.forward, idleRotationSpeed);
+                transform.RotateAround(transform.parent.position, Vector3.forward, idleRotationSpeed * 60 * Time.deltaTime);
             }
             yield return Timing.WaitForOneFrame;
         }
@@ -129,7 +129,7 @@ public class DuskwardenBossEnemy : Enemy
 
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
-        Instantiate(deathParticles, transform.position, Quaternion.identity);
+        Instantiate(deathParticles, transform.position, Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + 90));
         GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(30, 1, 1);
         EventManager.BossDefeat(3);
         EventManager.ExitBossArea();
@@ -137,7 +137,10 @@ public class DuskwardenBossEnemy : Enemy
             GameObject artifact = Instantiate(drop, transform.parent.position + Vector3.right * 16, Quaternion.identity);
         }
         field.GetComponent<Forcefield>().CheckForcefield();
-        GameObject.FindWithTag("DuskwardenRespawnField").SetActive(false);
+        GameObject respawnField = GameObject.FindWithTag("DuskwardenRespawnField");
+        if (respawnField) {
+            respawnField.SetActive(false);
+        }
         gameObject.SetActive(false);
     }
 }

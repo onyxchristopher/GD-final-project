@@ -5,7 +5,7 @@ using MEC;
 
 public class Planet : MonoBehaviour
 {
-    private GameObject player;
+    private Rigidbody2D playerRB;
     private Vector2 dist;
     [SerializeField] private float gravityScale;
     private float gravitationalConstant = 50;
@@ -13,7 +13,7 @@ public class Planet : MonoBehaviour
     private GameController gControl;
 
     void Start() {
-        player = GameObject.FindWithTag("Player");
+        playerRB = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
         gControl = GameObject.FindWithTag("GameController").GetComponent<GameController>();
 
         EventManager.onPlayerDeath += SuspendGravityTimer;
@@ -26,11 +26,10 @@ public class Planet : MonoBehaviour
         if (!other.CompareTag("Player") || suspendGravity) {
             return;
         }
-        dist = transform.position - player.transform.position; // distance to planet center
+        dist = (Vector2) transform.position - playerRB.position; // distance to planet center
         if (dist.magnitude > 80) {
             return;
         }
-        Rigidbody2D playerRB = player.GetComponent<Rigidbody2D>();
         // the law of gravity, in code
         playerRB.AddForce(dist * (gravitationalConstant * gravityScale / dist.sqrMagnitude));
     }
