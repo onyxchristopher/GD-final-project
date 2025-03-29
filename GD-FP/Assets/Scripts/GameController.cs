@@ -196,7 +196,7 @@ public class GameController : MonoBehaviour
             initialText.GetChild(i).GetComponent<DestroyAfterTime>().DestroyTrigger();
         }
 
-        //Timing.RunCoroutine(_CompassArrowDelay());
+        Timing.RunCoroutine(_CompassArrowDelay());
         EnableStopwatch();
     }
 
