@@ -129,7 +129,7 @@ public class DuskwardenBossEnemy : Enemy
 
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
-        Instantiate(deathParticles, transform.position, Quaternion.identity);
+        Instantiate(deathParticles, transform.position, Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + 90));
         GameObject.FindWithTag("MainCamera").GetComponent<CameraMovement>().ChangeSize(30, 1, 1);
         EventManager.BossDefeat(3);
         EventManager.ExitBossArea();

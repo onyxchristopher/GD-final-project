@@ -24,6 +24,9 @@ public class MessageDashboard : MonoBehaviour
         EventManager.onPlayAgain += ResetDashboard;
 
         sound = GameObject.FindWithTag("Sound").GetComponent<Sound>();
+    }
+
+    public void StartTimer() {
         Timing.RunCoroutine(_LaunchTimer());
     }
 
@@ -105,7 +108,16 @@ public class MessageDashboard : MonoBehaviour
         } else {
             ChangeTextTo("You found an artifact!\n\nFly over it to pick it up.");
             sound.PlayBossDefeatTutorial();
+            if (id == 1) {
+                Timing.RunCoroutine(_PedestalTimer());
+            }
         }
+    }
+
+    private IEnumerator<float> _PedestalTimer() {
+        yield return Timing.WaitForSeconds(3);
+        ChangeTextTo("Touching down on the pedestal sets a checkpoint and restores your health and fuel.");
+        sound.PlayCheckpointTutorial();
     }
 
     public void CorePickupMsg(int id) {
@@ -139,8 +151,6 @@ public class MessageDashboard : MonoBehaviour
             case 1:
                 ChangeTextTo("Your blade skill now has a longer range!");
                 sound.PlayArtifact1();
-                yield return Timing.WaitForSeconds(4);
-                PreCheckpointMsg();
                 break;
             case 2:
                 ChangeTextTo("New skill unlocked!\n\nPress 2 to dash and set a trap.");
@@ -159,11 +169,6 @@ public class MessageDashboard : MonoBehaviour
                 sound.PlayArtifact5();
                 break;
         }
-    }
-
-    public void PreCheckpointMsg() {
-        ChangeTextTo("Touching down on the pedestal sets a checkpoint and restores your health and fuel.");
-        sound.PlayCheckpointTutorial();
     }
 
     private void ResetDashboard() {

@@ -60,14 +60,15 @@ public class PlayerMovement : MonoBehaviour
         EventManager.onPlayAgain += InitializeMovement;
         EventManager.onNewGame += RestartActions;
 
+        playerInput.actions.FindActionMap("Player").Disable();
         playerInput.actions.FindActionMap("UI").Disable();
+    }
 
+    public void StartTimer() {
         Timing.RunCoroutine(_EnableActions());
     }
 
     private IEnumerator<float> _EnableActions() {
-        
-        playerInput.actions.FindActionMap("Player").Disable();
         yield return Timing.WaitForSeconds(12.5f);
         playerInput.actions.FindActionMap("Player").Enable();
     }

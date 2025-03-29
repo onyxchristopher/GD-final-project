@@ -137,7 +137,7 @@ public class VoidchargerBossEnemy : Enemy
 
     public override void EnemyDeath() {
         EventManager.onPlayerDeath -= ResetToIdle;
-        Instantiate(deathParticles, transform.position, Quaternion.identity);
+        Instantiate(deathParticles, transform.position, Quaternion.Euler(0, 0, rb.rotation));
         EventManager.BossDefeat(2);
         EventManager.ExitBossArea();
         if (drop) {

@@ -55,6 +55,8 @@ public class GameController : MonoBehaviour
     public float timeToMove = 3;
     public float timeToRespawn = 1.5f;
 
+    [SerializeField] private GameObject introArtifact;
+
     [SerializeField] private GameObject endscreen;
     private Text timeText;
     private float gameTime;
@@ -84,8 +86,6 @@ public class GameController : MonoBehaviour
         EventManager.onEndGame += EndingSequence;
         EventManager.onPlayAgain += Restart;
         EventManager.onNewGame += EnableStopwatch;
-
-        Timing.RunCoroutine(_CompassArrowDelay());
     }
 
     private void InitializeUniverse() {
@@ -117,7 +117,7 @@ public class GameController : MonoBehaviour
             clusterI.GetComponent<ClusterBoundary>().setId(level1[i].getId());
 
             // instantiate cluster scene boundary at core, set collider size, set name and id
-            GameObject csb = Instantiate(clusterSceneBoundary, corePos, Quaternion.identity);
+            GameObject csb = Instantiate(clusterSceneBoundary, corePos, Quaternion.identity, universe.transform);
             csb.GetComponent<BoxCollider2D>().size = boundingSize + Vector2.one * sceneLoadingRadius * 2;
             csb.name = $"CSB{i+1}";
             csb.GetComponent<ClusterSceneBoundary>().setId(level1[i].getId());
@@ -129,8 +129,6 @@ public class GameController : MonoBehaviour
     private IEnumerator<float> _CompassArrowDelay() {
         yield return Timing.WaitForSeconds(12.5f);
         compass.CalculateAnchorRadius(cam.pixelRect);
-
-        EnableStopwatch();
     }
 
     // Checking if camera resolution has changed
@@ -177,7 +175,32 @@ public class GameController : MonoBehaviour
         bar.transform.GetChild(1).GetComponent<Image>().sprite = uncrackedBar;
     }
 
+    // Starting sequence
+
+    public void StartButtonPressed() {
+        GameObject startscreen = GameObject.FindWithTag("Startscreen");
+        if (startscreen) {
+            Destroy(startscreen);
+        }
+        
+        GameObject.FindWithTag("Player").GetComponent<PlayerMovement>().StartTimer();
+        GameObject.FindWithTag("MessageDashboard").GetComponent<MessageDashboard>().StartTimer();
+        Instantiate(introArtifact, new Vector3(0, 18, 0), Quaternion.identity);
+        Transform initialText = GameObject.FindWithTag("InitialText").transform;
+        for (int i = 0; i < initialText.childCount; i++) {
+            initialText.GetChild(i).GetComponent<Animator>().SetTrigger("Start");
+            initialText.GetChild(i).GetComponent<DestroyAfterTime>().DestroyTrigger();
+        }
+
+        Timing.RunCoroutine(_CompassArrowDelay());
+        EnableStopwatch();
+    }
+
     // Timer and ending sequence
+
+    private void EnableStopwatch() {
+        Timing.RunCoroutine(_GameTime(), "gametime");
+    }
 
     private IEnumerator<float> _GameTime() {
         gameTime = 0;
@@ -220,7 +243,7 @@ public class GameController : MonoBehaviour
         timeText.text = finalTime;
 
         yield return Timing.WaitForSeconds(2);
-        //pMove.playerInput.actions.FindActionMap("UI").Enable();
+        pMove.playerInput.actions.FindActionMap("UI").Enable();
     }
 
     private void Restart() {
@@ -231,9 +254,5 @@ public class GameController : MonoBehaviour
         bottomCoreDefeated = false;
         Destroy(GameObject.FindWithTag("Universe"));
         InitializeUniverse();
-    }
-
-    private void EnableStopwatch() {
-        Timing.RunCoroutine(_GameTime(), "gametime");
     }
 }

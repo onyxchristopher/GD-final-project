@@ -102,10 +102,9 @@ public class Sound : MonoBehaviour
         
 
         BGMSourceOOC.clip = outOfCombatBGM;
+        BGMSourceOOC.volume = oocVolumeCap / 2;
         BGMSourceIC.clip = inCombatBGM;
         BGMSourceIC.volume = 0;
-
-        BGMSourceOOC.Play();
     }
 
     public void EnterCombat(int _) {
@@ -301,11 +300,11 @@ public class Sound : MonoBehaviour
 
     public void PlayMissionStart() {
         PlaySFX(missionStart, 1);
+        BGMSourceOOC.Play();
         Timing.RunCoroutine(_BGMVolumeRise());
     }
 
     private IEnumerator<float> _BGMVolumeRise() {
-        BGMSourceOOC.volume = oocVolumeCap / 2;
         yield return Timing.WaitForSeconds(10.6f);
         float time = 0;
         while (time < 1) {

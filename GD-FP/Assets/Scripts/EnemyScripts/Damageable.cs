@@ -12,7 +12,7 @@ public class Damageable : MonoBehaviour
     [HideInInspector] public int health;
     [SerializeField] private bool isBoss;
     private bool invuln = false;
-    private float invulnDuration = 0.3f;
+    private float invulnDuration = 0.8f;
     public Enemy enemy;
     public GameObject linkedForcefield;
     public GameObject protectiveForcefield;
@@ -34,7 +34,7 @@ public class Damageable : MonoBehaviour
         if (invuln && source == "blade") {
             return;
         } else if (source == "blade") {
-            invuln = true; // a blade grants 0.3 seconds invuln from more blade attacks
+            invuln = true; // a blade grants 0.8 seconds invuln from more blade attacks
             Timing.RunCoroutine(_IFrames());
         }
         if (!protectiveForcefield){ // if the enemy is not being protected by a forcefield

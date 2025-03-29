@@ -43,6 +43,9 @@ TagManager:
   - EndCanvas
   - MainCanvasParent
   - Endscreen
+  - Startscreen
+  - MessageDashboard
+  - InitialText
   layers:
   - Default
   - TransparentFX
