@@ -45,7 +45,6 @@ public class Artifact : MonoBehaviour
             
             EventManager.ArtifactPickup(id);
             if (id % 10 == 0) {
-                EventManager.SetSpawn(transform.position);
                 Timing.RunCoroutine(_MoveArtifactToPlayer());
                 Destroy(gameObject.GetComponent<BoxCollider2D>());
                 Destroy(gameObject, timeToPickup + 0.5f);

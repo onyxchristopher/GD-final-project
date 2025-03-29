@@ -100,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
         SetFuel(maxFuel);
     }
 
-    public void SetSpawn(Vector3 spawn) {
+    public void SetSpawn(Vector3 spawn, int _) {
         origin = spawn;
     }
 

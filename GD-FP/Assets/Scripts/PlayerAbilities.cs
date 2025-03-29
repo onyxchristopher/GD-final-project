@@ -244,6 +244,11 @@ public class PlayerAbilities : MonoBehaviour
         endcanvas.GetChild(2).gameObject.SetActive(false);
         endcanvas.parent.GetChild(1).gameObject.SetActive(false);
 
+        GameObject[] modules = GameObject.FindGameObjectsWithTag("TutorialModule");
+        for (int i = 0; i < modules.Length; i++) {
+            Destroy(modules[i]);
+        }
+
         InitializeAbilities();
 
         yield return Timing.WaitForSeconds(3);

@@ -815,6 +815,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1917701315}
     m_Modifications:
+    - target: {fileID: 7142628274115944221, guid: f44c438698b3c44e88b725b36a3c74bc,
+        type: 3}
+      propertyPath: sectorNum
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8878907731781219608, guid: f44c438698b3c44e88b725b36a3c74bc,
         type: 3}
       propertyPath: m_Color.b
@@ -1623,6 +1628,7 @@ MonoBehaviour:
   protectingObjects: []
   multiplier: -1
   offset: {x: 33, y: -24, z: 0}
+  echoceptorLastField: 0
 --- !u!68 &1439395605493616259
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -1690,6 +1696,7 @@ MonoBehaviour:
   protectingObjects: []
   multiplier: -1
   offset: {x: 0, y: 0, z: 0}
+  echoceptorLastField: 0
 --- !u!68 &4747957056117829893
 EdgeCollider2D:
   m_ObjectHideFlags: 0

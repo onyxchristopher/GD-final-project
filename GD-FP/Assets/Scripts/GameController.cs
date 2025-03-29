@@ -60,7 +60,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject endscreen;
     private Text timeText;
     private float gameTime;
-    private int completedRuns = 0;
+    public static int completedRuns = 0;
 
     void Awake() {
         bossBar = GameObject.FindWithTag("BossBar");
@@ -222,7 +222,7 @@ public class GameController : MonoBehaviour
         yield return Timing.WaitForSeconds(3);
 
         // Transport player home, spawn endscreen
-        EventManager.SetSpawn(2 * Vector3.up);
+        EventManager.SetSpawn(2 * Vector3.up, 0);
         PlayerMovement pMove = GameObject.FindWithTag("Player").GetComponent<PlayerMovement>();
         pMove.transform.position = 2 * Vector3.up;
         pMove.playerInput.actions.FindActionMap("Player").Disable();

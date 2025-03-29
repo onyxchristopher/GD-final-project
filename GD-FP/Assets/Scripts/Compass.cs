@@ -43,6 +43,7 @@ public class Compass : MonoBehaviour
 
     private bool majorShown = true;
     private bool minorShown = false;
+    private int respawnSector = 0;
 
     void Start()
     {
@@ -54,7 +55,10 @@ public class Compass : MonoBehaviour
         EventManager.onEnterCluster += EnteringCluster;
         EventManager.onExitCluster += LeavingCluster;
         EventManager.onEnterBossArea += HideCompass;
-        EventManager.onExitBossArea += ShowCompass;
+        EventManager.onExitBossArea += ShowCompassCheck;
+        EventManager.onSetSpawn += SetRespawnSector;
+        EventManager.onPlayerDeath += DeactivateAll;
+        EventManager.onPlayerRespawn += RespawnAlignment;
 
         currCluster = 0;
         level1 = l1;
@@ -69,13 +73,11 @@ public class Compass : MonoBehaviour
         for (int i = 0; i < minorArrowTransforms.Length; i++) {
             GameObject minorArrow = Instantiate(minorCompassArrow, Vector3.zero, Quaternion.identity, transform);
             minorArrowTransforms[i] = minorArrow.GetComponent<RectTransform>();
-            minorArrow.GetComponent<Image>().color = Color.clear;
             minorArrow.SetActive(false);
         }
 
         GameObject majorArrow = Instantiate(majorCompassArrow, Vector3.zero, Quaternion.identity, transform);
         majorArrowTransform = majorArrow.GetComponent<RectTransform>();
-        majorArrow.GetComponent<Image>().color = new Color(0, 0.5f, 1, 0.5f);
 
         majorShown = true;
 
@@ -85,6 +87,9 @@ public class Compass : MonoBehaviour
     }
 
     public void EnteringCluster(int clusterNum) {
+        if (GameObject.FindWithTag("Player").GetComponent<PlayerCollision>().inactive) {
+            return;
+        }
         currCluster = clusterNum;
 
         // update the minor arrows to the current cluster
@@ -105,53 +110,50 @@ public class Compass : MonoBehaviour
         HideMinor();
     }
 
+    private void ShowCompassCheck() {
+        Timing.RunCoroutine(_ShowCompassCheck());
+    }
+
+    private IEnumerator<float> _ShowCompassCheck() {
+        majorShown = true;
+        minorShown = true;
+        yield return Timing.WaitForOneFrame;
+        if (!GameObject.FindWithTag("Player").GetComponent<PlayerCollision>().inactive) {
+            ShowCompass();
+        }
+    }
+
     public void ShowCompass() {
         ShowMajor();
         ShowMinor();
     }
 
     private void ShowMajor() {
-        if (!majorShown) {
-            majorArrowTransform.gameObject.SetActive(true);
-            majorArrowTransform.gameObject.GetComponent<Animator>().SetTrigger("ShowCompass");
-            majorShown = true;
-        }
+        majorShown = true;
+        majorArrowTransform.gameObject.SetActive(true);
     }
 
     private void ShowMinor() {
-        if (currCluster == 6) {
+        if (currCluster == 0 || currCluster == 6) {
+            HideMinor();
             return;
         }
-        if (!minorShown) {
-            for (int i = 0; i < indices.Count; i++) {
-                minorArrowTransforms[indices[i]].gameObject.SetActive(true);
-                minorArrowTransforms[indices[i]].gameObject.GetComponent<Animator>().SetTrigger("ShowCompass");
-            }
-            minorShown = true;
+        minorShown = true;
+        for (int i = 0; i < indices.Count; i++) {
+            minorArrowTransforms[indices[i]].gameObject.SetActive(true);
         }
     }
 
     private void HideMajor() {
-        if (majorShown) {
-            majorArrowTransform.gameObject.GetComponent<Animator>().SetTrigger("HideCompass");
-            Timing.RunCoroutine(_ArrowSetInactive(majorArrowTransform));
-            majorShown = false;
-        }
+        majorArrowTransform.gameObject.SetActive(false);
+        majorShown = false;
     }
 
     private void HideMinor() {
-        if (minorShown) {
-            for (int i = 0; i < indices.Count; i++) {
-                minorArrowTransforms[indices[i]].gameObject.GetComponent<Animator>().SetTrigger("HideCompass");
-                Timing.RunCoroutine(_ArrowSetInactive(minorArrowTransforms[indices[i]]));
-            }
-            minorShown = false;
+        for (int i = 0; i < indices.Count; i++) {
+            minorArrowTransforms[indices[i]].gameObject.SetActive(false);
         }
-    }
-
-    private IEnumerator<float> _ArrowSetInactive(RectTransform arrow) {
-        yield return Timing.WaitForSeconds(0.5f);
-        arrow.gameObject.SetActive(false);
+        minorShown = false;
     }
 
     public void UpdateProgression(int id) {
@@ -161,7 +163,6 @@ public class Compass : MonoBehaviour
             DestroyAllArrows();
             return;
         }
-
         // major progression
         if (secondDigit == 0) {
             majorProg.Add(id);
@@ -191,6 +192,10 @@ public class Compass : MonoBehaviour
 
     // point to the minor objectives of the cluster entered
     private void UpdateMinor(int clusterNum) {
+        if (clusterNum == 0) {
+            indices = new List<int>();
+            return;
+        }
         int clusterIndex = clusterNum - 1;
         int numMinor = level2[clusterIndex].Length;
         indices = new List<int>();
@@ -203,8 +208,23 @@ public class Compass : MonoBehaviour
         }
     }
 
+    private void SetRespawnSector(Vector3 _, int sectorNum) {
+        respawnSector = sectorNum;
+    }
+
+    private void DeactivateAll() {
+        HideMajor();
+        HideMinor();
+    }
+
+    private void RespawnAlignment() {
+        ShowMajor();
+        EnteringCluster(respawnSector);
+    }
+
     // calculate radius, re-called on camera rect change
     public void CalculateAnchorRadius(Rect cameraRect) {
+        return;
         cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         float aspect = cam.aspect;
         RectTransform canvasTransform = transform.parent.gameObject.GetComponent<RectTransform>();
@@ -278,6 +298,9 @@ public class Compass : MonoBehaviour
         EventManager.onEnterCluster -= EnteringCluster;
         EventManager.onExitCluster -= LeavingCluster;
         EventManager.onEnterBossArea -= HideCompass;
-        EventManager.onExitBossArea -= ShowCompass;
+        EventManager.onExitBossArea -= ShowCompassCheck;
+        EventManager.onSetSpawn -= SetRespawnSector;
+        EventManager.onPlayerDeath -= DeactivateAll;
+        EventManager.onPlayerRespawn -= RespawnAlignment;
     }
 }

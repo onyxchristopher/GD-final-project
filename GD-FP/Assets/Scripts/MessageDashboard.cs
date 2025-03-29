@@ -32,7 +32,7 @@ public class MessageDashboard : MonoBehaviour
 
     private IEnumerator<float> _LaunchTimer() {
         sound.PlayMissionStart();
-        yield return Timing.WaitForSeconds(12.5f);
+        yield return Timing.WaitForSeconds(13f);
         Launch();
     }
 
@@ -108,7 +108,7 @@ public class MessageDashboard : MonoBehaviour
         } else {
             ChangeTextTo("You found an artifact!\n\nFly over it to pick it up.");
             sound.PlayBossDefeatTutorial();
-            if (id == 1) {
+            if (GameController.completedRuns == 0 && id == 1) {
                 Timing.RunCoroutine(_PedestalTimer());
             }
         }

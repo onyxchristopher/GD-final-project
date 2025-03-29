@@ -136,11 +136,11 @@ public class EventManager : MonoBehaviour
         onPickup?.Invoke();
     }
 
-    public delegate void NotifySetSpawn(Vector3 spawn);
+    public delegate void NotifySetSpawn(Vector3 spawn, int sectorNum);
     public static event NotifySetSpawn onSetSpawn;
-    public static void SetSpawn(Vector3 spawn) {
+    public static void SetSpawn(Vector3 spawn, int sectorNum) {
         if (onSetSpawn != null) {
-            onSetSpawn(spawn);
+            onSetSpawn(spawn, sectorNum);
         }
     }
 
