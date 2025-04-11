@@ -8,7 +8,7 @@ Astral Drone Quest is an action-adventure game set in outer space, where the pla
 
 Code, art, and animation are original.
 
-[Play Astral Drone Quest](onyxc.itch.io/astral-drone-quest)
+[Play Astral Drone Quest](https://onyxc.itch.io/astral-drone-quest)
 
 ## Interesting sections of code
 
