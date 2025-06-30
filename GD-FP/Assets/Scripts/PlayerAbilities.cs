@@ -60,6 +60,10 @@ public class PlayerAbilities : MonoBehaviour
     [SerializeField] private Sprite shieldSprite;
     [SerializeField] private Sprite lockSprite;
 
+    // Blade collision checking
+    List<Collider2D> bladeCollisions = new List<Collider2D>();
+    ContactFilter2D cf = new ContactFilter2D();
+
     void Start() {
         EventManager.onNewUniverse += InitializeAbilities;
 
@@ -69,6 +73,9 @@ public class PlayerAbilities : MonoBehaviour
         bladeCdSlider = cooldownIcons.transform.GetChild(0).gameObject.GetComponent<Slider>();
         trapCdSlider = cooldownIcons.transform.GetChild(1).gameObject.GetComponent<Slider>();
         shieldCdSlider = cooldownIcons.transform.GetChild(2).gameObject.GetComponent<Slider>();
+
+        cf.SetLayerMask(LayerMask.GetMask("Enemy", "Forcefield"));
+        cf.useTriggers = false;
     }
 
     public void InitializeAbilities() {
@@ -104,16 +111,46 @@ public class PlayerAbilities : MonoBehaviour
     // blade
     private void OnAction1() {
         if (bladeCd <= 0) {
-            // Spawn blade and set its damage
+            // Spawn blade
             GameObject bladeInstance = Instantiate(blade, transform.position, Quaternion.identity, transform);
-            bladeInstance.GetComponent<Blade>().SetDamage(bladeDamage);
-
             EventManager.BladeUse();
 
             // Start the cooldown
             bladeCd = bladeCooldownTime;
             Timing.RunCoroutine(_BladeCooldown());
+
+            // Manage the aspects of the blade
+            Timing.RunCoroutine(_BladeLifecycle());
         } 
+    }
+
+    private IEnumerator<float> _BladeLifecycle() {
+        if (BladeCollisionCheck()) {
+            yield break;
+        }
+        yield return Timing.WaitForSeconds(0.125f);
+        if (BladeCollisionCheck()) {
+            yield break;
+        }
+        yield return Timing.WaitForSeconds(0.125f);
+        BladeCollisionCheck();
+    }
+
+    private bool BladeCollisionCheck() {
+        int numCollisions = Physics2D.OverlapCircle(pMove.rb.position, bladeLength, cf, bladeCollisions);
+        for (int i = 0; i < numCollisions; i++) {
+            if (bladeCollisions[i].CompareTag("Forcefield")) {
+                EventManager.ForcefieldHit();
+                Destroy(GameObject.FindWithTag("Blade"), 0.05f);
+                return true;
+            }
+        }
+        for (int i = 0; i < numCollisions; i++) {
+            if (bladeCollisions[i].CompareTag("Damageable")) {
+                bladeCollisions[i].GetComponent<Damageable>().Damage(bladeDamage, false, "blade");
+            }
+        }
+        return false;
     }
 
     // trap

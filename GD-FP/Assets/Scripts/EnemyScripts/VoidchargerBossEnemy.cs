@@ -50,7 +50,7 @@ public class VoidchargerBossEnemy : Enemy
         rb = gameObject.GetComponent<Rigidbody2D>();
         dmg = gameObject.GetComponent<Damageable>();
         dmg.enemy = this;
-        telegraphArrow = transform.GetChild(2).gameObject;
+        telegraphArrow = transform.GetChild(1).gameObject;
 
         EventManager.onPlayerDeath += ResetToIdle;
     }

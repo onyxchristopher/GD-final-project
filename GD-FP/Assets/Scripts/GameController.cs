@@ -39,7 +39,6 @@ public class GameController : MonoBehaviour
 
     // Camera
     public Camera cam;
-    [HideInInspector] public Rect cameraRect;
 
     // Universe building refs
     private GameObject universe;
@@ -79,7 +78,6 @@ public class GameController : MonoBehaviour
         cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
 
         InitializeUniverse();
-        Timing.RunCoroutine(_CameraChangeCheck(), Segment.SlowUpdate);
 
         EventManager.onEnterBossArea += DisplayBossUI;
         EventManager.onExitBossArea += HideBossUI;
@@ -126,23 +124,11 @@ public class GameController : MonoBehaviour
         scenes.InitializeScenes(level1.Length, level0, level1, level2);
     }
 
-    
 
     private IEnumerator<float> _CompassArrowDelay() {
+        compass.HideCompass(0);
         yield return Timing.WaitForSeconds(12.5f);
-        compass.CalculateAnchorRadius(cam.pixelRect);
-    }
-
-    // Checking if camera resolution has changed
-    private IEnumerator<float> _CameraChangeCheck() {
-        while (true) {
-            if (cam.pixelRect.ToString() != cameraRect.ToString()) {
-                cameraRect = cam.pixelRect;
-                compass.CalculateAnchorRadius(cameraRect);
-            }
-            yield return Timing.WaitForOneFrame;
-        }
-        
+        compass.ShowCompass();
     }
 
     // Boss UI
