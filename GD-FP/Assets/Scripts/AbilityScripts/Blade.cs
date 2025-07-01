@@ -8,7 +8,7 @@ public class Blade : MonoBehaviour
     private float degreesToRotate = 180;
     private float duration = 0.25f;
     private float angularSpeed;
-    private int damage;
+    private int damage = 5;
 
     void Start() {
         player = transform.parent.gameObject;
@@ -22,24 +22,5 @@ public class Blade : MonoBehaviour
 
     public int GetDamage() {
         return damage;
-    }
-
-    public void SetDamage(int d) {
-        damage = d;
-    }
-
-    void OnTriggerEnter2D(Collider2D other) {
-        if (other.CompareTag("Forcefield")) {
-            // if the blade hits a forcefield, it gets destroyed
-            if (!other.isTrigger) {
-                Destroy(gameObject, duration / 5);
-                EventManager.ForcefieldHit();
-            }
-        } else if (other.CompareTag("Damageable")) {
-            // if the blade hits a damageable entity, it does damage
-            if (!other.isTrigger) {
-                other.gameObject.GetComponent<Damageable>().Damage(damage, false, "blade");
-            }
-        }
     }
 }

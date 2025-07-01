@@ -222,35 +222,6 @@ public class Compass : MonoBehaviour
         EnteringCluster(respawnSector);
     }
 
-    // calculate radius, re-called on camera rect change
-    public void CalculateAnchorRadius(Rect cameraRect) {
-        cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
-        float aspect = cam.aspect;
-        RectTransform canvasTransform = transform.parent.gameObject.GetComponent<RectTransform>();
-        RectTransform compassTransform = gameObject.GetComponent<RectTransform>();
-        if (aspect >= 1) { // landscape screen
-            float insetDistance = (canvasTransform.rect.width - canvasTransform.rect.height) / 2;
-            compassTransform.SetInsetAndSizeFromParentEdge(
-                RectTransform.Edge.Left,
-                insetDistance,
-                canvasTransform.rect.width - 2 * insetDistance);
-            compassTransform.SetInsetAndSizeFromParentEdge(
-                RectTransform.Edge.Top,
-                0,
-                canvasTransform.rect.height);
-        } else { // portrait
-            float insetDistance = (canvasTransform.rect.height - canvasTransform.rect.width) / 2;
-            compassTransform.SetInsetAndSizeFromParentEdge(
-                RectTransform.Edge.Top,
-                insetDistance,
-                canvasTransform.rect.height - 2 * insetDistance);
-            compassTransform.SetInsetAndSizeFromParentEdge(
-                RectTransform.Edge.Left,
-                0,
-                canvasTransform.rect.width);
-        }
-    }
-
     private Vector2 DiffToCompassSpace(Vector2 diff) {
         // return a normalized anchor vector weighted from the center
         return (Vector2.one / 2) + diff.normalized * cameraRatio;

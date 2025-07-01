@@ -17,8 +17,7 @@ public class Upgrades : MonoBehaviour
     [SerializeField] private int minorHealthUpgrade;
 
 
-    void Start()
-    {
+    void Start() {
         player = GameObject.FindWithTag("Player");
         playerAbilities = player.GetComponent<PlayerAbilities>();
         playerCollision = player.GetComponent<PlayerCollision>();

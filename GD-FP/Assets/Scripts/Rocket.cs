@@ -42,9 +42,9 @@ public class Rocket : MonoBehaviour
             Vector2 dirToPlayer = playerRB.position - rb.position;
             float angle = Vector2.SignedAngle(transform.right, dirToPlayer);
             if (angle >= maxTurn) {
-                rb.rotation += (maxTurn * 60 * Time.deltaTime);
+                rb.rotation += maxTurn * 60 * Time.deltaTime;
             } else if (angle <= -maxTurn) {
-                rb.rotation -= (maxTurn * 60 * Time.deltaTime);
+                rb.rotation -= maxTurn * 60 * Time.deltaTime;
             } 
             rb.velocity = speed * transform.right; // resets the rocket's velocity after turning
             yield return Timing.WaitForOneFrame;
@@ -55,7 +55,7 @@ public class Rocket : MonoBehaviour
             Explode();
         } else { // the rocket has been reflected
             if (longerReflectTime) { // the boss's rockets need to travel farther
-                yield return Timing.WaitForSeconds(4);
+                yield return Timing.WaitForSeconds(5);
             } else {
                 yield return Timing.WaitForSeconds(1.5f);
             }
